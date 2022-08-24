@@ -3,17 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node server.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.0",
+    "@emotion/styled": "^11.10.0",
+    "@mui/material": "^5.10.2",
+    "axios": "^0.27.2",
+    "express": "^4.18.1",
     "next": "12.2.5",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "socket-io": "^1.0.0",
+    "socket.io": "^4.5.1",
+    "socket.io-client": "^4.5.1",
+    "styled-components": "^5.3.5",
+    "use-debounce": "^8.0.3",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
+    "@types/node": "^18.7.12",
+    "@types/styled-components": "^5.1.26",
+    "babel-plugin-styled-components": "^2.0.7",
     "eslint": "8.22.0",
     "eslint-config-next": "12.2.5"
   }

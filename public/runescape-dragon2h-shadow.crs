@@ -1,0 +1,12 @@
+﻿[Arrow]
+Path=Normal.cur
+
+[AppStarting]
+Path=Busy in background.cur
+
+[Help]
+Path=Help Select.cur
+
+[Hand]
+Path=Link select.cur
+

@@ -3,6 +3,8 @@ import styled, { keyframes } from "styled-components";
 import { backgroundGradient, otherGradient } from "../utils/styleUtils";
 import { Frame } from "./CharacterView";
 import SocketService from "../SocketService";
+import { EnemyStats } from "./EnemyStats";
+import { EnemyAction } from "./EnemyAction";
 
 interface clickProps {
   clicked?: boolean;
@@ -141,23 +143,37 @@ export const BattleView: React.FC<BattleViewProps> = ({ gameData }) => {
   }, []);
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
-      <Frame style={{ display: "flex", flexDirection: "column" }}>
-        <p>{gameState.enemy.name}</p>
-        <p>{gameState.enemy.life}</p>
+      <Frame style={{ display: "flex", gap: "1rem" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <EnemyStats enemy={gameState.enemy} />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <EnemyAction enemy={gameState.enemy} />
+        </div>
       </Frame>
-      <Frame style={{ display: "flex", flexDirection: "column" }}>
-        <p>{gameState.spellReq.join(" ")}</p>
-        <div style={{ display: "flex", minHeight: "5rem" }}>
-          {gameState.spellInput.map((s: any) => {
-            switch (gameState.animation) {
-              case "casting":
-                return <Spell key={s}>{s}</Spell>;
-              case "failed":
-                return <FailedSpell key={s}>{s}</FailedSpell>;
-              case "normal":
-                return <p key={s}>{s}</p>;
-            }
-          })}
+      <Frame style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <p>{gameState.spellReq.join(" ")}</p>
+          <div style={{ display: "flex", minHeight: "5rem" }}>
+            {gameState.spellInput.map((s: any) => {
+              switch (gameState.animation) {
+                case "casting":
+                  return <Spell key={s}>{s}</Spell>;
+                case "failed":
+                  return <FailedSpell key={s}>{s}</FailedSpell>;
+                case "normal":
+                  return <p key={s}>{s}</p>;
+              }
+            })}
+          </div>
+        </div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <EnemyStats enemy={gameState.player} />
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <EnemyAction enemy={gameState.player} />
+          </div>
         </div>
       </Frame>
       <Frame style={{ width: "50%" }}>
@@ -183,9 +199,11 @@ export const BattleView: React.FC<BattleViewProps> = ({ gameData }) => {
               return (
                 <WordBox
                   style={{ cursor: "grab" }}
-                  onClick={() =>
-                    update({ type: "addWord", word: w, id: gameState.id })
-                  }
+                  onClick={() => {
+                    if (gameState.player.action === "casting") {
+                      update({ type: "addWord", word: w, id: gameState.id });
+                    }
+                  }}
                   key={w}
                 >
                   {w}

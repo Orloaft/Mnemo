@@ -63,6 +63,7 @@ border-color: #00FF66;
   }
 `;
 export const LoadButton = styled(Frame)`
+  cursor: default;
   font-size: 3rem;
   &:hover {
     animation: ${hoverRainbow};

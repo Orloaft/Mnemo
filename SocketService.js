@@ -5,7 +5,8 @@ class SocketService {
   // socket instance that will persist across all components
   socket = null;
   gameData = null;
-  initGame() {
+  update = this.updateData.bind(this);
+  async initGame() {
     this.socket.emit("init_gameData", this.socket.id);
   }
   //method to initiate socket instance

@@ -58,52 +58,51 @@ export const MenuView: React.FC = () => {
   const [isBattle, setIsBattle] = useState(false);
   const { socket } = SocketService as any;
   const battleStart = () => {
-    SocketService.connect();
     SocketService.initGame();
   };
+
   useEffect(() => {
     socket &&
       socket.on("update_res", (obj: object) => {
         socket.gameData = obj;
-        setIsBattle(true);
+        !isBattle && setIsBattle(true);
+        socket.gameData.concluded && setIsBattle(false);
       });
   }, []);
 
   return (
     <MenuContainer>
-      <div
-        style={{
-          display: "flex",
-          width: "41%",
-          zIndex: 3,
-          justifyContent: "center",
-        }}
-      >
-        <PartyWrap>
-          <Box>
-            <CharacterView />
-          </Box>
-          {(isBattle && (
-            <Box>
-              <BattleView />
-            </Box>
-          )) || (
-            <Box>
-              <LoadButton onClick={() => battleStart()}>Battle</LoadButton>
-            </Box>
-          )}
-        </PartyWrap>
-      </div>
-      <div
-        style={{
-          justifyContent: "center",
-          display: "flex",
-          width: "59%",
-          zIndex: 3,
-        }}
-      >
-        <PartyMenuView />
-      </div>
+      {(isBattle && <BattleView gameData={socket.gameData} />) || (
+        <>
+          <div
+            style={{
+              display: "flex",
+              width: "41%",
+              zIndex: 3,
+              justifyContent: "center",
+            }}
+          >
+            <PartyWrap>
+              <Box>
+                <LoadButton onClick={() => battleStart()}>Battle</LoadButton>
+              </Box>
+              <Box>
+                <CharacterView />
+              </Box>
+            </PartyWrap>
+          </div>
+          <div
+            style={{
+              justifyContent: "center",
+              display: "flex",
+              width: "59%",
+              zIndex: 3,
+            }}
+          >
+            <PartyMenuView />
+          </div>
+        </>
+      )}
     </MenuContainer>
   );
 };

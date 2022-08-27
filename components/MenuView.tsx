@@ -5,6 +5,7 @@ import { CharacterView } from "./CharacterView";
 import { LoadButton } from "./MainView";
 import { PartyMenuView } from "./PartyMenuView";
 import SocketService from "../SocketService";
+import { gameDataProps } from "../gameData";
 
 const emerge = keyframes`
 0%{ 
@@ -63,10 +64,16 @@ export const MenuView: React.FC = () => {
 
   useEffect(() => {
     socket &&
-      socket.on("update_res", (obj: object) => {
-        socket.gameData = obj;
-        !isBattle && setIsBattle(true);
-        socket.gameData.concluded && setIsBattle(false);
+      socket.on("update_res", (obj: gameDataProps) => {
+        if (obj !== null) {
+          socket.gameData = { ...obj };
+        }
+
+        if (socket.gameData && socket.gameData.concluded) {
+          setIsBattle(false);
+        } else {
+          !isBattle && setIsBattle(true);
+        }
       });
   }, []);
 

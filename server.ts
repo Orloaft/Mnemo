@@ -31,6 +31,7 @@ async function startServer() {
 
       if (gameData && gameData.player.life <= 0) {
         gameData.concluded = true;
+        gameData.score = "Player defeated";
         io.to(id).emit("update_res", gameData);
       } else {
         getGameActionHandler.handleAction(req, io, id);

@@ -9,6 +9,7 @@ export function getGameActionHandler() {
       const x = setInterval(() => {
         if (gameData.player.life <= 0) {
           gameData.concluded = true;
+          gameData.score = "player defeated";
           io.to(socket).emit("update_res", gameData);
         }
         if (gameData && gameData.concluded) {
@@ -24,8 +25,6 @@ export function getGameActionHandler() {
             gameData.enemy.actionPoints += 1;
           }
           if (gameData && gameData.enemy.action === "casting") {
-            gameData.player.life -= 10;
-            gameData.enemy.action = "chanting";
           }
 
           if (
@@ -33,13 +32,21 @@ export function getGameActionHandler() {
             gameData.enemy.actionPoints >= 15 - gameData.enemy.speed
           ) {
             gameData.enemy.action = "casting";
-            gameData.enemy.actionPoints = 0;
+            io.to(socket).emit("update_res", gameData);
+            setTimeout(() => {
+              gameData.enemy.actionPoints = 0;
+              gameData.player.life -= 10;
+              gameData.enemy.action = "chanting";
+              io.to(socket).emit("update_res", gameData);
+            }, 1000);
           }
           if (
             gameData &&
             gameData.player.actionPoints >= 15 - gameData.player.speed
           ) {
-            gameData.player.action = "casting";
+            setTimeout(() => {
+              gameData.player.action = "casting";
+            }, 1000);
           }
           io.to(socket).emit("update_res", gameData);
         }
@@ -49,6 +56,10 @@ export function getGameActionHandler() {
       let gameData = getGameDataHandler.getGame(req.id);
 
       switch (req.type) {
+        case "spellSelect":
+          gameData.player.spell = req.spell;
+          io.to(socketId).emit("update_res", gameData);
+          break;
         case "animate":
           gameData && (gameData.animation = req.animation);
         case "clearMatch":
@@ -67,7 +78,20 @@ export function getGameActionHandler() {
               io.to(socketId).emit("update_res", gameData);
               setTimeout(() => {
                 if (gameData) {
-                  gameData.enemy.life -= 30;
+                  switch (gameData.player.spell) {
+                    case "missle":
+                      gameData.enemy.life -= 30;
+                      break;
+                    case "heal":
+                      if (gameData.player.life + 30 > gameData.player.maxLife) {
+                        gameData.player.life = gameData.player.maxLife;
+                      } else {
+                        gameData.player.life += 30;
+                      }
+
+                      break;
+                  }
+
                   gameData.spellInput = [];
                   gameData.spellReq = [...gameData.spellTable]
                     .sort(() => 0.5 - Math.random())

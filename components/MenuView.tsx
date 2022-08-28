@@ -5,7 +5,7 @@ import { CharacterView } from "./CharacterView";
 import { LoadButton } from "./MainView";
 import { PartyMenuView } from "./PartyMenuView";
 import SocketService from "../SocketService";
-import { gameDataProps } from "../gameData";
+import gameData, { gameDataProps } from "../gameData";
 
 const emerge = keyframes`
 0%{ 
@@ -54,6 +54,12 @@ const MenuContainer = styled.div`
   @media (min-width: 80rem) {
   }
 `;
+const BattleContainer = styled.div`
+  animation: ${emerge};
+  animation-duration: 0.5s;
+  animation-iteration-count: once;
+  animation-timing-function: linear;
+`;
 
 export const MenuView: React.FC = () => {
   const [isBattle, setIsBattle] = useState(false);
@@ -61,55 +67,53 @@ export const MenuView: React.FC = () => {
   const battleStart = () => {
     SocketService.initGame();
   };
-
+  const leaveBattle = () => {
+    setIsBattle(false);
+  };
   useEffect(() => {
     socket &&
       socket.on("update_res", (obj: gameDataProps) => {
-        if (obj !== null) {
-          socket.gameData = { ...obj };
-        }
-
-        if (socket.gameData && socket.gameData.concluded) {
-          setIsBattle(false);
-        } else {
-          !isBattle && setIsBattle(true);
-        }
+        socket.gameData = { ...obj };
+        !isBattle && setIsBattle(true);
       });
   }, []);
-
-  return (
-    <MenuContainer>
-      {(isBattle && <BattleView gameData={socket.gameData} />) || (
-        <>
-          <div
-            style={{
-              display: "flex",
-              width: "41%",
-              zIndex: 3,
-              justifyContent: "center",
-            }}
-          >
-            <PartyWrap>
-              <Box>
-                <LoadButton onClick={() => battleStart()}>Battle</LoadButton>
-              </Box>
-              <Box>
-                <CharacterView />
-              </Box>
-            </PartyWrap>
-          </div>
-          <div
-            style={{
-              justifyContent: "center",
-              display: "flex",
-              width: "59%",
-              zIndex: 3,
-            }}
-          >
-            <PartyMenuView />
-          </div>
-        </>
-      )}
-    </MenuContainer>
-  );
+  if (isBattle) {
+    return (
+      <BattleContainer>
+        <BattleView gameData={socket.gameData} leaveBattle={leaveBattle} />
+      </BattleContainer>
+    );
+  } else {
+    return (
+      <MenuContainer>
+        <div
+          style={{
+            display: "flex",
+            width: "41%",
+            zIndex: 3,
+            justifyContent: "center",
+          }}
+        >
+          <PartyWrap>
+            <Box>
+              <LoadButton onClick={() => battleStart()}>Battle</LoadButton>
+            </Box>
+            <Box>
+              <CharacterView character={{ life: 100, maxLife: 100 }} />
+            </Box>
+          </PartyWrap>
+        </div>
+        <div
+          style={{
+            justifyContent: "center",
+            display: "flex",
+            width: "59%",
+            zIndex: 3,
+          }}
+        >
+          <PartyMenuView />
+        </div>
+      </MenuContainer>
+    );
+  }
 };

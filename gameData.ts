@@ -1,4 +1,5 @@
 import { uuid } from "uuidv4";
+import { getEnemy } from "./enemies";
 export interface gameDataProps {
   id: string;
   time: number;
@@ -9,6 +10,7 @@ export interface gameDataProps {
     speed: number;
     actionPoints: number;
     action: string;
+    spell: string;
   };
   enemy: {
     name: string;
@@ -25,35 +27,7 @@ export interface gameDataProps {
   concluded: boolean;
   animation: string;
 }
-const rounds = [
-  {
-    name: "goblin",
-    life: 20,
-    maxLife: 20,
-    speed: 5,
-    actionPoints: 0,
-    action: "chanting",
-    dmg: 5,
-  },
-  {
-    name: "wraith",
-    life: 40,
-    maxLife: 40,
-    speed: 7,
-    actionPoints: 0,
-    action: "chanting",
-    dmg: 15,
-  },
-  {
-    name: "megawraith",
-    life: 60,
-    maxLife: 60,
-    speed: 9,
-    actionPoints: 0,
-    action: "chanting",
-    dmg: 25,
-  },
-];
+const rounds = [...getEnemy()];
 const gamesArr: {
   id: string;
   time: number;
@@ -64,6 +38,7 @@ const gamesArr: {
     speed: number;
     actionPoints: number;
     action: string;
+    spell: string;
   };
   enemy: {
     name: string;
@@ -79,6 +54,7 @@ const gamesArr: {
   spellReq: string[];
   concluded: boolean;
   animation: string;
+  score: string;
 }[] = [];
 function getGameDataHandler() {
   return {
@@ -93,6 +69,7 @@ function getGameDataHandler() {
           speed: 10,
           actionPoints: 0,
           action: "chanting",
+          spell: "missle",
         },
         enemy: { ...rounds[0] },
         spellTable: [
@@ -114,6 +91,7 @@ function getGameDataHandler() {
         spellReq: ["Lorem", "ipsum", "dolor"],
         concluded: false,
         animation: "normal",
+        score: "",
       };
       gamesArr.push(newGame);
       console.log(newGame.id);
@@ -129,6 +107,7 @@ function getGameDataHandler() {
         game.enemy = { ...rounds[game.round] };
       } else {
         game.concluded = true;
+        game.score = "Congratulations, you eviscerated all enemies!";
       }
     },
   };

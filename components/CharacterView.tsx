@@ -64,7 +64,9 @@ border-color: #00FF66;
   }
 `;
 
-interface CharacterViewProps {}
+interface CharacterViewProps {
+  character: any;
+}
 export const Frame = styled.div`
   display: flex;
   border: 2px solid #ffebcd;
@@ -127,14 +129,14 @@ const Character = styled(Frame)`
     width: 100%;
   }
 `;
-export const CharacterView: React.FC<CharacterViewProps> = () => {
+export const CharacterView: React.FC<CharacterViewProps> = ({ character }) => {
   return (
     <FlipCard>
       <InnerCard className="innerCard">
         <FrontCard>
           <Character>
             <Avatar />
-            <Stats />
+            <Stats character={character} />
           </Character>
         </FrontCard>
         <BackCard>

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { backgroundGradient, otherGradient } from "../utils/styleUtils";
-import { Frame } from "./CharacterView";
+import { CharacterView, Frame } from "./CharacterView";
 import SocketService from "../SocketService";
-import { EnemyStats } from "./EnemyStats";
-import { EnemyAction } from "./EnemyAction";
+import { StatView } from "./StatView";
+import { ActionView } from "./ActionView";
+import slime from "../public/slime.png";
+import { border } from "@mui/system";
 
 interface clickProps {
   clicked?: boolean;
@@ -12,6 +14,7 @@ interface clickProps {
 }
 interface BattleViewProps {
   gameData: any;
+  leaveBattle: () => void;
 }
 const casting = keyframes`
  
@@ -126,6 +129,7 @@ const FailedSpell: any = styled.p`
   animation-timing-function: linear;
 `;
 const WordBox = styled(Frame)`
+  cursor: default;
   background: ${(props: clickProps) =>
     props.clicked ? otherGradient : backgroundGradient};
 `;
@@ -158,7 +162,10 @@ const Wrap = styled.div`
   animationiterationcount: once;
 `;
 
-export const BattleView: React.FC<BattleViewProps> = ({ gameData }) => {
+export const BattleView: React.FC<BattleViewProps> = ({
+  gameData,
+  leaveBattle,
+}) => {
   const [gameState, setGameState] = useState<any>(gameData);
 
   const { socket, update } = SocketService as any;
@@ -170,98 +177,187 @@ export const BattleView: React.FC<BattleViewProps> = ({ gameData }) => {
         socket.gameData = { ...obj };
       });
   }, []);
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: ".5rem",
-      }}
-    >
-      <Frame style={{ display: "flex", gap: "1rem" }}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <EnemyStats enemy={gameState.enemy} />
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-end",
-          }}
-        >
-          <EnemyAction enemy={gameState.enemy} />
-        </div>
-      </Frame>
-      <Frame
+  if (!gameState.concluded) {
+    return (
+      <div
         style={{
           display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
+          flexDirection: "column",
+          gap: ".5rem",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <p>{gameState.spellReq && gameState.spellReq.join(" ")}</p>
-          <div style={{ display: "flex", minHeight: "5rem" }}>
-            {gameState.spellInput &&
-              gameState.spellInput.map((s: any) => {
-                switch (gameState.animation) {
-                  case "casting":
-                    return <Spell key={s}>{s}</Spell>;
-                  case "failed":
-                    return <FailedSpell key={s}>{s}</FailedSpell>;
-                  case "normal":
-                    return <p key={s}>{s}</p>;
-                }
-              })}
-          </div>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <EnemyStats enemy={gameState.player} />
-          </div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <EnemyAction enemy={gameState.player} />
-          </div>
-        </div>
-      </Frame>
-      <Frame style={{ width: "50%" }}>
-        <div
+        <Frame
           style={{
             display: "flex",
-            flexWrap: "wrap",
-            gap: ".5rem",
+            gap: "1rem",
+            minHeight: "5rem",
           }}
         >
-          {gameState.spellTable &&
-            gameState.spellTable.map((w: string) => {
-              if (gameState.spellInput.find((e: string) => e === w)) {
-                return (
-                  <WordBox
-                    style={{ cursor: "default", color: "black" }}
-                    key={w}
-                    clicked
-                  >
-                    {w}
-                  </WordBox>
-                );
-              } else {
-                return (
-                  <WordBox
-                    style={{ cursor: "grab" }}
-                    onClick={() => {
-                      if (gameState.player.action === "casting") {
-                        update({ type: "addWord", word: w, id: gameState.id });
-                      }
-                    }}
-                    key={w}
-                  >
-                    {w}
-                  </WordBox>
-                );
+          <div
+            style={{
+              display: "flex",
+              gap: "1rem",
+              minHeight: "5rem",
+              flexDirection: "column",
+            }}
+          >
+            <StatView enemy={gameState.enemy} />
+            <ActionView enemy={gameState.enemy} />
+          </div>
+          <img
+            style={{
+              objectFit: "cover",
+              width: "5rem",
+              animation: `${
+                gameState.enemy.action === "casting"
+                  ? `@keyframes {
+                  0%{
+                    translate(0px, 0px)
+                  }
+                  50%{
+                    translate(22px, 0px)
+                  }
+                  100%{
+                    translate(0px, 0px)
+                  }} 1s linear
+                  
+                 `
+                  : ""
+              }`,
+              transition: ".25s linear",
+            }}
+            src={`${gameState.enemy.name}.png`}
+          />
+        </Frame>
+
+        <Frame
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <p>{gameState.spellReq && gameState.spellReq.join(" ")}</p>
+            <div style={{ display: "flex", minHeight: "5rem", gap: ".5rem" }}>
+              {gameState.spellInput &&
+                gameState.spellInput.map((s: any) => {
+                  switch (gameState.animation) {
+                    case "casting":
+                      return <Spell key={s}>{s}</Spell>;
+                    case "failed":
+                      return <FailedSpell key={s}>{s}</FailedSpell>;
+                    case "normal":
+                      return <p key={s}>{s}</p>;
+                  }
+                })}
+            </div>
+          </div>
+        </Frame>
+        <div style={{ display: "flex", gap: "1rem", zIndex: 3 }}>
+          <Frame style={{ width: "50%" }}>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: ".5rem",
+                width: "100%",
+                height: "100%",
+                position: "relative",
+              }}
+            >
+              {gameState.spellTable &&
+                gameState.spellTable.map((w: string) => {
+                  if (gameState.spellInput.find((e: string) => e === w)) {
+                    return (
+                      <WordBox key={w} style={{ color: "black" }} clicked>
+                        {w}
+                      </WordBox>
+                    );
+                  } else {
+                    return (
+                      <WordBox
+                        key={w}
+                        onClick={() => {
+                          if (gameState.player.action === "casting") {
+                            update({
+                              type: "addWord",
+                              word: w,
+                              id: gameState.id,
+                            });
+                          }
+                        }}
+                      >
+                        {w}
+                      </WordBox>
+                    );
+                  }
+                })}
+            </div>
+          </Frame>
+
+          <Frame
+            style={{
+              display: "flex",
+              gap: "1rem",
+              minHeight: "5rem",
+              flexDirection: "column",
+            }}
+          >
+            <StatView enemy={gameState.player} />
+
+            <ActionView enemy={gameState.player} />
+            <span
+              style={{
+                cursor: "default",
+                border: `${
+                  gameState.player.spell === "missle" ? "2px solid white" : ""
+                }`,
+              }}
+              onClick={() =>
+                update({
+                  type: "spellSelect",
+                  spell: "missle",
+                  id: gameState.id,
+                })
               }
-            })}
+            >
+              Missle
+            </span>
+            <span
+              style={{
+                cursor: "default",
+                border: `${
+                  gameState.player.spell === "heal" ? "2px solid white" : ""
+                }`,
+              }}
+              onClick={() =>
+                update({
+                  type: "spellSelect",
+                  spell: "heal",
+                  id: gameState.id,
+                })
+              }
+            >
+              Heal
+            </span>
+          </Frame>
         </div>
+      </div>
+    );
+  } else {
+    return (
+      <Frame
+        onClick={() => leaveBattle()}
+        style={{
+          position: "absolute",
+          zIndex: 3,
+          left: "50%",
+          cursor: "default",
+        }}
+      >
+        {gameState.score}
       </Frame>
-    </div>
-  );
+    );
+  }
 };

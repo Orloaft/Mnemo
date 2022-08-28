@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 const HpBar = styled.div`
   background-color: aliceblue;
-  padding: 0.25rem;
-  height: 1.5rem;
+  padding: 0.15rem;
+  height: 0.75rem;
   width: 10rem;
 `;
 const Hp = styled.div`
@@ -13,8 +13,9 @@ const Hp = styled.div`
   background-color: red;
   height: 100%;
 `;
-export const EnemyStats = ({ enemy }: any) => {
+export const StatView = ({ enemy }: any) => {
   const { life, maxLife, name } = enemy;
+
   return (
     <>
       {name}

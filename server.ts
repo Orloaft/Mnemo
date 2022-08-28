@@ -3,11 +3,10 @@ import express from "express";
 import next from "next";
 import getGameDataHandler, { gameDataProps } from "./gameData";
 import getGameActionHandler from "./gameActions";
-import gameData from "./gameData";
 
 // function that allows next.js to handle the server side code
 async function startServer() {
-  const nextJsApp = next({ dev: false, conf: { reactStrictMode: true } });
+  const nextJsApp = next({ dev: true, conf: { reactStrictMode: true } });
   await nextJsApp.prepare();
   const app = express();
   app.all("*", nextJsApp.getRequestHandler() as any);

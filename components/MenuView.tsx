@@ -65,6 +65,7 @@ export const MenuView: React.FC = () => {
   const [isBattle, setIsBattle] = useState(false);
   const { socket } = SocketService as any;
   const battleStart = () => {
+    console.log(socket.id);
     SocketService.initGame();
   };
   const leaveBattle = () => {

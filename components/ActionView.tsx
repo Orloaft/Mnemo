@@ -9,9 +9,9 @@ const MpBar = styled.div`
 const Mp = styled.div`
   background-color: yellow;
   height: 100%;
-  -webkit-transition: width 1s ease;
-  -o-transition: width 1s ease;
-  transition: width 1s ease;
+  -webkit-transition: width 1.25s linear;
+  -o-transition: width 1.25s linear;
+  transition: width 1.25s linear;
 `;
 
 export const ActionView = ({ enemy }: any) => {

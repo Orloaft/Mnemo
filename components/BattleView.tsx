@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { backgroundGradient, otherGradient } from "../utils/styleUtils";
 import { CharacterView, Frame } from "./CharacterView";
 import SocketService from "../SocketService";
@@ -16,6 +16,20 @@ interface BattleViewProps {
   gameData: any;
   leaveBattle: () => void;
 }
+const slide = keyframes`
+  0%{
+    translate(0px, 0px)
+  }
+  50%{
+    translate(22px, 0px)
+  }
+  100%{
+    translate(0px, 0px)
+  }`;
+const animationRule = css(
+  ["", " 1s linear;"] as any as TemplateStringsArray,
+  slide
+);
 const casting = keyframes`
  
     0% {
@@ -207,24 +221,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
           <img
             style={{
               objectFit: "cover",
-              width: "5rem",
-              animation: `${
-                gameState.enemy.action === "casting"
-                  ? `@keyframes {
-                  0%{
-                    translate(0px, 0px)
-                  }
-                  50%{
-                    translate(22px, 0px)
-                  }
-                  100%{
-                    translate(0px, 0px)
-                  }} 1s linear
-                  
-                 `
-                  : ""
-              }`,
-              transition: ".25s linear",
+              width: "6rem",
             }}
             src={`${gameState.enemy.name}.png`}
           />

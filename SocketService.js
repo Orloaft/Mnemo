@@ -11,8 +11,17 @@ class SocketService {
   }
   //method to initiate socket instance
   async connect() {
-    this.socket = io("/");
+    return new Promise((rs, rj) => {
+      this.socket = io();
+
+      if (!this.socket) return rj();
+
+      this.socket.on("connect", () => {
+        rs(this.socket);
+      });
+    });
   }
+
   async updateData(req) {
     this.socket.emit("update_req", this.socket.id, req);
   }

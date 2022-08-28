@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "ts-node server.ts",
     "build": "next build",
-    "start": "NODE_ENV=production node main-server.js -p $PORT",
+    "start": "NODE_ENV=production ts-node server.ts -p $PORT",
     "heroku-postbuild": "npm run build",
     "lint": "next lint"
   },

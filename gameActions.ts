@@ -19,18 +19,26 @@ export function getGameActionHandler() {
         } else {
           gameData && (gameData.time += 1);
           if (gameData && gameData.player.action === "chanting") {
-            gameData && (gameData.player.actionPoints += 1);
+            gameData && (gameData.player.actionPoints += 3);
           }
           if (gameData && gameData.enemy.action === "chanting") {
             gameData.enemy.actionPoints += 1;
-          }
-          if (gameData && gameData.enemy.action === "casting") {
+            if (gameData.enemy.actionPoints % 5 === 0) {
+              gameData.enemy.spellInput.push(
+                [...gameData.spellTable]
+                  .sort(() => 0.5 - Math.random())
+                  .slice(0, 1)[0]
+              );
+              io.to(socket).emit("update_res", gameData);
+            }
           }
 
           if (gameData && gameData.enemy.actionPoints >= 15) {
             gameData.enemy.action = "casting";
+
             io.to(socket).emit("update_res", gameData);
             setTimeout(() => {
+              gameData.enemy.spellInput = [];
               gameData.enemy.actionPoints = 0;
               gameData.player.life -= 10;
               gameData.enemy.action = "chanting";

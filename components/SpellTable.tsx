@@ -2,6 +2,8 @@ import styled, { keyframes } from "styled-components";
 import { setOnKeyDown, useMountEffect } from "../utils/jsUtils";
 import { otherGradient, backgroundGradient } from "../utils/styleUtils";
 import { Frame } from "./CharacterView";
+import SocketService from "../SocketService";
+
 const wiggle = keyframes`
 0% { transform: rotate(0deg); }
 25% { transform: rotate(-5deg); }
@@ -22,6 +24,7 @@ const Table = styled.div`
 `;
 const WordBox = styled(Frame)`
   cursor: default;
+  min-width: 20%;
   //   animation: ${wiggle};
   //   animation-duration: 4s;
   //   animation-iteration-count: infinite;
@@ -33,7 +36,7 @@ interface clickProps {
   clicked?: boolean;
   onClick?: () => void;
 }
-export const SpellTable = ({ spells, spellInput, clickHandler }) => {
+export const SpellTable = ({ id, spells, spellInput, clickHandler }) => {
   function installUndoHandler() {
     setOnKeyDown(async (e) => {
       if (e.key === "q") {
@@ -62,6 +65,22 @@ export const SpellTable = ({ spells, spellInput, clickHandler }) => {
       }
       if (e.key === "f") {
         clickHandler("aut");
+      }
+      if (e.keyCode === 38) {
+        console.log({ es: e });
+        SocketService.update({
+          type: "spellSelect",
+          spell: "missle",
+          id: id,
+        });
+      }
+      if (e.keyCode === 40) {
+        console.log({ es: e });
+        SocketService.update({
+          type: "spellSelect",
+          spell: "heal",
+          id: id,
+        });
       }
     });
   }

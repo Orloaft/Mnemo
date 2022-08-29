@@ -19,7 +19,7 @@ export const Avatar = () => {
         alt="placeholder"
         style={{ height: "5rem", width: "5rem" }}
       ></img>
-      <Name>Alex Orlow</Name>
+      <Name>{localStorage.getItem("username")}</Name>
     </Frame>
   );
 };

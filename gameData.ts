@@ -20,6 +20,7 @@ export interface gameDataProps {
     actionPoints: number;
     action: string;
     dmg: number;
+    spellInput: string[];
   };
   spellTable: string[];
   spellInput: string[];
@@ -48,6 +49,7 @@ const gamesArr: {
     actionPoints: number;
     action: string;
     dmg: number;
+    spellInput: string[];
   };
   spellTable: string[];
   spellInput: string[];

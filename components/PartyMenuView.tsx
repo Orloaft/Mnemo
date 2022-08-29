@@ -116,24 +116,23 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
             <OptionWrap>
               <MenuSpan
                 onClick={() => {
-                  setBackContent(`Javascript, React, HTML/CSS,
-                  Node, Express, MySQL, Web APIs,
-                  (DOM)API, Agile development,
-                  User Authentication,
-                  OAuth, Heroku, GitHub, Jest,
-                  Gdscript, Trux and SonicSheets.`);
+                  setBackContent(`Heal: recover 30 player hp
+                                  Missle: deal 30 damage to target`);
                 }}
               >
                 Abilities
               </MenuSpan>
               <MenuSpan
                 onClick={() => {
-                  setBackContent(`
-	
-                Dell Latitude E7470 14in Laptop, Core i5-6300U 2.4GHz, 8GB Ram, 256GB SSD, Windows 10 Pro 64bit`);
+                  setBackContent(
+                    `QWERASDF
+                  Missle - up arrow
+                  Heal - down arrow
+	                         `
+                  );
                 }}
               >
-                Items
+                Controls
               </MenuSpan>
               <MenuSpan>Magic</MenuSpan>
               <MenuSpan>GF</MenuSpan>

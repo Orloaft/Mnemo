@@ -3,6 +3,7 @@ import styled, { keyframes } from "styled-components";
 import { LoadingView } from "./LoadingView";
 import { MenuView } from "./MenuView";
 import { Frame } from "./CharacterView";
+import { SignIn } from "./SignIn";
 const hoverRainbow = keyframes`
  
 0% {
@@ -75,39 +76,20 @@ export const LoadButton = styled(Frame)`
 export const MainView: React.FC = () => {
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  const [credentials, setCredentials] = useState(null);
 
   function toggle() {
     setIsActive(!isActive);
   }
 
-  function reset() {
-    setSeconds(0);
-    setIsActive(false);
+  function logIn() {
+    setCredentials(window.localStorage.getItem("username"));
   }
 
-  React.useEffect(() => {
-    let interval: any = null;
-    if (isActive) {
-      interval = setInterval(() => {
-        setSeconds((seconds) => seconds + 1);
-      }, 25);
-      if (seconds === 100) {
-        toggle();
-      }
-    } else if (!isActive && seconds !== 0) {
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [isActive, seconds]);
-
-  if (seconds < 100) {
+  if (credentials === null) {
     return (
       <>
-        {(isActive && <LoadingView progress={`${seconds}%`} />) || (
-          <LoadButton onClick={() => toggle()}>
-            <span>Load Page</span>
-          </LoadButton>
-        )}
+        <SignIn logIn={logIn} />
       </>
     );
   } else {

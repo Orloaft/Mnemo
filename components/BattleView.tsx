@@ -8,6 +8,8 @@ import { ActionView } from "./ActionView";
 
 import { SpellTable } from "./SpellTable";
 import { relative } from "path";
+import { setOnKeyDown, useMountEffect } from "../utils/jsUtils";
+import { getEnemy } from "../enemies";
 
 interface BattleViewProps {
   gameData: any;
@@ -176,6 +178,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
   const [gameState, setGameState] = useState<any>(gameData);
 
   const { socket, update } = SocketService as any;
+
   function spellClickHandle(w: string) {
     update({
       type: "addWord",
@@ -183,6 +186,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
       id: gameState.id,
     });
   }
+
   useEffect(() => {
     socket &&
       socket.on("update_res", (obj: object) => {
@@ -230,6 +234,16 @@ export const BattleView: React.FC<BattleViewProps> = ({
               src={`${gameState.enemy.name}.png`}
             />
           </Frame>
+          {gameState.enemy.spellInput.map((s) => {
+            switch (gameState.enemy.action) {
+              case "casting":
+                return <Spell key={s}>{s}</Spell>;
+              case "failed":
+                return <FailedSpell key={s}>{s}</FailedSpell>;
+              case "chanting":
+                return <p key={s}>{s}</p>;
+            }
+          })}
         </Frame>
 
         <Frame
@@ -259,6 +273,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
         <div style={{ display: "flex", gap: "1rem", zIndex: 3 }}>
           <Frame style={{ width: "50%" }}>
             <SpellTable
+              id={gameState.id}
               spells={gameState.spellTable}
               spellInput={gameState.spellInput}
               clickHandler={spellClickHandle}

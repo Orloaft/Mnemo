@@ -19,7 +19,7 @@ export const ActionView = ({ enemy }: any) => {
   return (
     <>
       <MpBar>
-        <Mp style={{ width: `${(actionPoints / (15 - speed)) * 101}%` }} />
+        <Mp style={{ width: `${(actionPoints / 15) * 100}%` }} />
       </MpBar>
     </>
   );

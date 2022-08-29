@@ -5,13 +5,10 @@ import { CharacterView, Frame } from "./CharacterView";
 import SocketService from "../SocketService";
 import { StatView } from "./StatView";
 import { ActionView } from "./ActionView";
-import slime from "../public/slime.png";
-import { border } from "@mui/system";
 
-interface clickProps {
-  clicked?: boolean;
-  onClick?: () => void;
-}
+import { SpellTable } from "./SpellTable";
+import { relative } from "path";
+
 interface BattleViewProps {
   gameData: any;
   leaveBattle: () => void;
@@ -142,11 +139,7 @@ const FailedSpell: any = styled.p`
   animation-iteration-count: once;
   animation-timing-function: linear;
 `;
-const WordBox = styled(Frame)`
-  cursor: default;
-  background: ${(props: clickProps) =>
-    props.clicked ? otherGradient : backgroundGradient};
-`;
+
 const emerge = keyframes`
 0%{ 
     transform: scale(0)
@@ -183,7 +176,13 @@ export const BattleView: React.FC<BattleViewProps> = ({
   const [gameState, setGameState] = useState<any>(gameData);
 
   const { socket, update } = SocketService as any;
-
+  function spellClickHandle(w: string) {
+    update({
+      type: "addWord",
+      word: w,
+      id: gameState.id,
+    });
+  }
   useEffect(() => {
     socket &&
       socket.on("update_res", (obj: object) => {
@@ -218,13 +217,19 @@ export const BattleView: React.FC<BattleViewProps> = ({
             <StatView enemy={gameState.enemy} />
             <ActionView enemy={gameState.enemy} />
           </div>
-          <img
+          <Frame
             style={{
-              objectFit: "cover",
-              width: "6rem",
+              background: "linear-gradient(to right, #868f96 0%, #596164 100%)",
             }}
-            src={`${gameState.enemy.name}.png`}
-          />
+          >
+            <img
+              style={{
+                objectFit: "cover",
+                width: "6rem",
+              }}
+              src={`${gameState.enemy.name}.png`}
+            />
+          </Frame>
         </Frame>
 
         <Frame
@@ -253,44 +258,11 @@ export const BattleView: React.FC<BattleViewProps> = ({
         </Frame>
         <div style={{ display: "flex", gap: "1rem", zIndex: 3 }}>
           <Frame style={{ width: "50%" }}>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: ".5rem",
-                width: "100%",
-                height: "100%",
-                position: "relative",
-              }}
-            >
-              {gameState.spellTable &&
-                gameState.spellTable.map((w: string) => {
-                  if (gameState.spellInput.find((e: string) => e === w)) {
-                    return (
-                      <WordBox key={w} style={{ color: "black" }} clicked>
-                        {w}
-                      </WordBox>
-                    );
-                  } else {
-                    return (
-                      <WordBox
-                        key={w}
-                        onClick={() => {
-                          if (gameState.player.action === "casting") {
-                            update({
-                              type: "addWord",
-                              word: w,
-                              id: gameState.id,
-                            });
-                          }
-                        }}
-                      >
-                        {w}
-                      </WordBox>
-                    );
-                  }
-                })}
-            </div>
+            <SpellTable
+              spells={gameState.spellTable}
+              spellInput={gameState.spellInput}
+              clickHandler={spellClickHandle}
+            />
           </Frame>
 
           <Frame

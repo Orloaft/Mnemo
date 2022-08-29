@@ -27,10 +27,7 @@ export function getGameActionHandler() {
           if (gameData && gameData.enemy.action === "casting") {
           }
 
-          if (
-            gameData &&
-            gameData.enemy.actionPoints >= 15 - gameData.enemy.speed
-          ) {
+          if (gameData && gameData.enemy.actionPoints >= 15) {
             gameData.enemy.action = "casting";
             io.to(socket).emit("update_res", gameData);
             setTimeout(() => {
@@ -40,10 +37,7 @@ export function getGameActionHandler() {
               io.to(socket).emit("update_res", gameData);
             }, 1000);
           }
-          if (
-            gameData &&
-            gameData.player.actionPoints >= 15 - gameData.player.speed
-          ) {
+          if (gameData && gameData.player.actionPoints >= 15) {
             setTimeout(() => {
               gameData.player.action = "casting";
             }, 1000);
@@ -67,7 +61,9 @@ export function getGameActionHandler() {
           io.to(socketId).emit("update_res", gameData);
 
         case "addWord":
-          gameData && gameData.spellInput.push(req.word);
+          gameData.player.actionPoints >= 15 &&
+            !gameData.spellInput.find((w) => w === req.word) &&
+            gameData.spellInput.push(req.word);
           if (
             gameData &&
             gameData.spellInput.length === gameData.spellReq.length

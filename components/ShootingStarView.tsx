@@ -20,7 +20,7 @@ const ShootingStarContainer = styled.section`
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
 `;
 const ShootingStar = styled.span`
   position: absolute;

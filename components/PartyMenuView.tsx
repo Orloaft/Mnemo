@@ -6,7 +6,6 @@ import { BackCard, FrontCard, InnerCard } from "./CharacterView";
 
 const PartyMenu = styled.div`
   z-index: 4;
-  height: 100%;
   width: auto;
   min-width: 15rem;
   flex-direction: column;
@@ -87,10 +86,10 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100%;
+    height: 15rem;
     border: 2px solid #ffebcd;
     color: #ffebcd;
-    borderradius: 0.25rem;
+    border-radius: 0.25rem;
     padding: 0.5rem;
     zindex: 2;
     background: ${backgroundGradient};
@@ -140,7 +139,7 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
             </OptionWrap>
           </FrontCard>
           <BackCard
-            style={{ height: "100%" }}
+            style={{ height: "15rem" }}
             onMouseLeave={() => setTimeout(() => setBackContent(""), 1000)}
           >
             {backContent}

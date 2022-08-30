@@ -34,15 +34,15 @@ const PartyWrap = styled.div`
 `;
 const Box = styled.div`
   position: relative;
-  height: 100%;
-  min-height: 8rem;
+  height: 50%;
+
   width: auto;
 `;
 const MenuContainer = styled.div`
-  width: 75%;
   display: flex;
   gap: 0.5rem;
   flex-direction: column;
+
   animation: ${emerge};
   animation-duration: 0.5s;
   animation-iteration-count: once;
@@ -87,33 +87,13 @@ export const MenuView: React.FC = () => {
   } else {
     return (
       <MenuContainer>
-        <div
-          style={{
-            display: "flex",
-            width: "41%",
-            zIndex: 3,
-            justifyContent: "center",
-          }}
-        >
-          <PartyWrap>
-            <Box>
-              <LoadButton onClick={() => battleStart()}>Battle</LoadButton>
-            </Box>
-            <Box>
+        <PartyWrap>
+          <LoadButton onClick={() => battleStart()}>Battle</LoadButton>
+          {/* <Box>
               <CharacterView character={{ life: 100, maxLife: 100 }} />
-            </Box>
-          </PartyWrap>
-        </div>
-        <div
-          style={{
-            justifyContent: "center",
-            display: "flex",
-            width: "59%",
-            zIndex: 3,
-          }}
-        >
-          <PartyMenuView />
-        </div>
+            </Box> */}{" "}
+        </PartyWrap>
+        <PartyMenuView />
       </MenuContainer>
     );
   }

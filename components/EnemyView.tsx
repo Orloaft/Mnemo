@@ -4,6 +4,7 @@ import { ActionView } from "./ActionView";
 import { FailedSpell, Spell } from "./BattleView";
 import { Frame } from "./CharacterView";
 import { StatView } from "./StatView";
+import SocketService from "../SocketService";
 const emerge = keyframes`
 0%{ 
     transform: scale(0)
@@ -34,7 +35,7 @@ const EnemyImage = styled(Frame)`
   border-color: ${(props: { targeted: boolean }) =>
     props.targeted ? `white` : `black`};
 `;
-export const EnemyView = ({ enemies }) => {
+export const EnemyView = ({ enemies, id }) => {
   return (
     <Frame
       style={{
@@ -43,7 +44,7 @@ export const EnemyView = ({ enemies }) => {
         minHeight: "5rem",
       }}
     >
-      {enemies.map((enemy) => {
+      {enemies.map((enemy, i) => {
         if (enemy.targeted) {
           return (
             <EnemyImage key={uuid()} targeted={true}>
@@ -65,9 +66,7 @@ export const EnemyView = ({ enemies }) => {
                 <StatView enemy={enemy} />
                 <ActionView enemy={enemy} />
               </div>{" "}
-              <div
-                style={{ position: "absolute", transform: "translate(10rem)" }}
-              >
+              <div style={{ display: "flex", flexDirection: "column" }}>
                 {enemy.spellInput.map((s) => {
                   switch (enemy.action) {
                     case "casting":
@@ -83,7 +82,17 @@ export const EnemyView = ({ enemies }) => {
           );
         }
         return (
-          <EnemyImage key={uuid()} targeted={false}>
+          <EnemyImage
+            onClick={() => {
+              SocketService.update({
+                type: "enemyClicked",
+                targetIndex: i,
+                id: id,
+              });
+            }}
+            key={uuid()}
+            targeted={false}
+          >
             <img
               style={{
                 objectFit: "cover",
@@ -102,9 +111,7 @@ export const EnemyView = ({ enemies }) => {
               <StatView enemy={enemy} />
               <ActionView enemy={enemy} />
             </div>{" "}
-            <div
-              style={{ position: "absolute", transform: "translate(10rem)" }}
-            >
+            <div style={{ display: "flex", flexDirection: "column" }}>
               {enemy.spellInput.map((s) => {
                 switch (enemy.action) {
                   case "casting":

@@ -72,6 +72,13 @@ export function getGameActionHandler() {
           break;
         case "animate":
           gameData && (gameData.animation = req.animation);
+          break;
+        case "enemyClicked":
+          gameData.player.target = req.targetIndex;
+          gameData.enemies.find((enemy) => enemy.targeted).targeted = false;
+          gameData.enemies[req.targetIndex].targeted = true;
+          io.to(socketId).emit("update_res", gameData);
+          break;
         case "enemySelect":
           let target = gameData.player.target;
 
@@ -91,7 +98,7 @@ export function getGameActionHandler() {
               gameData.enemies[target + 1].targeted = true;
             }
           }
-          console.log(target);
+
           io.to(socketId).emit("update_res", gameData);
           break;
         case "clearMatch":

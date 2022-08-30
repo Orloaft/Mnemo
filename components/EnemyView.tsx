@@ -26,12 +26,14 @@ const emerge = keyframes`
 }
 `;
 const EnemyImage = styled(Frame)`
+  margin: 0;
+  padding: 0.25rem;
   animation: ${emerge};
   animationduration: 2s;
   animationiterationcount: once;
   background: linear-gradient(to right, #868f96 0%, #596164 100%);
   display: flex;
-  flex-direction: column;
+  width: 30%;
   border-color: ${(props: { targeted: boolean }) =>
     props.targeted ? `white` : `black`};
 `;
@@ -40,8 +42,7 @@ export const EnemyView = ({ enemies, id }) => {
     <Frame
       style={{
         display: "flex",
-        gap: "1rem",
-        minHeight: "5rem",
+        gap: ".1rem",
       }}
     >
       {enemies.map((enemy, i) => {
@@ -51,38 +52,63 @@ export const EnemyView = ({ enemies, id }) => {
               <img
                 style={{
                   objectFit: "cover",
-                  width: "6rem",
                 }}
                 src={`${enemy.name}.png`}
               />
               <div
                 style={{
                   display: "flex",
-                  gap: "1rem",
+                  gap: ".1rem",
                   minHeight: "5rem",
                   flexDirection: "column",
+                  margin: 0,
+                  padding: 0,
                 }}
               >
                 <StatView enemy={enemy} />
                 <ActionView enemy={enemy} />
-              </div>{" "}
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                {enemy.spellInput.map((s) => {
-                  switch (enemy.action) {
-                    case "casting":
-                      return <Spell key={uuid()}>{s}</Spell>;
-                    case "failed":
-                      return <FailedSpell key={uuid()}>{s}</FailedSpell>;
-                    case "chanting":
-                      return <p key={uuid()}>{s}</p>;
-                  }
-                })}
+                <div
+                  style={{
+                    margin: 0,
+                    padding: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    flexWrap: "wrap",
+                    fontSize: ".5rem",
+                    maxWidth: "100%",
+                    gap: ".25rem",
+                  }}
+                >
+                  {enemy.spellInput.map((s) => {
+                    switch (enemy.action) {
+                      case "casting":
+                        return (
+                          <Spell key={uuid()} style={{ margin: 0 }}>
+                            {s}
+                          </Spell>
+                        );
+                      case "failed":
+                        return (
+                          <FailedSpell key={uuid()} style={{ margin: 0 }}>
+                            {s}
+                          </FailedSpell>
+                        );
+                      case "chanting":
+                        return (
+                          <p key={uuid()} style={{ margin: 0 }}>
+                            {s}
+                          </p>
+                        );
+                    }
+                  })}
+                </div>
               </div>
             </EnemyImage>
           );
         }
         return (
           <EnemyImage
+            key={uuid()}
             onClick={() => {
               SocketService.update({
                 type: "enemyClicked",
@@ -90,38 +116,59 @@ export const EnemyView = ({ enemies, id }) => {
                 id: id,
               });
             }}
-            key={uuid()}
             targeted={false}
           >
             <img
               style={{
                 objectFit: "cover",
-                width: "6rem",
               }}
               src={`${enemy.name}.png`}
             />
             <div
               style={{
                 display: "flex",
-                gap: "1rem",
+                gap: ".1rem",
                 minHeight: "5rem",
                 flexDirection: "column",
               }}
             >
               <StatView enemy={enemy} />
               <ActionView enemy={enemy} />
-            </div>{" "}
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              {enemy.spellInput.map((s) => {
-                switch (enemy.action) {
-                  case "casting":
-                    return <Spell key={uuid()}>{s}</Spell>;
-                  case "failed":
-                    return <FailedSpell key={uuid()}>{s}</FailedSpell>;
-                  case "chanting":
-                    return <p key={uuid()}>{s}</p>;
-                }
-              })}
+              <div
+                style={{
+                  margin: 0,
+                  padding: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                  fontSize: ".5rem",
+                  maxWidth: "100%",
+                  gap: ".25rem",
+                }}
+              >
+                {enemy.spellInput.map((s) => {
+                  switch (enemy.action) {
+                    case "casting":
+                      return (
+                        <Spell key={uuid()} style={{ margin: 0 }}>
+                          {s}
+                        </Spell>
+                      );
+                    case "failed":
+                      return (
+                        <FailedSpell key={uuid()} style={{ margin: 0 }}>
+                          {s}
+                        </FailedSpell>
+                      );
+                    case "chanting":
+                      return (
+                        <p key={uuid()} style={{ margin: 0 }}>
+                          {s}
+                        </p>
+                      );
+                  }
+                })}
+              </div>
             </div>
           </EnemyImage>
         );

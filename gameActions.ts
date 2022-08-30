@@ -8,6 +8,7 @@ export function getGameActionHandler() {
       // Update the count down every 1 second
       const x = setInterval(() => {
         if (gameData.player.life <= 0) {
+          gameData.enemies.forEach((enemy) => (enemy.spellInput = []));
           gameData.concluded = true;
           gameData.score = "player defeated";
           io.to(socket).emit("update_res", gameData);

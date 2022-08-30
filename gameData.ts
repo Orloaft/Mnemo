@@ -97,7 +97,8 @@ function getGameDataHandler() {
         score: "",
       };
       gamesArr.push(newGame);
-      console.log(newGame.id);
+      newGame.enemies.forEach((enemy) => (enemy.spellInput = []));
+      console.log(newGame.enemies[0].spellInput);
       return newGame;
     },
     getGame: function (id: string) {
@@ -108,8 +109,10 @@ function getGameDataHandler() {
       if (game.round + 1 < rounds.length) {
         game.round += 1;
         game.enemies = [{ ...rounds[game.round] }];
+        game.enemies.forEach((enemy) => (enemy.spellInput = []));
       } else {
         game.concluded = true;
+        game.enemies.forEach((enemy) => (enemy.spellInput = []));
         game.score = "Congratulations, you eviscerated all enemies!";
       }
     },

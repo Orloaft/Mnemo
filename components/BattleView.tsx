@@ -37,41 +37,41 @@ const casting = keyframes`
       color: teal;
     }
     10% {
-      letter-spacing: 0.1rem;
+      letter-spacing: 0.01rem;
       color: aqua;
     }
     20% {
-      letter-spacing: 0.15rem;
+      letter-spacing: 0.015rem;
       color: rgb(234, 243, 243);
     }
   
     30% {
-      letter-spacing: 0.2rem;
+      letter-spacing: 0.02rem;
       color: rgb(215, 255, 106);
     }
   
     40% {
-      letter-spacing: 0.25rem;
+      letter-spacing: 0.025rem;
       color: rgb(255, 96, 189);
     }
     50% {
-      letter-spacing: 0.3rem;
+      letter-spacing: 0.03rem;
       color: rgb(255, 185, 153);
     }
     60% {
-      letter-spacing: 0.25rem;
+      letter-spacing: 0.025rem;
       color: blue;
     }
     70% {
-      letter-spacing: 0.2rem;
+      letter-spacing: 0.02rem;
       color: blueviolet;
     }
     80% {
-      letter-spacing: 0.15;
+      letter-spacing: 0.015;
       color: rgb(81, 247, 30);
     }
     90% {
-      letter-spacing: 0.1;
+      letter-spacing: 0.01;
       color: rgb(252, 220, 81);
     }
     100% {

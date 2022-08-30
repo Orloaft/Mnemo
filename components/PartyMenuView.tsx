@@ -128,6 +128,7 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
                     `QWERASDF
                   Missle - up arrow
                   Heal - down arrow
+                  Toggle target - left/right arrow
 	                         `
                   );
                 }}

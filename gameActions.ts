@@ -38,9 +38,13 @@ export function getGameActionHandler() {
 
             io.to(socket).emit("update_res", gameData);
             setTimeout(() => {
+              switch (gameData.enemy.spell) {
+                case "missle":
+                  gameData.player.life -= gameData.enemy.dmg;
+              }
               gameData.enemy.spellInput = [];
               gameData.enemy.actionPoints = 0;
-              gameData.player.life -= 10;
+
               gameData.enemy.action = "chanting";
               io.to(socket).emit("update_res", gameData);
             }, 1000);

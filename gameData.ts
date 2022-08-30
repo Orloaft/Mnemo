@@ -50,6 +50,7 @@ const gamesArr: {
     action: string;
     dmg: number;
     spellInput: string[];
+    spell: string;
   };
   spellTable: string[];
   spellInput: string[];

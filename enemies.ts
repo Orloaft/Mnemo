@@ -9,6 +9,7 @@ export const getEnemy = () => {
       action: "chanting",
       dmg: 5,
       spellInput: [],
+      spell: "missle",
     },
     {
       name: "turtle",
@@ -19,6 +20,7 @@ export const getEnemy = () => {
       action: "chanting",
       dmg: 10,
       spellInput: [],
+      spell: "missle",
     },
     {
       name: "skeleton",
@@ -29,6 +31,7 @@ export const getEnemy = () => {
       action: "chanting",
       dmg: 15,
       spellInput: [],
+      spell: "missle",
     },
     {
       name: "waspoid",
@@ -39,6 +42,7 @@ export const getEnemy = () => {
       action: "chanting",
       dmg: 20,
       spellInput: [],
+      spell: "missle",
     },
     {
       name: "drake",
@@ -49,6 +53,7 @@ export const getEnemy = () => {
       action: "chanting",
       dmg: 25,
       spellInput: [],
+      spell: "missle",
     },
     {
       name: "eye",
@@ -59,6 +64,7 @@ export const getEnemy = () => {
       action: "chanting",
       dmg: 30,
       spellInput: [],
+      spell: "missle",
     },
     {
       name: "ghoul",
@@ -69,6 +75,7 @@ export const getEnemy = () => {
       action: "chanting",
       dmg: 35,
       spellInput: [],
+      spell: "missle",
     },
     {
       name: "magus",
@@ -79,6 +86,7 @@ export const getEnemy = () => {
       action: "chanting",
       dmg: 40,
       spellInput: [],
+      spell: "missle",
     },
   ];
   return enemies;

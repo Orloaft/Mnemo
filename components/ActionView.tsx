@@ -3,8 +3,8 @@ import styled from "styled-components";
 const MpBar = styled.div`
   background-color: aliceblue;
   padding: 0.15rem;
-  height: 0.75rem;
-  width: 10rem;
+  height: 0.5rem;
+  width: 5rem;
 `;
 const Mp = styled.div`
   background-color: yellow;

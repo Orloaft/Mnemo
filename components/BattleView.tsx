@@ -10,6 +10,7 @@ import { SpellTable } from "./SpellTable";
 import { relative } from "path";
 import { setOnKeyDown, useMountEffect } from "../utils/jsUtils";
 import { getEnemy } from "../enemies";
+import { EnemyView } from "./EnemyView";
 
 interface BattleViewProps {
   gameData: any;
@@ -129,13 +130,13 @@ const miscast = keyframes`
     }
   
 `;
-const Spell: any = styled.p`
+export const Spell: any = styled.p`
   animation: ${casting};
   animation-duration: 1s;
   animation-iteration-count: once;
   animation-timing-function: linear;
 `;
-const FailedSpell: any = styled.p`
+export const FailedSpell: any = styled.p`
   animation: ${miscast};
   animation-duration: 1s;
   animation-iteration-count: once;
@@ -203,49 +204,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
           gap: ".5rem",
         }}
       >
-        <Frame
-          style={{
-            display: "flex",
-            gap: "1rem",
-            minHeight: "5rem",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              gap: "1rem",
-              minHeight: "5rem",
-              flexDirection: "column",
-            }}
-          >
-            <StatView enemy={gameState.enemy} />
-            <ActionView enemy={gameState.enemy} />
-          </div>
-          <Frame
-            style={{
-              background: "linear-gradient(to right, #868f96 0%, #596164 100%)",
-            }}
-          >
-            <img
-              style={{
-                objectFit: "cover",
-                width: "6rem",
-              }}
-              src={`${gameState.enemy.name}.png`}
-            />
-          </Frame>
-          {gameState.enemy.spellInput.map((s) => {
-            switch (gameState.enemy.action) {
-              case "casting":
-                return <Spell key={s}>{s}</Spell>;
-              case "failed":
-                return <FailedSpell key={s}>{s}</FailedSpell>;
-              case "chanting":
-                return <p key={s}>{s}</p>;
-            }
-          })}
-        </Frame>
-
+        <EnemyView enemy={gameState.enemy} />
         <Frame
           style={{
             display: "flex",
@@ -271,7 +230,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
           </div>
         </Frame>
         <div style={{ display: "flex", gap: "1rem", zIndex: 3 }}>
-          <Frame style={{ width: "50%" }}>
+          <Frame style={{ width: "60%" }}>
             <SpellTable
               id={gameState.id}
               spells={gameState.spellTable}

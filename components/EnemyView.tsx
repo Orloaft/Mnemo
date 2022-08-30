@@ -28,9 +28,7 @@ const emerge = keyframes`
 const EnemyImage = styled(Frame)`
   margin: 0;
   padding: 0.25rem;
-  animation: ${emerge};
-  animationduration: 2s;
-  animationiterationcount: once;
+
   background: linear-gradient(to right, #868f96 0%, #596164 100%);
   display: flex;
   width: 30%;
@@ -39,7 +37,7 @@ const EnemyImage = styled(Frame)`
 `;
 export const EnemyView = ({ enemies, id }) => {
   return (
-    <Frame
+    <div
       style={{
         display: "flex",
         gap: ".1rem",
@@ -77,6 +75,7 @@ export const EnemyView = ({ enemies, id }) => {
                     fontSize: ".5rem",
                     maxWidth: "100%",
                     gap: ".25rem",
+                    lineHeight: ".5rem",
                   }}
                 >
                   {enemy.spellInput.map((s) => {
@@ -144,6 +143,7 @@ export const EnemyView = ({ enemies, id }) => {
                   fontSize: ".5rem",
                   maxWidth: "100%",
                   gap: ".25rem",
+                  lineHeight: ".5rem",
                 }}
               >
                 {enemy.spellInput.map((s) => {
@@ -173,6 +173,6 @@ export const EnemyView = ({ enemies, id }) => {
           </EnemyImage>
         );
       })}
-    </Frame>
+    </div>
   );
 };

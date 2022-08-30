@@ -69,6 +69,9 @@ export function getGameActionHandler() {
       switch (req.type) {
         case "spellSelect":
           gameData.player.spell = req.spell;
+          gameData.spellReq = [...gameData.spellTable]
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 3);
           io.to(socketId).emit("update_res", gameData);
           break;
         case "animate":
@@ -76,7 +79,8 @@ export function getGameActionHandler() {
           break;
         case "enemyClicked":
           gameData.player.target = req.targetIndex;
-          gameData.enemies.find((enemy) => enemy.targeted).targeted = false;
+          gameData.enemies.find((enemy) => enemy.targeted) &&
+            (gameData.enemies.find((enemy) => enemy.targeted).targeted = false);
           gameData.enemies[req.targetIndex].targeted = true;
           io.to(socketId).emit("update_res", gameData);
           break;

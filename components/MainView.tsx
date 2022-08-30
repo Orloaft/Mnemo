@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { LoadingView } from "./LoadingView";
 import { MenuView } from "./MenuView";
@@ -85,7 +85,9 @@ export const MainView: React.FC = () => {
   function logIn() {
     setCredentials(window.localStorage.getItem("username"));
   }
-
+  useEffect(() => {
+    logIn();
+  });
   if (credentials === null) {
     return (
       <>

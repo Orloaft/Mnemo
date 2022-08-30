@@ -21,7 +21,9 @@ export const StatView = ({ enemy }: any) => {
       <span style={{ fontSize: "1rem" }}>{name}</span>
       <div>
         <HpBar>
-          <Hp style={{ width: `${(life / maxLife) * 100}%` }} />
+          <Hp
+            style={{ width: `${(life > 0 && (life / maxLife) * 100) || 0}%` }}
+          />
         </HpBar>
       </div>
     </>

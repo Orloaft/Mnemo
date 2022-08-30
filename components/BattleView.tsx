@@ -204,7 +204,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
           gap: ".5rem",
         }}
       >
-        <EnemyView enemy={gameState.enemy} />
+        <EnemyView enemies={gameState.enemies} />;
         <Frame
           style={{
             display: "flex",

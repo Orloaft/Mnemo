@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { uuid } from "uuidv4";
 import { ActionView } from "./ActionView";
 import { FailedSpell, Spell } from "./BattleView";
 import { Frame } from "./CharacterView";
@@ -30,8 +31,10 @@ const EnemyImage = styled(Frame)`
   background: linear-gradient(to right, #868f96 0%, #596164 100%);
   display: flex;
   flex-direction: column;
+  border-color: ${(props: { targeted: boolean }) =>
+    props.targeted ? `white` : `black`};
 `;
-export const EnemyView = ({ enemy }) => {
+export const EnemyView = ({ enemies }) => {
   return (
     <Frame
       style={{
@@ -40,38 +43,82 @@ export const EnemyView = ({ enemy }) => {
         minHeight: "5rem",
       }}
     >
-      <EnemyImage>
-        <img
-          style={{
-            objectFit: "cover",
-            width: "6rem",
-          }}
-          src={`${enemy.name}.png`}
-        />
-        <div
-          style={{
-            display: "flex",
-            gap: "1rem",
-            minHeight: "5rem",
-            flexDirection: "column",
-          }}
-        >
-          <StatView enemy={enemy} />
-          <ActionView enemy={enemy} />
-        </div>{" "}
-        <div style={{ position: "absolute", transform: "translate(10rem)" }}>
-          {enemy.spellInput.map((s) => {
-            switch (enemy.action) {
-              case "casting":
-                return <Spell key={s}>{s}</Spell>;
-              case "failed":
-                return <FailedSpell key={s}>{s}</FailedSpell>;
-              case "chanting":
-                return <p key={s}>{s}</p>;
-            }
-          })}
-        </div>
-      </EnemyImage>
+      {enemies.map((enemy) => {
+        if (enemy.targeted) {
+          return (
+            <EnemyImage key={uuid()} targeted={true}>
+              <img
+                style={{
+                  objectFit: "cover",
+                  width: "6rem",
+                }}
+                src={`${enemy.name}.png`}
+              />
+              <div
+                style={{
+                  display: "flex",
+                  gap: "1rem",
+                  minHeight: "5rem",
+                  flexDirection: "column",
+                }}
+              >
+                <StatView enemy={enemy} />
+                <ActionView enemy={enemy} />
+              </div>{" "}
+              <div
+                style={{ position: "absolute", transform: "translate(10rem)" }}
+              >
+                {enemy.spellInput.map((s) => {
+                  switch (enemy.action) {
+                    case "casting":
+                      return <Spell key={uuid()}>{s}</Spell>;
+                    case "failed":
+                      return <FailedSpell key={uuid()}>{s}</FailedSpell>;
+                    case "chanting":
+                      return <p key={uuid()}>{s}</p>;
+                  }
+                })}
+              </div>
+            </EnemyImage>
+          );
+        }
+        return (
+          <EnemyImage key={uuid()} targeted={false}>
+            <img
+              style={{
+                objectFit: "cover",
+                width: "6rem",
+              }}
+              src={`${enemy.name}.png`}
+            />
+            <div
+              style={{
+                display: "flex",
+                gap: "1rem",
+                minHeight: "5rem",
+                flexDirection: "column",
+              }}
+            >
+              <StatView enemy={enemy} />
+              <ActionView enemy={enemy} />
+            </div>{" "}
+            <div
+              style={{ position: "absolute", transform: "translate(10rem)" }}
+            >
+              {enemy.spellInput.map((s) => {
+                switch (enemy.action) {
+                  case "casting":
+                    return <Spell key={uuid()}>{s}</Spell>;
+                  case "failed":
+                    return <FailedSpell key={uuid()}>{s}</FailedSpell>;
+                  case "chanting":
+                    return <p key={uuid()}>{s}</p>;
+                }
+              })}
+            </div>
+          </EnemyImage>
+        );
+      })}
     </Frame>
   );
 };

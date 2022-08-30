@@ -2,14 +2,15 @@ export const getEnemy = () => {
   let enemies = [
     {
       name: "slime",
-      life: 20,
-      maxLife: 20,
+      life: 30,
+      maxLife: 30,
       speed: 5,
       actionPoints: 0,
       action: "chanting",
       dmg: 5,
       spellInput: [],
       spell: "missle",
+      targeted: false,
     },
     {
       name: "turtle",
@@ -21,6 +22,7 @@ export const getEnemy = () => {
       dmg: 10,
       spellInput: [],
       spell: "missle",
+      targeted: false,
     },
     {
       name: "skeleton",
@@ -32,6 +34,7 @@ export const getEnemy = () => {
       dmg: 15,
       spellInput: [],
       spell: "missle",
+      targeted: false,
     },
     {
       name: "waspoid",
@@ -43,6 +46,7 @@ export const getEnemy = () => {
       dmg: 20,
       spellInput: [],
       spell: "missle",
+      targeted: false,
     },
     {
       name: "drake",
@@ -54,6 +58,7 @@ export const getEnemy = () => {
       dmg: 25,
       spellInput: [],
       spell: "missle",
+      targeted: false,
     },
     {
       name: "eye",
@@ -65,6 +70,7 @@ export const getEnemy = () => {
       dmg: 30,
       spellInput: [],
       spell: "missle",
+      targeted: false,
     },
     {
       name: "ghoul",
@@ -76,6 +82,7 @@ export const getEnemy = () => {
       dmg: 35,
       spellInput: [],
       spell: "missle",
+      targeted: false,
     },
     {
       name: "magus",
@@ -87,6 +94,7 @@ export const getEnemy = () => {
       dmg: 40,
       spellInput: [],
       spell: "missle",
+      targeted: false,
     },
   ];
   return enemies;

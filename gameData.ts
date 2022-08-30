@@ -11,8 +11,9 @@ export interface gameDataProps {
     actionPoints: number;
     action: string;
     spell: string;
+    target: number;
   };
-  enemy: {
+  enemies: {
     name: string;
     life: number;
     maxLife: number;
@@ -21,7 +22,8 @@ export interface gameDataProps {
     action: string;
     dmg: number;
     spellInput: string[];
-  };
+    targeted: boolean;
+  }[];
   spellTable: string[];
   spellInput: string[];
   spellReq: string[];
@@ -40,8 +42,9 @@ const gamesArr: {
     actionPoints: number;
     action: string;
     spell: string;
+    target: number;
   };
-  enemy: {
+  enemies: {
     name: string;
     life: number;
     maxLife: number;
@@ -51,7 +54,8 @@ const gamesArr: {
     dmg: number;
     spellInput: string[];
     spell: string;
-  };
+    targeted: boolean;
+  }[];
   spellTable: string[];
   spellInput: string[];
   spellReq: string[];
@@ -73,8 +77,9 @@ function getGameDataHandler() {
           actionPoints: 0,
           action: "chanting",
           spell: "missle",
+          target: 0,
         },
-        enemy: { ...rounds[0] },
+        enemies: [{ ...rounds[0] }, { ...rounds[1] }, { ...rounds[2] }],
         spellTable: [
           "lorem",
           "ipsum",
@@ -102,7 +107,7 @@ function getGameDataHandler() {
       let game = gamesArr.find((game) => game.id === id);
       if (game.round + 1 < rounds.length) {
         game.round += 1;
-        game.enemy = { ...rounds[game.round] };
+        game.enemies = [{ ...rounds[game.round] }];
       } else {
         game.concluded = true;
         game.score = "Congratulations, you eviscerated all enemies!";

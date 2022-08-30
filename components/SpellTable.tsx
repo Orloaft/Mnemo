@@ -82,6 +82,22 @@ export const SpellTable = ({ id, spells, spellInput, clickHandler }) => {
           id: id,
         });
       }
+      if (e.keyCode === 37) {
+        console.log({ es: e });
+        SocketService.update({
+          type: "enemySelect",
+          direction: "left",
+          id: id,
+        });
+      }
+      if (e.keyCode === 39) {
+        console.log({ es: e });
+        SocketService.update({
+          type: "enemySelect",
+          direction: "right",
+          id: id,
+        });
+      }
     });
   }
   useMountEffect(() => {

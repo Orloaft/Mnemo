@@ -16,11 +16,15 @@ const animate = keyframes`
 `;
 
 const ShootingStarContainer = styled.section`
+  display: none;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  @media (min-width: 48rem) {
+    display: initial;
+  }
 `;
 const ShootingStar = styled.span`
   position: absolute;

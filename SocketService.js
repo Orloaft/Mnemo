@@ -6,6 +6,10 @@ class SocketService {
   socket = null;
   gameData = null;
   update = this.updateData.bind(this);
+  closeGame = this.closeGame.bind(this);
+  async closeGame() {
+    this.socket.emit("delete_gameData", this.gameData.id);
+  }
   async initGame() {
     this.socket.emit(
       "init_gameData",

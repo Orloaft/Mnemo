@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
-import { backgroundGradient, otherGradient } from "../utils/styleUtils";
-import { CharacterView, Frame } from "./CharacterView";
+
+import { Frame } from "./CharacterView";
 import SocketService from "../SocketService";
 import { StatView } from "./StatView";
 import { ActionView } from "./ActionView";
 
 import { SpellTable } from "./SpellTable";
-import { relative } from "path";
-import { setOnKeyDown, useMountEffect } from "../utils/jsUtils";
-import { getEnemy } from "../enemies";
+
 import { EnemyView } from "./EnemyView";
 
 interface BattleViewProps {
@@ -26,10 +24,7 @@ const slide = keyframes`
   100%{
     translate(0px, 0px)
   }`;
-const animationRule = css(
-  ["", " 1s linear;"] as any as TemplateStringsArray,
-  slide
-);
+
 const casting = keyframes`
  
     0% {
@@ -195,7 +190,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
         socket.gameData = { ...obj };
       });
   }, []);
-  if (!gameState.concluded) {
+  if (!gameState.concluded && !gameState.paused) {
     return (
       <div
         style={{
@@ -297,14 +292,35 @@ export const BattleView: React.FC<BattleViewProps> = ({
         </div>
       </div>
     );
-  } else {
+  } else if (gameState.paused) {
     return (
       <Frame
-        onClick={() => leaveBattle()}
+        onClick={() => update({ type: "pause", id: gameState.id })}
         style={{
           position: "absolute",
           zIndex: 3,
-          left: "50%",
+          left: "25%",
+          top: "25%",
+          cursor: "default",
+        }}
+      >
+        PAUSED
+      </Frame>
+    );
+  } else {
+    return (
+      <Frame
+        onClick={() => {
+          leaveBattle();
+          // update({ type: "clearMatch", id: gameState.id });
+
+          console.log(gameState);
+        }}
+        style={{
+          position: "absolute",
+          zIndex: 3,
+          left: "25%",
+          top: "25%",
           cursor: "default",
         }}
       >

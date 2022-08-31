@@ -20,6 +20,9 @@ async function startServer() {
     socket.on("disconnecting", () => {
       console.log(socket.rooms); // the Set contains at least the socket ID
     });
+    socket.on("delete_gameData", (id) => {
+      getGameDataHandler.removeGame(id);
+    });
     socket.on("init_gameData", (id: any, name: string) => {
       let newGame: gameDataProps = getGameDataHandler.initGame();
       getGameActionHandler.gameTimer(newGame.id, id, io);

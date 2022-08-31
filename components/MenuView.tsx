@@ -42,7 +42,8 @@ const MenuContainer = styled.div`
   display: flex;
   gap: 0.5rem;
   flex-direction: column;
-
+  position: absolute;
+  top: 25%;
   animation: ${emerge};
   animation-duration: 0.5s;
   animation-iteration-count: once;
@@ -69,13 +70,16 @@ export const MenuView: React.FC = () => {
     SocketService.initGame();
   };
   const leaveBattle = () => {
+    console.log("ended battle");
     setIsBattle(false);
   };
   useEffect(() => {
     socket &&
       socket.on("update_res", (obj: gameDataProps) => {
         socket.gameData = { ...obj };
-        !isBattle && setIsBattle(true);
+        if (!obj.concluded) {
+          !isBattle && setIsBattle(true);
+        }
       });
   }, []);
   if (isBattle) {

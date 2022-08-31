@@ -20,7 +20,6 @@
 @media (max-width: 25rem) {
   .container {
     overflow-x: scroll;
-    padding-left: 3rem;
   }
 }
 .container::after {

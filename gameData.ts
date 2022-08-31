@@ -2,6 +2,7 @@ import { uuid } from "uuidv4";
 import { getEnemy } from "./enemies";
 export interface gameDataProps {
   id: string;
+  paused: boolean;
   time: number;
   round: number;
   player: {
@@ -34,6 +35,7 @@ export interface gameDataProps {
 const rounds = [...getEnemy()];
 const gamesArr: {
   id: string;
+  paused: boolean;
   time: number;
   round: number;
   player: {
@@ -70,6 +72,7 @@ function getGameDataHandler() {
     initGame: function (): any {
       let newGame = {
         id: uuid(),
+        paused: false,
         time: 0,
         round: 0,
         player: {
@@ -101,11 +104,17 @@ function getGameDataHandler() {
       };
       gamesArr.push(newGame);
       newGame.enemies.forEach((enemy) => (enemy.spellInput = []));
-      console.log(newGame.enemies[0].spellInput);
+
       return newGame;
+    },
+    removeGame: function (id: string) {
+      gamesArr.filter((game) => game.id !== id);
     },
     getGame: function (id: string) {
       return gamesArr.find((game) => game.id === id);
+    },
+    getAllGames: function () {
+      return gamesArr;
     },
     nextRound: function (id: string) {
       let game = gamesArr.find((game) => game.id === id);

@@ -101,6 +101,13 @@ export const SpellTable = ({ id, spells, spellInput, clickHandler }) => {
           id: id,
         });
       }
+      if (e.keyCode === 13) {
+        console.log({ es: e });
+        SocketService.update({
+          type: "pause",
+          id: id,
+        });
+      }
     });
   }
   useMountEffect(() => {

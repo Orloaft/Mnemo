@@ -31,9 +31,12 @@ const EnemyImage = styled(Frame)`
   position: relative;
   background: linear-gradient(to right, #868f96 0%, #596164 100%);
   display: flex;
-  width: 20%;
+  width: 30%;
   border-color: ${(props: { targeted: boolean }) =>
     props.targeted ? `white` : `black`};
+  @media (min-width: 48rem) {
+    width: 20%;
+  }
 `;
 export const EnemyView = ({ enemies, id }) => {
   return (

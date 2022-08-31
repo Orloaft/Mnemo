@@ -1,3 +1,4 @@
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import React from "react";
 import styled, { keyframes } from "styled-components";
 import { setTimeout } from "timers";
@@ -70,7 +71,7 @@ const accordionText = keyframes`
 
 interface PartyMenuViewProps {}
 export const PartyMenuView = (props: PartyMenuViewProps) => {
-  const [backContent, setBackContent] = React.useState<string>("");
+  const [backContent, setBackContent] = React.useState<any>(null);
   const MenuSpan = styled.span`
     cursor: default;
     font-size: 2rem;
@@ -115,8 +116,12 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
             <OptionWrap>
               <MenuSpan
                 onClick={() => {
-                  setBackContent(`Heal: recover 30 player hp
-                                  Missle: deal 30 damage to target`);
+                  setBackContent(
+                    <>
+                      <span>Heal: recover 30 player hp</span>
+                      <span>Missle: deal 30 damage to target</span>
+                    </>
+                  );
                 }}
               >
                 Abilities
@@ -124,22 +129,37 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
               <MenuSpan
                 onClick={() => {
                   setBackContent(
-                    `QWERASDF
-                  Missle - up arrow
-                  Heal - down arrow
-                  Toggle target - left/right arrow
-	                         `
+                    <>
+                      <span>Incantations - QWERASDF</span>
+                      <span>Missle - up arrow</span>
+                      <span>Heal - down arrow</span>
+                      <span>Toggle target - left/right arrow</span>
+                      <span>Toggle pause - enter</span>
+                    </>
                   );
                 }}
               >
                 Controls
               </MenuSpan>
-              <MenuSpan>Magic</MenuSpan>
-              <MenuSpan>GF</MenuSpan>
+              <MenuSpan
+                onClick={() => {
+                  setBackContent(
+                    `Press 'Battle' to face a gauntlet of enemies.
+                   After selecting a spell, match the words displayed to perform the cast.
+                   You need to wait until your energy is full in order to cast spells.`
+                  );
+                }}
+              >
+                About
+              </MenuSpan>
             </OptionWrap>
           </FrontCard>
           <BackCard
-            style={{ height: "15rem" }}
+            style={{
+              height: "15rem",
+              display: "flex",
+              flexDirection: "column",
+            }}
             onMouseLeave={() => setTimeout(() => setBackContent(""), 1000)}
           >
             {backContent}

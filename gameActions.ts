@@ -7,59 +7,61 @@ export function getGameActionHandler() {
       gameData.enemies[0].targeted = true;
       // Update the count down every 1 second
       const x = setInterval(() => {
-        if (gameData.player.life <= 0) {
-          gameData.enemies.forEach((enemy) => (enemy.spellInput = []));
-          gameData.concluded = true;
-          gameData.score = "player defeated";
-          io.to(socket).emit("update_res", gameData);
-        }
-        if (gameData && gameData.concluded) {
-          console.log("clearing timer");
-          io.to(socket).emit("update_res", gameData);
-          clearInterval(x);
-        } else {
-          gameData && (gameData.time += 1);
-          if (gameData && gameData.player.action === "chanting") {
-            gameData && (gameData.player.actionPoints += 3);
+        if (!gameData.paused) {
+          if (gameData.player.life <= 0) {
+            gameData.enemies.forEach((enemy) => (enemy.spellInput = []));
+            gameData.concluded = true;
+            gameData.score = "player defeated";
+            io.to(socket).emit("update_res", gameData);
           }
-
-          gameData.enemies.forEach((enemy) => {
-            if (enemy.action === "chanting" && enemy.life > 0) {
-              enemy.actionPoints += 1;
-              if (enemy.actionPoints % 5 === 0) {
-                enemy.spellInput.push(
-                  [...gameData.spellTable]
-                    .sort(() => 0.5 - Math.random())
-                    .slice(0, 1)[0]
-                );
-
-                io.to(socket).emit("update_res", gameData);
-              }
+          if (gameData && gameData.concluded) {
+            io.to(socket).emit("update_res", gameData);
+            getGameDataHandler.removeGame(roomId);
+            clearInterval(x);
+          } else {
+            gameData && (gameData.time += 1);
+            if (gameData && gameData.player.action === "chanting") {
+              gameData && (gameData.player.actionPoints += 3);
             }
-            if (enemy.actionPoints >= 15) {
-              enemy.action = "casting";
 
-              io.to(socket).emit("update_res", gameData);
-              setTimeout(() => {
-                switch (enemy.spell) {
-                  case "missle":
-                    gameData.player.life -= enemy.dmg;
+            gameData.enemies.forEach((enemy) => {
+              if (enemy.action === "chanting" && enemy.life > 0) {
+                enemy.actionPoints += 1;
+                if (enemy.actionPoints % 5 === 0) {
+                  enemy.spellInput.push(
+                    [...gameData.spellTable]
+                      .sort(() => 0.5 - Math.random())
+                      .slice(0, 1)[0]
+                  );
+
+                  io.to(socket).emit("update_res", gameData);
                 }
-                enemy.spellInput = [];
-                enemy.actionPoints = 0;
+              }
+              if (enemy.actionPoints >= 15) {
+                enemy.action = "casting";
 
-                enemy.action = "chanting";
                 io.to(socket).emit("update_res", gameData);
+                setTimeout(() => {
+                  switch (enemy.spell) {
+                    case "missle":
+                      gameData.player.life -= enemy.dmg;
+                  }
+                  enemy.spellInput = [];
+                  enemy.actionPoints = 0;
+
+                  enemy.action = "chanting";
+                  io.to(socket).emit("update_res", gameData);
+                }, 1000);
+              }
+            });
+
+            if (gameData && gameData.player.actionPoints >= 15) {
+              setTimeout(() => {
+                gameData.player.action = "casting";
               }, 1000);
             }
-          });
-
-          if (gameData && gameData.player.actionPoints >= 15) {
-            setTimeout(() => {
-              gameData.player.action = "casting";
-            }, 1000);
+            io.to(socket).emit("update_res", gameData);
           }
-          io.to(socket).emit("update_res", gameData);
         }
       }, 1000);
     },
@@ -67,6 +69,10 @@ export function getGameActionHandler() {
       let gameData = getGameDataHandler.getGame(req.id);
 
       switch (req.type) {
+        case "pause":
+          gameData.paused = !gameData.paused;
+          io.to(socketId).emit("update_res", gameData);
+          break;
         case "spellSelect":
           gameData.player.spell = req.spell;
           gameData.spellReq = [...gameData.spellTable]
@@ -114,6 +120,7 @@ export function getGameActionHandler() {
           break;
         case "clearMatch":
           gameData && (gameData.concluded = true);
+          getGameDataHandler.removeGame(req.id);
           io.to(socketId).emit("update_res", gameData);
           break;
         case "addWord":

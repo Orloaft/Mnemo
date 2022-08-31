@@ -7,7 +7,7 @@ const MpBar = styled.div`
   width: 5rem;
 `;
 const Mp = styled.div`
-  background-color: yellow;
+  background-color: blue;
   height: 100%;
   -webkit-transition: width 1.25s linear;
   -o-transition: width 1.25s linear;

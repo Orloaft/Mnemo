@@ -5,6 +5,7 @@ export interface gameDataProps {
   time: number;
   round: number;
   player: {
+    name: string;
     life: number;
     maxLife: number;
     speed: number;
@@ -36,6 +37,7 @@ const gamesArr: {
   time: number;
   round: number;
   player: {
+    name: string;
     life: number;
     maxLife: number;
     speed: number;
@@ -71,6 +73,7 @@ function getGameDataHandler() {
         time: 0,
         round: 0,
         player: {
+          name: "",
           life: 100,
           maxLife: 100,
           speed: 10,

@@ -28,10 +28,10 @@ const emerge = keyframes`
 const EnemyImage = styled(Frame)`
   margin: 0;
   padding: 0.25rem;
-
+  position: relative;
   background: linear-gradient(to right, #868f96 0%, #596164 100%);
   display: flex;
-  width: 30%;
+  width: 20%;
   border-color: ${(props: { targeted: boolean }) =>
     props.targeted ? `white` : `black`};
 `;
@@ -50,17 +50,23 @@ export const EnemyView = ({ enemies, id }) => {
               <img
                 style={{
                   objectFit: "cover",
+                  position: "absolute",
+                  height: "auto",
+                  width: "45%",
+                  left: "50%",
+                  bottom: 0,
+                  zIndex: 0,
                 }}
                 src={`${enemy.name}.png`}
               />
               <div
                 style={{
+                  position: "relative",
+                  zIndex: "2",
                   display: "flex",
                   gap: ".1rem",
                   minHeight: "5rem",
                   flexDirection: "column",
-                  margin: 0,
-                  padding: 0,
                 }}
               >
                 <StatView enemy={enemy} />
@@ -120,11 +126,19 @@ export const EnemyView = ({ enemies, id }) => {
             <img
               style={{
                 objectFit: "cover",
+                position: "absolute",
+                height: "auto",
+                width: "45%",
+                left: "50%",
+                bottom: 0,
+                zIndex: 0,
               }}
               src={`${enemy.name}.png`}
             />
             <div
               style={{
+                position: "relative",
+                zIndex: "2",
                 display: "flex",
                 gap: ".1rem",
                 minHeight: "5rem",

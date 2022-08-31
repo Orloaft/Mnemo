@@ -76,6 +76,12 @@ export function getGameActionHandler() {
           break;
         case "animate":
           gameData && (gameData.animation = req.animation);
+          io.to(socketId).emit("update_res", gameData);
+          setTimeout(() => {
+            gameData && (gameData.animation = "normal");
+            io.to(socketId).emit("update_res", gameData);
+          }, req.duration);
+
           break;
         case "enemyClicked":
           gameData.player.target = req.targetIndex;

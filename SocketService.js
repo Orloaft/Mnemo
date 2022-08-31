@@ -7,7 +7,11 @@ class SocketService {
   gameData = null;
   update = this.updateData.bind(this);
   async initGame() {
-    this.socket.emit("init_gameData", this.socket.id);
+    this.socket.emit(
+      "init_gameData",
+      this.socket.id,
+      localStorage.getItem("username")
+    );
   }
   //method to initiate socket instance
   async connect() {

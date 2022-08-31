@@ -23,6 +23,9 @@ const Table = styled.div`
   }
 `;
 const WordBox = styled(Frame)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: default;
   min-width: 20%;
   //   animation: ${wiggle};

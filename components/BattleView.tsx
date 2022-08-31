@@ -212,9 +212,18 @@ export const BattleView: React.FC<BattleViewProps> = ({
             justifyContent: "space-between",
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              fontSize: ".75rem",
+              lineHeight: ".15rem",
+            }}
+          >
             <p>{gameState.spellReq && gameState.spellReq.join(" ")}</p>
-            <div style={{ display: "flex", minHeight: "5rem", gap: ".5rem" }}>
+            <div
+              style={{ display: "flex", minHeight: "1.75rem", gap: ".5rem" }}
+            >
               {gameState.spellInput &&
                 gameState.spellInput.map((s: any) => {
                   switch (gameState.animation) {

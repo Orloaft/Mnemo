@@ -18,7 +18,7 @@ export const StatView = ({ enemy }: any) => {
 
   return (
     <>
-      <span style={{ fontSize: "1rem" }}>{name}</span>
+      <span style={{ fontSize: ".75rem" }}>{name}</span>
       <div>
         <HpBar>
           <Hp

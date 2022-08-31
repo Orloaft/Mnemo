@@ -145,7 +145,7 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
                 onClick={() => {
                   setBackContent(
                     <span>
-                      Press 'Battle' to face a gauntlet of enemies. After
+                      Press Battle to face a gauntlet of enemies. After
                       selecting a spell, match the words displayed to perform
                       the cast. You need to wait until your energy is full in
                       order to cast spells.

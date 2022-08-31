@@ -9,6 +9,7 @@ import { ActionView } from "./ActionView";
 import { SpellTable } from "./SpellTable";
 
 import { EnemyView } from "./EnemyView";
+import { uuid } from "uuidv4";
 
 interface BattleViewProps {
   gameData: any;
@@ -82,41 +83,41 @@ const miscast = keyframes`
       color: red;
     }
     10% {
-      letter-spacing: 0.1rem;
+      letter-spacing: 0.01rem;
       color: red;
     }
     20% {
-      letter-spacing: 0.15rem;
+      letter-spacing: 0.015rem;
       color: red;
     }
   
     30% {
-      letter-spacing: 0.2rem;
+      letter-spacing: 0.02rem;
       color: red;
     }
   
     40% {
-      letter-spacing: 0.25rem;
+      letter-spacing: 0.025rem;
       color: red;
     }
     50% {
-      letter-spacing: 0.3rem;
+      letter-spacing: 0.03rem;
       color: red;
     }
     60% {
-      letter-spacing: 0.25rem;
+      letter-spacing: 0.025rem;
       color: red;
     }
     70% {
-      letter-spacing: 0.2rem;
+      letter-spacing: 0.02rem;
       color: red;
     }
     80% {
-      letter-spacing: 0.15;
+      letter-spacing: 0.015;
       color: red;
     }
     90% {
-      letter-spacing: 0.1;
+      letter-spacing: 0.01;
       color: red;
     }
     100% {
@@ -215,11 +216,27 @@ export const BattleView: React.FC<BattleViewProps> = ({
               lineHeight: ".15rem",
             }}
           >
-            <p>{gameState.spellReq && gameState.spellReq.join(" ")}</p>
             <div
-              style={{ display: "flex", minHeight: "1.75rem", gap: ".5rem" }}
+              style={{
+                display: "flex",
+                minHeight: "1.75rem",
+                gap: ".5rem",
+                alignItems: "center",
+              }}
             >
-              {gameState.spellInput &&
+              {gameState.spellReq &&
+                gameState.spellReq.map((word, i) => {
+                  if (!gameState.spellInput[i]) {
+                    return <span key={uuid()}>{word}</span>;
+                  } else if (
+                    gameState.spellInput[i] === gameState.spellReq[i]
+                  ) {
+                    return <Spell key={uuid()}>{word}</Spell>;
+                  } else {
+                    return <FailedSpell key={uuid()}>{word}</FailedSpell>;
+                  }
+                })}
+              {/* {gameState.spellInput &&
                 gameState.spellInput.map((s: any) => {
                   switch (gameState.animation) {
                     case "casting":
@@ -229,7 +246,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
                     case "normal":
                       return <p key={s}>{s}</p>;
                   }
-                })}
+                })} */}
             </div>
           </div>
         </Frame>
@@ -312,9 +329,6 @@ export const BattleView: React.FC<BattleViewProps> = ({
       <Frame
         onClick={() => {
           leaveBattle();
-          // update({ type: "clearMatch", id: gameState.id });
-
-          console.log(gameState);
         }}
         style={{
           position: "absolute",

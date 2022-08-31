@@ -101,10 +101,10 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
     width: 100%;
     perspective: 1000px;
     ${backContent
-      ? `  &:hover {
+      ? ` 
         & .innerCard {
           transform: rotateY(180deg);
-        }
+        
       }`
       : ``}
   `;
@@ -144,9 +144,12 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
               <MenuSpan
                 onClick={() => {
                   setBackContent(
-                    `Press 'Battle' to face a gauntlet of enemies.
-                   After selecting a spell, match the words displayed to perform the cast.
-                   You need to wait until your energy is full in order to cast spells.`
+                    <span>
+                      Press 'Battle' to face a gauntlet of enemies. After
+                      selecting a spell, match the words displayed to perform
+                      the cast. You need to wait until your energy is full in
+                      order to cast spells.
+                    </span>
                   );
                 }}
               >

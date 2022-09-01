@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { LoadingView } from "./LoadingView";
+
 import { MenuView } from "./MenuView";
 import { Frame } from "./CharacterView";
 import { SignIn } from "./SignIn";
+import { LobbyListView } from "./LobbyListView";
 const hoverRainbow = keyframes`
  
 0% {
@@ -74,12 +75,11 @@ export const LoadButton = styled(Frame)`
   }
 `;
 export const MainView: React.FC = () => {
-  const [seconds, setSeconds] = useState(0);
-  const [isActive, setIsActive] = useState(false);
+  const [isLobby, setIsLobby] = useState(false);
   const [credentials, setCredentials] = useState(null);
 
   function toggle() {
-    setIsActive(!isActive);
+    setIsLobby(!isLobby);
   }
 
   function logIn() {
@@ -94,7 +94,9 @@ export const MainView: React.FC = () => {
         <SignIn logIn={logIn} />
       </>
     );
+  } else if (!isLobby) {
+    return <MenuView toggleLobby={toggle} />;
   } else {
-    return <MenuView />;
+    return <LobbyListView toggleLobby={toggle} />;
   }
 };

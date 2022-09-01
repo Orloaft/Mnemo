@@ -16,6 +16,7 @@ export function getGameActionHandler() {
             gameData.participatingSockets.forEach((socketId) => {
               io.to(socketId).emit("update_res", gameData);
             });
+            getGameDataHandler.removeGame(gameData.id);
           }
           if (gameData && gameData.concluded) {
             gameData.participatingSockets.forEach((socketId) => {
@@ -186,7 +187,8 @@ export function getGameActionHandler() {
                     gameData &&
                     !gameData.enemies.find((enemy) => enemy.life > 0)
                   ) {
-                    getGameDataHandler.nextRound(gameData.id);
+                    getGameDataHandler.nextRound(gameData.id) &&
+                      getGameDataHandler.removeGame(gameData.id);
                   }
                   io.to(socketId).emit("update_res", gameData);
                 }

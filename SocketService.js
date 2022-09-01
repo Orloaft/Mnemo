@@ -8,6 +8,7 @@ class SocketService {
   update = this.updateData.bind(this);
   closeGame = this.closeGame.bind(this);
   resumeGame = this.resumeGame.bind(this);
+  getGames = this.getGames.bind(this);
   async closeGame() {
     this.socket.emit("delete_gameData", this.gameData.id);
   }
@@ -37,7 +38,9 @@ class SocketService {
       });
     });
   }
-
+  async getGames() {
+    this.socket.emit("get_games", this.socket.id);
+  }
   async updateData(req) {
     this.socket.emit("update_req", this.socket.id, req);
   }

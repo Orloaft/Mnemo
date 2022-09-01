@@ -38,7 +38,7 @@ const Box = styled.div`
 
   width: auto;
 `;
-const MenuContainer = styled.div`
+export const MenuContainer = styled.div`
   display: flex;
   gap: 0.5rem;
   flex-direction: column;
@@ -62,7 +62,9 @@ const BattleContainer = styled.div`
   animation-timing-function: linear;
 `;
 
-export const MenuView: React.FC = () => {
+export const MenuView: React.FC<{ toggleLobby: () => void }> = ({
+  toggleLobby,
+}) => {
   const [isBattle, setIsBattle] = useState(false);
   // checks if there is an id stored to try and resume interrupted match
   const [matchId, setMatchId] = useState(false);
@@ -122,7 +124,7 @@ export const MenuView: React.FC = () => {
             <LoadButton onClick={() => battleStart()}>Battle</LoadButton>
           </PartyWrap>
         )}
-
+        <LoadButton onClick={() => toggleLobby()}>Multiplayer</LoadButton>
         <PartyMenuView />
       </MenuContainer>
     );

@@ -34,7 +34,7 @@ export interface gameDataProps {
   animation: string;
 }
 const rounds = [...getEnemy()];
-const gamesArr: {
+let gamesArr: {
   id: string;
   paused: boolean;
   time: number;
@@ -111,7 +111,7 @@ function getGameDataHandler() {
       return newGame;
     },
     removeGame: function (id: string) {
-      gamesArr.filter((game) => game.id !== id);
+      gamesArr = gamesArr.filter((game) => game.id !== id);
     },
     getGame: function (id: string) {
       return gamesArr.find((game) => game.id === id);
@@ -125,10 +125,12 @@ function getGameDataHandler() {
         game.round += 1;
         game.enemies = [{ ...rounds[game.round] }];
         game.enemies.forEach((enemy) => (enemy.spellInput = []));
+        return false;
       } else {
         game.concluded = true;
         game.enemies.forEach((enemy) => (enemy.spellInput = []));
         game.score = "Congratulations, you eviscerated all enemies!";
+        return true;
       }
     },
   };

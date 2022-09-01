@@ -33,6 +33,9 @@ async function startServer() {
     socket.on("resume_game", (socket, id) => {
       io.to(socket).emit("update_res", getGameDataHandler.getGame(id));
     });
+    socket.on("get_games", (socket) => {
+      io.to(socket).emit("get_games_res", getGameDataHandler.getAllGames());
+    });
     socket.on("delete_gameData", (id) => {
       getGameDataHandler.removeGame(id);
     });

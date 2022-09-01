@@ -4,6 +4,7 @@ export function getGameActionHandler() {
   return {
     gameTimer: function (roomId: string, socket: any, io: any) {
       let gameData = getGameDataHandler.getGame(roomId);
+      gameData.participatingSockets.push(socket);
       gameData.enemies[0].targeted = true;
       // Update the count down every 1 second
       const x = setInterval(() => {
@@ -12,10 +13,14 @@ export function getGameActionHandler() {
             gameData.enemies.forEach((enemy) => (enemy.spellInput = []));
             gameData.concluded = true;
             gameData.score = "player defeated";
-            io.to(socket).emit("update_res", gameData);
+            gameData.participatingSockets.forEach((socketId) => {
+              io.to(socketId).emit("update_res", gameData);
+            });
           }
           if (gameData && gameData.concluded) {
-            io.to(socket).emit("update_res", gameData);
+            gameData.participatingSockets.forEach((socketId) => {
+              io.to(socketId).emit("update_res", gameData);
+            });
             getGameDataHandler.removeGame(roomId);
             clearInterval(x);
           } else {
@@ -34,13 +39,17 @@ export function getGameActionHandler() {
                       .slice(0, 1)[0]
                   );
 
-                  io.to(socket).emit("update_res", gameData);
+                  gameData.participatingSockets.forEach((socketId) => {
+                    io.to(socketId).emit("update_res", gameData);
+                  });
                 }
               }
               if (enemy.actionPoints >= 15) {
                 enemy.action = "casting";
 
-                io.to(socket).emit("update_res", gameData);
+                gameData.participatingSockets.forEach((socketId) => {
+                  io.to(socketId).emit("update_res", gameData);
+                });
                 setTimeout(() => {
                   switch (enemy.spell) {
                     case "missle":
@@ -50,7 +59,9 @@ export function getGameActionHandler() {
                   enemy.actionPoints = 0;
 
                   enemy.action = "chanting";
-                  io.to(socket).emit("update_res", gameData);
+                  gameData.participatingSockets.forEach((socketId) => {
+                    io.to(socketId).emit("update_res", gameData);
+                  });
                 }, 1000);
               }
             });
@@ -60,7 +71,9 @@ export function getGameActionHandler() {
                 gameData.player.action = "casting";
               }, 1000);
             }
-            io.to(socket).emit("update_res", gameData);
+            gameData.participatingSockets.forEach((socketId) => {
+              io.to(socketId).emit("update_res", gameData);
+            });
           }
         }
       }, 1000);
@@ -69,6 +82,9 @@ export function getGameActionHandler() {
       let gameData = getGameDataHandler.getGame(req.id);
 
       switch (req.type) {
+        case "addPlayerSocket":
+          gameData && gameData.participatingSockets.push(req.socket);
+          break;
         case "pause":
           gameData.paused = !gameData.paused;
           io.to(socketId).emit("update_res", gameData);

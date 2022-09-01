@@ -9,23 +9,23 @@ const MpBar = styled.div`
   width: 5rem;
   & :nth-child(1) {
     background-color: ${(props: { ap: number }) =>
-      props.ap >= 3 ? `blue` : `black`};
+      props.ap >= 3 ? `teal` : `black`};
   }
   & :nth-child(2) {
     background-color: ${(props: { ap: number }) =>
-      props.ap >= 6 ? `blue` : `black`};
+      props.ap >= 6 ? `teal` : `black`};
   }
   & :nth-child(3) {
     background-color: ${(props: { ap: number }) =>
-      props.ap >= 9 ? `blue` : `black`};
+      props.ap >= 9 ? `teal` : `black`};
   }
   & :nth-child(4) {
     background-color: ${(props: { ap: number }) =>
-      props.ap >= 12 ? `blue` : `black`};
+      props.ap >= 12 ? `teal` : `black`};
   }
   & :nth-child(5) {
     background-color: ${(props: { ap: number }) =>
-      props.ap >= 15 ? `blue` : `black`};
+      props.ap >= 15 ? `teal` : `black`};
   }
 `;
 const Mp = styled.div`

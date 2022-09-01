@@ -5,6 +5,7 @@ export interface gameDataProps {
   paused: boolean;
   time: number;
   round: number;
+  participatingSockets: string[];
   player: {
     name: string;
     life: number;
@@ -38,6 +39,7 @@ const gamesArr: {
   paused: boolean;
   time: number;
   round: number;
+  participatingSockets: string[];
   player: {
     name: string;
     life: number;
@@ -75,6 +77,7 @@ function getGameDataHandler() {
         paused: false,
         time: 0,
         round: 0,
+        participatingSockets: [],
         player: {
           name: "",
           life: 100,

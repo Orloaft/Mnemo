@@ -18,7 +18,20 @@ async function startServer() {
   io.on("connection", (socket: any) => {
     console.log("connected with", socket.id);
     socket.on("disconnecting", () => {
+      getGameDataHandler.getAllGames().forEach((game) => {
+        if (
+          game.participatingSockets.find((socketId) => socketId === socket.id)
+        ) {
+          game.paused = true;
+          game.participatingSockets.filter(
+            (socketId) => socketId !== socket.id
+          );
+        }
+      });
       console.log(socket.rooms); // the Set contains at least the socket ID
+    });
+    socket.on("resume_game", (socket, id) => {
+      io.to(socket).emit("update_res", getGameDataHandler.getGame(id));
     });
     socket.on("delete_gameData", (id) => {
       getGameDataHandler.removeGame(id);

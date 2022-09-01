@@ -7,8 +7,16 @@ class SocketService {
   gameData = null;
   update = this.updateData.bind(this);
   closeGame = this.closeGame.bind(this);
+  resumeGame = this.resumeGame.bind(this);
   async closeGame() {
     this.socket.emit("delete_gameData", this.gameData.id);
+  }
+  resumeGame() {
+    this.socket.emit(
+      "resume_game",
+      this.socket.id,
+      localStorage.getItem("matchId")
+    );
   }
   async initGame() {
     this.socket.emit(

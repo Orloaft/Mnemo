@@ -68,9 +68,8 @@ export const MenuView: React.FC<{ toggleLobby: () => void }> = ({
   const [isBattle, setIsBattle] = useState(false);
   // checks if there is an id stored to try and resume interrupted match
   const [matchId, setMatchId] = useState(false);
-  const { socket } = SocketService as any;
+
   const battleStart = () => {
-    console.log(socket.id);
     SocketService.initGame();
   };
   const leaveBattle = () => {
@@ -80,34 +79,36 @@ export const MenuView: React.FC<{ toggleLobby: () => void }> = ({
   useEffect(() => {
     localStorage.getItem("matchId") && setMatchId(true);
 
-    socket &&
-      socket.on("update_res", (obj: gameDataProps) => {
-        socket.gameData = { ...obj };
-        if (obj && !obj.concluded) {
-          localStorage.setItem("matchId", obj.id);
-          if (
-            !obj.participatingSockets.find(
-              (socket) => socket === SocketService.socket.id
-            )
-          ) {
-            SocketService.update({
-              type: "addPlayerSocket",
-              socket: SocketService.socket.id,
-              id: obj.id,
-            });
-          }
-
-          !isBattle && setIsBattle(true);
-        } else {
-          localStorage.removeItem("matchId");
-          setMatchId(false);
+    SocketService.socket().on("update_res", (obj: gameDataProps) => {
+      SocketService.setGameData(obj);
+      if (obj && !obj.concluded) {
+        localStorage.setItem("matchId", obj.id);
+        if (
+          !obj.participatingSockets.find(
+            (socket) => socket === SocketService.socket().id
+          )
+        ) {
+          SocketService.update({
+            type: "addPlayerSocket",
+            socket: SocketService.socket().id,
+            id: obj.id,
+          });
         }
-      });
+
+        !isBattle && setIsBattle(true);
+      } else {
+        localStorage.removeItem("matchId");
+        setMatchId(false);
+      }
+    });
   }, []);
   if (isBattle) {
     return (
       <BattleContainer>
-        <BattleView gameData={socket.gameData} leaveBattle={leaveBattle} />
+        <BattleView
+          gameData={SocketService.getGameData()}
+          leaveBattle={leaveBattle}
+        />
       </BattleContainer>
     );
   } else {

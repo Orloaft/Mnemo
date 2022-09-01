@@ -9,7 +9,7 @@ export function getGameActionHandler() {
       // Update the count down every 1 second
       const x = setInterval(() => {
         if (!gameData.paused) {
-          if (gameData.player.life <= 0) {
+          if (gameData.players[0].life <= 0) {
             gameData.enemies.forEach((enemy) => (enemy.spellInput = []));
             gameData.concluded = true;
             gameData.score = "player defeated";
@@ -26,8 +26,8 @@ export function getGameActionHandler() {
             clearInterval(x);
           } else {
             gameData && (gameData.time += 1);
-            if (gameData && gameData.player.action === "chanting") {
-              gameData && (gameData.player.actionPoints += 3);
+            if (gameData && gameData.players[0].action === "chanting") {
+              gameData && (gameData.players[0].actionPoints += 3);
             }
 
             gameData.enemies.forEach((enemy) => {
@@ -54,7 +54,7 @@ export function getGameActionHandler() {
                 setTimeout(() => {
                   switch (enemy.spell) {
                     case "missle":
-                      gameData.player.life -= enemy.dmg;
+                      gameData.players[0].life -= enemy.dmg;
                   }
                   enemy.spellInput = [];
                   enemy.actionPoints = 0;
@@ -67,9 +67,9 @@ export function getGameActionHandler() {
               }
             });
 
-            if (gameData && gameData.player.actionPoints >= 15) {
+            if (gameData && gameData.players[0].actionPoints >= 15) {
               setTimeout(() => {
-                gameData.player.action = "casting";
+                gameData.players[0].action = "casting";
               }, 1000);
             }
             gameData.participatingSockets.forEach((socketId) => {
@@ -91,7 +91,7 @@ export function getGameActionHandler() {
           io.to(socketId).emit("update_res", gameData);
           break;
         case "spellSelect":
-          gameData.player.spell = req.spell;
+          gameData.players[0].spell = req.spell;
           gameData.spellReq = [...gameData.spellTable]
             .sort(() => 0.5 - Math.random())
             .slice(0, 3);
@@ -107,28 +107,28 @@ export function getGameActionHandler() {
 
           break;
         case "enemyClicked":
-          gameData.player.target = req.targetIndex;
+          gameData.players[0].target = req.targetIndex;
           gameData.enemies.find((enemy) => enemy.targeted) &&
             (gameData.enemies.find((enemy) => enemy.targeted).targeted = false);
           gameData.enemies[req.targetIndex].targeted = true;
           io.to(socketId).emit("update_res", gameData);
           break;
         case "enemySelect":
-          let target = gameData.player.target;
+          let target = gameData.players[0].target;
 
           if (gameData.enemies.length === 1) {
             gameData.enemies[0].targeted = true;
           }
           if (req.direction === "left") {
-            if (gameData.player.target > 0) {
+            if (gameData.players[0].target > 0) {
               gameData.enemies[target].targeted = false;
-              gameData.player.target--;
+              gameData.players[0].target--;
               gameData.enemies[target - 1].targeted = true;
             }
           } else {
-            if (gameData.player.target < gameData.enemies.length - 1) {
+            if (gameData.players[0].target < gameData.enemies.length - 1) {
               gameData.enemies[target].targeted = false;
-              gameData.player.target++;
+              gameData.players[0].target++;
               gameData.enemies[target + 1].targeted = true;
             }
           }
@@ -141,7 +141,8 @@ export function getGameActionHandler() {
           io.to(socketId).emit("update_res", gameData);
           break;
         case "addWord":
-          gameData.player.actionPoints >= 15 &&
+          gameData &&
+            gameData.players[0].actionPoints >= 15 &&
             !gameData.spellInput.find((w) => w === req.word) &&
             gameData.spellInput.push(req.word);
           if (
@@ -150,28 +151,31 @@ export function getGameActionHandler() {
           ) {
             if (gameData.spellInput.join("") === gameData.spellReq.join("")) {
               gameData.animation = "casting";
-              gameData.player.actionPoints = 0;
+              gameData.players[0].actionPoints = 0;
               io.to(socketId).emit("update_res", gameData);
               setTimeout(() => {
                 if (gameData) {
-                  switch (gameData.player.spell) {
+                  switch (gameData.players[0].spell) {
                     case "missle":
-                      let target = gameData.enemies[gameData.player.target];
+                      let target = gameData.enemies[gameData.players[0].target];
                       target.life -= 30;
                       if (target.life <= 0) {
                         target.spellInput = [];
                         gameData.enemies[0].targeted = true;
 
                         io.to(socketId).emit("update_res", gameData);
-                        gameData.enemies.splice(gameData.player.target, 1);
-                        gameData.player.target = 0;
+                        gameData.enemies.splice(gameData.players[0].target, 1);
+                        gameData.players[0].target = 0;
                       }
                       break;
                     case "heal":
-                      if (gameData.player.life + 30 > gameData.player.maxLife) {
-                        gameData.player.life = gameData.player.maxLife;
+                      if (
+                        gameData.players[0].life + 30 >
+                        gameData.players[0].maxLife
+                      ) {
+                        gameData.players[0].life = gameData.players[0].maxLife;
                       } else {
-                        gameData.player.life += 30;
+                        gameData.players[0].life += 30;
                       }
 
                       break;
@@ -182,7 +186,7 @@ export function getGameActionHandler() {
                     .sort(() => 0.5 - Math.random())
                     .slice(0, 3);
                   gameData.animation = "normal";
-                  gameData.player.action = "chanting";
+                  gameData.players[0].action = "chanting";
                   if (
                     gameData &&
                     !gameData.enemies.find((enemy) => enemy.life > 0)

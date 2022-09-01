@@ -6,7 +6,7 @@ export interface gameDataProps {
   time: number;
   round: number;
   participatingSockets: string[];
-  player: {
+  players: {
     name: string;
     life: number;
     maxLife: number;
@@ -15,7 +15,7 @@ export interface gameDataProps {
     action: string;
     spell: string;
     target: number;
-  };
+  }[];
   enemies: {
     name: string;
     life: number;
@@ -34,13 +34,20 @@ export interface gameDataProps {
   animation: string;
 }
 const rounds = [...getEnemy()];
+let lobbyArr: {
+  id: string;
+  owner: string;
+  players: { id: string; name: string; socket: string }[];
+  name: string;
+  messages: { author: string; body: string }[];
+}[] = [];
 let gamesArr: {
   id: string;
   paused: boolean;
   time: number;
   round: number;
   participatingSockets: string[];
-  player: {
+  players: {
     name: string;
     life: number;
     maxLife: number;
@@ -49,7 +56,7 @@ let gamesArr: {
     action: string;
     spell: string;
     target: number;
-  };
+  }[];
   enemies: {
     name: string;
     life: number;
@@ -71,6 +78,18 @@ let gamesArr: {
 }[] = [];
 function getGameDataHandler() {
   return {
+    initLobby: function (owner, name): any {
+      let newLobby = {
+        id: uuid(),
+        owner: owner.id,
+        players: [{ id: owner.id, name: owner.name, socket: owner.socket }],
+        name: name,
+        messages: [],
+        // socket: socket,
+      };
+      lobbyArr.push(newLobby);
+      return newLobby;
+    },
     initGame: function (): any {
       let newGame = {
         id: uuid(),
@@ -78,16 +97,18 @@ function getGameDataHandler() {
         time: 0,
         round: 0,
         participatingSockets: [],
-        player: {
-          name: "",
-          life: 100,
-          maxLife: 100,
-          speed: 10,
-          actionPoints: 0,
-          action: "chanting",
-          spell: "missle",
-          target: 0,
-        },
+        players: [
+          {
+            name: "",
+            life: 100,
+            maxLife: 100,
+            speed: 10,
+            actionPoints: 0,
+            action: "chanting",
+            spell: "missle",
+            target: 0,
+          },
+        ],
         enemies: [{ ...rounds[0] }, { ...rounds[1] }, { ...rounds[2] }],
         spellTable: [
           "lorem",
@@ -112,6 +133,12 @@ function getGameDataHandler() {
     },
     removeGame: function (id: string) {
       gamesArr = gamesArr.filter((game) => game.id !== id);
+    },
+    getLobby: function (id: string) {
+      return lobbyArr.find((lobby) => lobby.id === id);
+    },
+    getAllLobbies: function () {
+      return lobbyArr;
     },
     getGame: function (id: string) {
       return gamesArr.find((game) => game.id === id);

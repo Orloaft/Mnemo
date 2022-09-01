@@ -10,6 +10,7 @@ import { SpellTable } from "./SpellTable";
 
 import { EnemyView } from "./EnemyView";
 import { uuid } from "uuidv4";
+import { Socket } from "socket.io-client";
 
 interface BattleViewProps {
   gameData: any;
@@ -174,10 +175,8 @@ export const BattleView: React.FC<BattleViewProps> = ({
 }) => {
   const [gameState, setGameState] = useState<any>(gameData);
 
-  const { socket, update } = SocketService as any;
-
   function spellClickHandle(w: string) {
-    update({
+    SocketService.update({
       type: "addWord",
       word: w,
       id: gameState.id,
@@ -185,11 +184,10 @@ export const BattleView: React.FC<BattleViewProps> = ({
   }
 
   useEffect(() => {
-    socket &&
-      socket.on("update_res", (obj: object) => {
-        setGameState({ ...obj });
-        socket.gameData = { ...obj };
-      });
+    SocketService.socket().on("update_res", (obj: object) => {
+      setGameState({ ...obj });
+      SocketService.setGameData(obj);
+    });
   }, []);
   if (!gameState.concluded && !gameState.paused) {
     return (
@@ -257,20 +255,22 @@ export const BattleView: React.FC<BattleViewProps> = ({
             }}
           >
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <StatView enemy={gameState.player} />
+              <StatView enemy={gameState.players[0]} />
 
-              <ActionView enemy={gameState.player} />
+              <ActionView enemy={gameState.players[0]} />
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
               <span
                 style={{
                   cursor: "default",
                   border: `${
-                    gameState.player.spell === "missle" ? "2px solid white" : ""
+                    gameState.players[0].spell === "missle"
+                      ? "2px solid white"
+                      : ""
                   }`,
                 }}
                 onClick={() =>
-                  update({
+                  SocketService.update({
                     type: "spellSelect",
                     spell: "missle",
                     id: gameState.id,
@@ -283,11 +283,13 @@ export const BattleView: React.FC<BattleViewProps> = ({
                 style={{
                   cursor: "default",
                   border: `${
-                    gameState.player.spell === "heal" ? "2px solid white" : ""
+                    gameState.players[0].spell === "heal"
+                      ? "2px solid white"
+                      : ""
                   }`,
                 }}
                 onClick={() =>
-                  update({
+                  SocketService.update({
                     type: "spellSelect",
                     spell: "heal",
                     id: gameState.id,
@@ -304,7 +306,9 @@ export const BattleView: React.FC<BattleViewProps> = ({
   } else if (gameState.paused) {
     return (
       <Frame
-        onClick={() => update({ type: "pause", id: gameState.id })}
+        onClick={() =>
+          SocketService.update({ type: "pause", id: gameState.id })
+        }
         style={{
           position: "absolute",
           zIndex: 3,

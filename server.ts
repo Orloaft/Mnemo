@@ -17,6 +17,7 @@ async function startServer() {
   //endpoint for initiating client connection
   io.on("connection", (socket: any) => {
     console.log("connected with", socket.id);
+    //when a socket disconnects. check which game it was in and pause that game and remove socketId
     socket.on("disconnecting", () => {
       getGameDataHandler.getAllGames().forEach((game) => {
         if (
@@ -28,7 +29,6 @@ async function startServer() {
           );
         }
       });
-      console.log(socket.rooms); // the Set contains at least the socket ID
     });
     socket.on("resume_game", (socket, id) => {
       io.to(socket).emit("update_res", getGameDataHandler.getGame(id));

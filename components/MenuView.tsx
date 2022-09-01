@@ -81,7 +81,7 @@ export const MenuView: React.FC = () => {
     socket &&
       socket.on("update_res", (obj: gameDataProps) => {
         socket.gameData = { ...obj };
-        if (!obj.concluded) {
+        if (obj && !obj.concluded) {
           localStorage.setItem("matchId", obj.id);
           if (
             !obj.participatingSockets.find(

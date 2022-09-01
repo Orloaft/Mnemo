@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styled, { css, keyframes } from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 import { Frame } from "./CharacterView";
 import SocketService from "../SocketService";
@@ -236,75 +236,67 @@ export const BattleView: React.FC<BattleViewProps> = ({
                     return <FailedSpell key={uuid()}>{word}</FailedSpell>;
                   }
                 })}
-              {/* {gameState.spellInput &&
-                gameState.spellInput.map((s: any) => {
-                  switch (gameState.animation) {
-                    case "casting":
-                      return <Spell key={s}>{s}</Spell>;
-                    case "failed":
-                      return <FailedSpell key={s}>{s}</FailedSpell>;
-                    case "normal":
-                      return <p key={s}>{s}</p>;
-                  }
-                })} */}
             </div>
           </div>
         </Frame>
         <div style={{ display: "flex", gap: "1rem", zIndex: 3 }}>
-          <Frame style={{ width: "60%" }}>
+          <div style={{ width: "60%" }}>
             <SpellTable
               id={gameState.id}
               spells={gameState.spellTable}
               spellInput={gameState.spellInput}
               clickHandler={spellClickHandle}
             />
-          </Frame>
+          </div>
 
           <Frame
             style={{
               display: "flex",
               gap: "1rem",
               minHeight: "5rem",
-              flexDirection: "column",
             }}
           >
-            <StatView enemy={gameState.player} />
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <StatView enemy={gameState.player} />
 
-            <ActionView enemy={gameState.player} />
-            <span
-              style={{
-                cursor: "default",
-                border: `${
-                  gameState.player.spell === "missle" ? "2px solid white" : ""
-                }`,
-              }}
-              onClick={() =>
-                update({
-                  type: "spellSelect",
-                  spell: "missle",
-                  id: gameState.id,
-                })
-              }
-            >
-              Missle
-            </span>
-            <span
-              style={{
-                cursor: "default",
-                border: `${
-                  gameState.player.spell === "heal" ? "2px solid white" : ""
-                }`,
-              }}
-              onClick={() =>
-                update({
-                  type: "spellSelect",
-                  spell: "heal",
-                  id: gameState.id,
-                })
-              }
-            >
-              Heal
-            </span>
+              <ActionView enemy={gameState.player} />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <span
+                style={{
+                  cursor: "default",
+                  border: `${
+                    gameState.player.spell === "missle" ? "2px solid white" : ""
+                  }`,
+                }}
+                onClick={() =>
+                  update({
+                    type: "spellSelect",
+                    spell: "missle",
+                    id: gameState.id,
+                  })
+                }
+              >
+                Missle
+              </span>
+              <span
+                style={{
+                  cursor: "default",
+                  border: `${
+                    gameState.player.spell === "heal" ? "2px solid white" : ""
+                  }`,
+                }}
+                onClick={() =>
+                  update({
+                    type: "spellSelect",
+                    spell: "heal",
+                    id: gameState.id,
+                  })
+                }
+              >
+                Heal
+              </span>
+            </div>
           </Frame>
         </div>
       </div>

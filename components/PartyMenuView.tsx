@@ -88,7 +88,7 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
     flex-direction: column;
     width: 100%;
     height: 15rem;
-    border: 2px solid #ffebcd;
+    // border: 2px solid #ffebcd;
     color: #ffebcd;
     border-radius: 0.25rem;
     padding: 0.5rem;

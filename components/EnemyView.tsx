@@ -32,13 +32,13 @@ const EnemyImage = styled(Frame)`
   background: linear-gradient(to right, #868f96 0%, #596164 100%);
   display: flex;
   width: 30%;
-  border-color: ${(props: { targeted: boolean }) =>
-    props.targeted ? `white` : `black`};
+  border: ${(props: { targeted: boolean }) =>
+    props.targeted ? `2px solid white` : ``};
   @media (min-width: 48rem) {
     width: 20%;
   }
 `;
-export const EnemyView = ({ enemies, id }) => {
+export const EnemyView = ({ player, enemies, id }) => {
   return (
     <div
       style={{
@@ -47,7 +47,7 @@ export const EnemyView = ({ enemies, id }) => {
       }}
     >
       {enemies.map((enemy, i) => {
-        if (enemy.targeted) {
+        if (player && player.target === i) {
           return (
             <EnemyImage key={uuid()} targeted={true}>
               <img

@@ -89,6 +89,7 @@ async function startServer() {
         });
       });
       await socket.join(lobby.id);
+      getGameDataHandler.removeLobby(lobby.id);
       getGameActionHandler.gameTimer(newGame.id, io);
 
       io.to(lobby.id).emit("update_res", newGame);

@@ -175,7 +175,9 @@ export const BattleView: React.FC<BattleViewProps> = ({
   leaveBattle,
 }) => {
   const [gameState, setGameState] = useState<any>(gameData);
-
+  let player = gameState.players.find(
+    (p) => p.id === localStorage.getItem("playerId")
+  );
   function spellClickHandle(w: string) {
     SocketService.update({
       type: "addWord",
@@ -199,7 +201,12 @@ export const BattleView: React.FC<BattleViewProps> = ({
           gap: ".5rem",
         }}
       >
-        <EnemyView enemies={gameState.enemies} id={gameState.id} />;
+        <EnemyView
+          player={player}
+          enemies={gameState.enemies}
+          id={gameState.id}
+        />
+        ;
         <Frame
           style={{
             display: "flex",
@@ -224,18 +231,28 @@ export const BattleView: React.FC<BattleViewProps> = ({
               }}
             >
               {gameState &&
-                gameState.players[0].spellReq.map((word, i) => {
-                  if (!gameState.players[0].spellInput[i]) {
-                    return <span key={uuid()}>{word}</span>;
-                  } else if (
-                    gameState.players[0].spellInput[i] ===
-                    gameState.players[0].spellReq[i]
-                  ) {
-                    return <Spell key={uuid()}>{word}</Spell>;
-                  } else {
-                    return <FailedSpell key={uuid()}>{word}</FailedSpell>;
-                  }
-                })}
+                gameState.players
+                  .find((p) => p.id === SocketService.getPlayerId())
+                  .spellReq.map((word, i) => {
+                    if (
+                      !gameState.players.find(
+                        (p) => p.id === SocketService.getPlayerId()
+                      ).spellInput[i]
+                    ) {
+                      return <span key={uuid()}>{word}</span>;
+                    } else if (
+                      gameState.players.find(
+                        (p) => p.id === SocketService.getPlayerId()
+                      ).spellInput[i] ===
+                      gameState.players.find(
+                        (p) => p.id === SocketService.getPlayerId()
+                      ).spellReq[i]
+                    ) {
+                      return <Spell key={uuid()}>{word}</Spell>;
+                    } else {
+                      return <FailedSpell key={uuid()}>{word}</FailedSpell>;
+                    }
+                  })}
             </div>
           </div>
         </Frame>
@@ -244,12 +261,40 @@ export const BattleView: React.FC<BattleViewProps> = ({
             <SpellTable
               id={gameState.id}
               spells={gameState.spellTable}
-              spellInput={gameState.players[0].spellInput}
+              spellInput={
+                gameState.players &&
+                gameState.players.find(
+                  (p) => p.id === SocketService.getPlayerId()
+                ).spellInput
+              }
               clickHandler={spellClickHandle}
             />
           </div>
-          {gameState.players.map((player) => {
-            return <PlayerView gameState={gameState} player={player} />;
+          {gameState.players.map((player, i) => {
+            if (
+              gameState.players.find(
+                (p) => p.id === localStorage.getItem("playerId")
+              ).spell === "heal" &&
+              gameState.players.find(
+                (p) => p.id === localStorage.getItem("playerId")
+              ).target === i
+            ) {
+              return (
+                <PlayerView
+                  gameState={gameState}
+                  player={player}
+                  targeted={true}
+                />
+              );
+            } else {
+              return (
+                <PlayerView
+                  gameState={gameState}
+                  player={player}
+                  targeted={false}
+                />
+              );
+            }
           })}
         </div>
       </div>

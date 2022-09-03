@@ -69,7 +69,7 @@ interface CharacterViewProps {
 }
 export const Frame = styled.div`
   display: flex;
-  border: 2px solid #ffebcd;
+  // border: 2px solid #ffebcd;
   color: #ffebcd;
   border-radius: 0.25rem;
   padding: 0.5rem;

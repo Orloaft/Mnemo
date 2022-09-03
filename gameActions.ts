@@ -28,13 +28,15 @@ export function getGameActionHandler() {
             gameData && (gameData.time += 1);
             gameData &&
               gameData.players.forEach((p) => {
-                if (gameData && p.action === "chanting") {
-                  gameData && (p.actionPoints += 3);
-                }
-                if (gameData && p.actionPoints >= 15) {
-                  setTimeout(() => {
-                    p.action = "casting";
-                  }, 1000);
+                if (p.life > 0) {
+                  if (gameData && p.action === "chanting") {
+                    gameData && (p.actionPoints += 3);
+                  }
+                  if (gameData && p.actionPoints >= 15) {
+                    setTimeout(() => {
+                      p.action = "casting";
+                    }, 1000);
+                  }
                 }
               });
 
@@ -65,7 +67,7 @@ export function getGameActionHandler() {
                   enemy.actionPoints = 0;
 
                   enemy.action = "chanting";
-
+                  gameData.players[enemy.target].life <= 0 && enemy.target++;
                   io.to(roomId).emit("update_res", gameData);
                 }, 1000);
               }
@@ -105,28 +107,32 @@ export function getGameActionHandler() {
           break;
         case "enemyClicked":
           player.target = req.targetIndex;
-          gameData.enemies.find((enemy) => enemy.targeted) &&
-            (gameData.enemies.find((enemy) => enemy.targeted).targeted = false);
-          gameData.enemies[req.targetIndex].targeted = true;
+
           io.to(req.id).emit("update_res", gameData);
           break;
         case "enemySelect":
-          let target = player.target;
-
-          if (gameData.enemies.length === 1) {
-            gameData.enemies[0].targeted = true;
-          }
-          if (req.direction === "left") {
-            if (player.target > 0) {
-              gameData.enemies[target].targeted = false;
-              player.target--;
-              gameData.enemies[target - 1].targeted = true;
+          if (player.spell === "missle") {
+            if (!gameData.enemies[player.target]) {
+              player.target = 0;
+            }
+            if (req.direction === "left") {
+              if (player.target > 0) {
+                player.target--;
+              }
+            } else {
+              if (player.target < gameData.enemies.length - 1) {
+                player.target++;
+              }
             }
           } else {
-            if (player.target < gameData.enemies.length - 1) {
-              gameData.enemies[target].targeted = false;
-              player.target++;
-              gameData.enemies[target + 1].targeted = true;
+            if (req.direction === "left") {
+              if (player.target > 0) {
+                player.target--;
+              }
+            } else {
+              if (player.target < gameData.players.length - 1) {
+                player.target++;
+              }
             }
           }
 
@@ -163,10 +169,11 @@ export function getGameActionHandler() {
                       }
                       break;
                     case "heal":
-                      if (player.life + 30 > player.maxLife) {
-                        player.life = player.maxLife;
+                      let playerTarget = gameData.players[player.target];
+                      if (playerTarget.life + 30 > playerTarget.maxLife) {
+                        playerTarget.life = playerTarget.maxLife;
                       } else {
-                        player.life += 30;
+                        playerTarget.life += 30;
                       }
 
                       break;

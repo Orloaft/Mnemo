@@ -1,3 +1,4 @@
+import { EventEmitter } from "stream";
 import { uuid } from "uuidv4";
 import { getEnemy } from "./enemies";
 export interface gameDataProps {
@@ -37,7 +38,9 @@ export interface gameDataProps {
   concluded: boolean;
   animation: string;
 }
-const rounds = [...getEnemy()];
+const rounds = [...getEnemy()].map((enemy) => {
+  return [{ ...enemy }, { ...enemy }, { ...enemy }];
+});
 let lobbyArr: {
   id: string;
   owner: string;
@@ -105,7 +108,9 @@ function getGameDataHandler() {
         round: 0,
         participatingSockets: [],
         players: [],
-        enemies: [{ ...rounds[0] }, { ...rounds[1] }, { ...rounds[2] }],
+        enemies: rounds[0].map((enemy) => {
+          return { ...enemy };
+        }),
         spellTable: [
           "lorem",
           "ipsum",
@@ -149,7 +154,9 @@ function getGameDataHandler() {
       let game = gamesArr.find((game) => game.id === id);
       if (game.round + 1 < rounds.length) {
         game.round += 1;
-        game.enemies = [{ ...rounds[game.round] }];
+        game.enemies = rounds[game.round].map((enemy) => {
+          return { ...enemy };
+        });
         game.enemies.forEach((enemy) => (enemy.spellInput = []));
         return false;
       } else {

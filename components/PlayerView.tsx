@@ -1,17 +1,22 @@
+import styled from "styled-components";
 import SocketService from "../SocketService";
 import { ActionView } from "./ActionView";
 import { Frame } from "./CharacterView";
 import { StatView } from "./StatView";
-
-export const PlayerView = ({ gameState, player }) => {
+const PlayerFrame = styled(Frame)`
+  border: ${(props: { targeted: boolean }) =>
+    props.targeted ? `2px solid white` : ``};
+`;
+export const PlayerView = ({ gameState, player, targeted }) => {
   if (player.id === SocketService.getPlayerId()) {
     return (
-      <Frame
+      <PlayerFrame
         style={{
           display: "flex",
           gap: "1rem",
           minHeight: "5rem",
         }}
+        targeted={targeted}
       >
         {" "}
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -51,23 +56,24 @@ export const PlayerView = ({ gameState, player }) => {
             Heal
           </span>
         </div>
-      </Frame>
+      </PlayerFrame>
     );
   } else {
     return (
-      <Frame
+      <PlayerFrame
         style={{
           display: "flex",
           gap: "1rem",
           minHeight: "5rem",
         }}
+        targeted={targeted}
       >
         <div style={{ display: "flex", flexDirection: "column" }}>
           <StatView enemy={player} />
 
           <ActionView enemy={player} />
         </div>
-      </Frame>
+      </PlayerFrame>
     );
   }
 };

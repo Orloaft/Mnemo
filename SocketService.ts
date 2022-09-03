@@ -52,7 +52,7 @@ function getSocketService() {
       socket.emit("leave_lobby", lobbyId, playerId);
     },
     initGame: function () {
-      playerId = uuid();
+      !playerId && (playerId = uuid());
       localStorage.setItem("playerId", playerId);
       socket.emit(
         "init_gameData",
@@ -79,7 +79,11 @@ function getSocketService() {
     },
     update: function (req) {
       //send an update to the battle state which is handled by a switch statement
-      socket.emit("update_req", playerId, req);
+      socket.emit(
+        "update_req",
+        playerId || localStorage.getItem("playerId"),
+        req
+      );
     },
     joinLobby: function (lobbyId) {
       let player = { name: localStorage.getItem("username"), id: uuid() };

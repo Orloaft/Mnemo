@@ -158,11 +158,12 @@ export function getGameActionHandler() {
                 }
               });
               io.to(req.id).emit("update_res", gameData);
+            } else {
+              gameData &&
+                player.actionPoints >= 15 &&
+                !player.spellInput.find((w) => w === req.word) &&
+                player.spellInput.push(req.word);
             }
-            gameData &&
-              player.actionPoints >= 15 &&
-              !player.spellInput.find((w) => w === req.word) &&
-              player.spellInput.push(req.word);
             if (player && player.spellInput.length === player.spellReq.length) {
               if (player.spellInput.join("") === player.spellReq.join("")) {
                 gameData.animation = "casting";

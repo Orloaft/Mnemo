@@ -3,8 +3,6 @@ import express from "express";
 import next from "next";
 import getGameDataHandler, { gameDataProps } from "./gameData";
 import getGameActionHandler from "./gameActions";
-import { uuid } from "uuidv4";
-import { PlayerView } from "./components/PlayerView";
 
 // function that allows next.js to handle the server side code
 async function startServer() {

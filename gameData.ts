@@ -28,7 +28,7 @@ export interface gameDataProps {
     actionPoints: number;
     action: string;
     dmg: number;
-    spellInput: string[];
+    spellInput: { word: string; isFlagged: boolean }[];
     targeted: boolean;
     target: any;
   }[];
@@ -75,7 +75,7 @@ let gamesArr: {
     actionPoints: number;
     action: string;
     dmg: number;
-    spellInput: string[];
+    spellInput: { word: string; isFlagged: boolean }[];
     spell: string;
     targeted: boolean;
     target: any;

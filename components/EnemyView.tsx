@@ -92,20 +92,31 @@ export const EnemyView = ({ player, enemies, id }) => {
                       case "casting":
                         return (
                           <Spell key={uuid()} style={{ margin: 0 }}>
-                            {s}
+                            {s.word}
                           </Spell>
                         );
                       case "failed":
                         return (
                           <FailedSpell key={uuid()} style={{ margin: 0 }}>
-                            {s}
+                            {s.word}
                           </FailedSpell>
                         );
                       case "chanting":
                         return (
-                          <p key={uuid()} style={{ margin: 0 }}>
-                            {s}
-                          </p>
+                          <>
+                            {(s.isFlagged && (
+                              <p
+                                key={uuid()}
+                                style={{ margin: 0, color: "yellow" }}
+                              >
+                                {s.word}
+                              </p>
+                            )) || (
+                              <p key={uuid()} style={{ margin: 0 }}>
+                                {s.word}
+                              </p>
+                            )}
+                          </>
                         );
                     }
                   })}
@@ -168,20 +179,31 @@ export const EnemyView = ({ player, enemies, id }) => {
                     case "casting":
                       return (
                         <Spell key={uuid()} style={{ margin: 0 }}>
-                          {s}
+                          {s.word}
                         </Spell>
                       );
                     case "failed":
                       return (
                         <FailedSpell key={uuid()} style={{ margin: 0 }}>
-                          {s}
+                          {s.word}
                         </FailedSpell>
                       );
                     case "chanting":
                       return (
-                        <p key={uuid()} style={{ margin: 0 }}>
-                          {s}
-                        </p>
+                        <>
+                          {(s.isFlagged && (
+                            <p
+                              key={uuid()}
+                              style={{ margin: 0, color: "yellow" }}
+                            >
+                              {s.word}
+                            </p>
+                          )) || (
+                            <p key={uuid()} style={{ margin: 0 }}>
+                              {s.word}
+                            </p>
+                          )}
+                        </>
                       );
                   }
                 })}

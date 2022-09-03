@@ -30,7 +30,7 @@ export function getGameActionHandler() {
               gameData.players.forEach((p) => {
                 if (p.life > 0) {
                   if (gameData && p.action === "chanting") {
-                    gameData && (p.actionPoints += 3);
+                    gameData && (p.actionPoints += 1.5);
                   }
                   if (gameData && p.actionPoints >= 15) {
                     setTimeout(() => {
@@ -42,13 +42,14 @@ export function getGameActionHandler() {
 
             gameData.enemies.forEach((enemy) => {
               if (enemy.action === "chanting" && enemy.life > 0) {
-                enemy.actionPoints += 1;
+                enemy.actionPoints += 1.25;
                 if (enemy.actionPoints % 5 === 0) {
-                  enemy.spellInput.push(
-                    [...gameData.spellTable]
+                  enemy.spellInput.push({
+                    word: [...gameData.spellTable]
                       .sort(() => 0.5 - Math.random())
-                      .slice(0, 1)[0]
-                  );
+                      .slice(0, 1)[0],
+                    isFlagged: !Math.floor(Math.random() * 4),
+                  });
 
                   io.to(roomId).emit("update_res", gameData);
                 }
@@ -145,6 +146,19 @@ export function getGameActionHandler() {
             io.to(req.id).emit("update_res", gameData);
             break;
           case "addWord":
+            if (player.actionPoints < 15) {
+              gameData.enemies.forEach((e) => {
+                let match = e.spellInput[e.spellInput.length - 1];
+
+                if (match && match.isFlagged && match.word === req.word) {
+                  player.actionPoints += 5;
+                  match.isFlagged = false;
+                  e.spellInput.pop();
+                  e.actionPoints -= 5;
+                }
+              });
+              io.to(req.id).emit("update_res", gameData);
+            }
             gameData &&
               player.actionPoints >= 15 &&
               !player.spellInput.find((w) => w === req.word) &&

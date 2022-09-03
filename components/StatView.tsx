@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const HpBar = styled.div`
-  background-color: aliceblue;
+  background: transparent;
   padding: 0.15rem;
   height: 0.5rem;
   width: 5rem;

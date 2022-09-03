@@ -4,8 +4,9 @@ import { ActionView } from "./ActionView";
 import { Frame } from "./CharacterView";
 import { StatView } from "./StatView";
 const PlayerFrame = styled(Frame)`
+  background: linear-gradient(to right, #868f96 0%, #596164 100%);
   border: ${(props: { targeted: boolean }) =>
-    props.targeted ? `2px solid white` : ``};
+    props.targeted ? `2px solid white` : `2px solid transparent`};
 `;
 export const PlayerView = ({ gameState, player, targeted }) => {
   if (player.id === SocketService.getPlayerId()) {
@@ -27,6 +28,7 @@ export const PlayerView = ({ gameState, player, targeted }) => {
         <div style={{ display: "flex", flexDirection: "column" }}>
           <span
             style={{
+              padding: ".25rem",
               cursor: "default",
               border: `${player.spell === "missle" ? "2px solid white" : ""}`,
             }}
@@ -42,6 +44,7 @@ export const PlayerView = ({ gameState, player, targeted }) => {
           </span>
           <span
             style={{
+              padding: ".25rem",
               cursor: "default",
               border: `${player.spell === "heal" ? "2px solid white" : ""}`,
             }}

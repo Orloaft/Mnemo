@@ -88,6 +88,7 @@ export const MenuView: React.FC = () => {
         !isBattle && setIsBattle(true);
       } else {
         localStorage.removeItem("matchId");
+        SocketService.setLobbyData(null);
         setMatchId(false);
       }
     });

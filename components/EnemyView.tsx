@@ -47,7 +47,7 @@ export const EnemyView = ({ player, enemies, id }) => {
       }}
     >
       {enemies.map((enemy, i) => {
-        if (player && player.target === i) {
+        if (player && player.target === i && player.spell === "missle") {
           return (
             <EnemyImage key={uuid()} targeted={true}>
               <img

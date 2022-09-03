@@ -67,6 +67,9 @@ export function getGameActionHandler() {
                   enemy.actionPoints = 0;
 
                   enemy.action = "chanting";
+                  enemy.target = Math.floor(
+                    Math.random() * gameData.players.length
+                  );
                   gameData.players[enemy.target].life <= 0 && enemy.target++;
                   io.to(roomId).emit("update_res", gameData);
                 }, 1000);
@@ -81,134 +84,141 @@ export function getGameActionHandler() {
     handleAction: function (req, io, playerId) {
       let gameData = getGameDataHandler.getGame(req.id);
       let player = gameData && gameData.players.find((p) => p.id === playerId);
-      switch (req.type) {
-        // case "addPlayerSocket":
-        //   gameData && gameData.participatingSockets.push(req.socket);
-        //   break;
-        case "pause":
-          gameData.paused = !gameData.paused;
-          io.to(gameData.id).emit("update_res", gameData);
-          break;
-        case "spellSelect":
-          player.spell = req.spell;
-          player.spellReq = [...gameData.spellTable]
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 3);
-          io.to(req.id).emit("update_res", gameData);
-          break;
-        case "animate":
-          gameData && (gameData.animation = req.animation);
-          io.to(req.id).emit("update_res", gameData);
-          setTimeout(() => {
-            gameData && (gameData.animation = "normal");
+      if (player.life > 0) {
+        switch (req.type) {
+          // case "addPlayerSocket":
+          //   gameData && gameData.participatingSockets.push(req.socket);
+          //   break;
+          case "pause":
+            gameData.paused = !gameData.paused;
+            io.to(gameData.id).emit("update_res", gameData);
+            break;
+          case "spellSelect":
+            player.spell = req.spell;
+            player.spellReq = [...gameData.spellTable]
+              .sort(() => 0.5 - Math.random())
+              .slice(0, 3);
             io.to(req.id).emit("update_res", gameData);
-          }, req.duration);
-
-          break;
-        case "enemyClicked":
-          player.target = req.targetIndex;
-
-          io.to(req.id).emit("update_res", gameData);
-          break;
-        case "enemySelect":
-          if (player.spell === "missle") {
-            if (!gameData.enemies[player.target]) {
-              player.target = 0;
-            }
-            if (req.direction === "left") {
-              if (player.target > 0) {
-                player.target--;
-              }
-            } else {
-              if (player.target < gameData.enemies.length - 1) {
-                player.target++;
-              }
-            }
-          } else {
-            if (req.direction === "left") {
-              if (player.target > 0) {
-                player.target--;
-              }
-            } else {
-              if (player.target < gameData.players.length - 1) {
-                player.target++;
-              }
-            }
-          }
-
-          io.to(req.id).emit("update_res", gameData);
-          break;
-        case "clearMatch":
-          gameData && (gameData.concluded = true);
-          getGameDataHandler.removeGame(req.id);
-          io.to(req.id).emit("update_res", gameData);
-          break;
-        case "addWord":
-          gameData &&
-            player.actionPoints >= 15 &&
-            !player.spellInput.find((w) => w === req.word) &&
-            player.spellInput.push(req.word);
-          if (player && player.spellInput.length === player.spellReq.length) {
-            if (player.spellInput.join("") === player.spellReq.join("")) {
-              gameData.animation = "casting";
-              player.actionPoints = 0;
-              io.to(req.id).emit("update_res", gameData);
-              setTimeout(() => {
-                if (gameData) {
-                  switch (player.spell) {
-                    case "missle":
-                      let target = gameData.enemies[player.target];
-                      target.life -= 30;
-                      if (target.life <= 0) {
-                        target.spellInput = [];
-                        gameData.enemies[0].targeted = true;
-
-                        io.to(req.id).emit("update_res", gameData);
-                        gameData.enemies.splice(player.target, 1);
-                        player.target = 0;
-                      }
-                      break;
-                    case "heal":
-                      let playerTarget = gameData.players[player.target];
-                      if (playerTarget.life + 30 > playerTarget.maxLife) {
-                        playerTarget.life = playerTarget.maxLife;
-                      } else {
-                        playerTarget.life += 30;
-                      }
-
-                      break;
-                  }
-
-                  player.spellInput = [];
-                  player.spellReq = [...gameData.spellTable]
-                    .sort(() => 0.5 - Math.random())
-                    .slice(0, 3);
-                  gameData.animation = "normal";
-                  player.action = "chanting";
-                  if (
-                    gameData &&
-                    !gameData.enemies.find((enemy) => enemy.life > 0)
-                  ) {
-                    getGameDataHandler.nextRound(gameData.id) &&
-                      getGameDataHandler.removeGame(gameData.id);
-                  }
-                  io.to(req.id).emit("update_res", gameData);
-                }
-              }, 1000);
-            } else {
-              gameData.animation = "failed";
-              io.to(req.id).emit("update_res", gameData);
-              setTimeout(() => {
-                if (gameData) {
-                  player.spellInput = [];
-                  gameData.animation = "normal";
-                  io.to(req.id).emit("update_res", gameData);
-                }
-              }, 1000);
-            }
-          } else {
+            break;
+          case "animate":
+            gameData && (gameData.animation = req.animation);
             io.to(req.id).emit("update_res", gameData);
-          }
+            setTimeout(() => {
+              gameData && (gameData.animation = "normal");
+              io.to(req.id).emit("update_res", gameData);
+            }, req.duration);
+
+            break;
+          case "enemyClicked":
+            player.target = req.targetIndex;
+
+            io.to(req.id).emit("update_res", gameData);
+            break;
+          case "enemySelect":
+            if (player.spell === "missle") {
+              if (!gameData.enemies[player.target]) {
+                player.target = 0;
+              }
+              if (req.direction === "left") {
+                if (player.target > 0) {
+                  player.target--;
+                }
+              } else {
+                if (player.target < gameData.enemies.length - 1) {
+                  player.target++;
+                }
+              }
+            } else {
+              if (req.direction === "left") {
+                if (player.target > 0) {
+                  player.target--;
+                }
+              } else {
+                if (player.target < gameData.players.length - 1) {
+                  player.target++;
+                }
+              }
+            }
+
+            io.to(req.id).emit("update_res", gameData);
+            break;
+          case "clearMatch":
+            gameData && (gameData.concluded = true);
+            getGameDataHandler.removeGame(req.id);
+            io.to(req.id).emit("update_res", gameData);
+            break;
+          case "addWord":
+            gameData &&
+              player.actionPoints >= 15 &&
+              !player.spellInput.find((w) => w === req.word) &&
+              player.spellInput.push(req.word);
+            if (player && player.spellInput.length === player.spellReq.length) {
+              if (player.spellInput.join("") === player.spellReq.join("")) {
+                gameData.animation = "casting";
+                player.actionPoints = 0;
+                io.to(req.id).emit("update_res", gameData);
+                setTimeout(() => {
+                  if (gameData) {
+                    switch (player.spell) {
+                      case "missle":
+                        let target = gameData.enemies[player.target];
+                        if (!target) {
+                          player.target = 0;
+                          target = gameData.enemies[player.target];
+                        }
+
+                        target.life -= 30;
+                        if (target.life <= 0) {
+                          target.spellInput = [];
+                          gameData.enemies[0].targeted = true;
+
+                          io.to(req.id).emit("update_res", gameData);
+                          gameData.enemies.splice(player.target, 1);
+                          player.target = 0;
+                        }
+                        break;
+                      case "heal":
+                        let playerTarget = gameData.players[player.target];
+                        if (playerTarget.life + 30 > playerTarget.maxLife) {
+                          playerTarget.life = playerTarget.maxLife;
+                        } else {
+                          playerTarget.life += 30;
+                        }
+
+                        break;
+                    }
+
+                    player.spellInput = [];
+                    player.spellReq = [...gameData.spellTable]
+                      .sort(() => 0.5 - Math.random())
+                      .slice(0, 3);
+                    gameData.animation = "normal";
+                    player.action = "chanting";
+                    if (
+                      gameData &&
+                      !gameData.enemies.find((enemy) => enemy.life > 0)
+                    ) {
+                      getGameDataHandler.nextRound(gameData.id) &&
+                        getGameDataHandler.removeGame(gameData.id);
+                    }
+                    io.to(req.id).emit("update_res", gameData);
+                  }
+                }, 1000);
+              } else {
+                gameData.animation = "failed";
+                io.to(req.id).emit("update_res", gameData);
+                setTimeout(() => {
+                  if (gameData) {
+                    player.spellInput = [];
+                    gameData.animation = "normal";
+                    io.to(req.id).emit("update_res", gameData);
+                  }
+                }, 1000);
+              }
+            } else {
+              io.to(req.id).emit("update_res", gameData);
+            }
+        }
       }
     },
   };

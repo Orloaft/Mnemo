@@ -157,7 +157,10 @@ function getGameDataHandler() {
         game.enemies = rounds[game.round].map((enemy) => {
           return { ...enemy };
         });
-        game.enemies.forEach((enemy) => (enemy.spellInput = []));
+        game.enemies.forEach((enemy) => {
+          enemy.target = Math.floor(Math.random() * game.players.length);
+          enemy.spellInput = [];
+        });
         return false;
       } else {
         game.concluded = true;

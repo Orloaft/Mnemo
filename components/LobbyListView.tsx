@@ -3,9 +3,10 @@ import { MenuContainer } from "./MenuView";
 import SocketService from "../SocketService";
 import { Frame } from "./CharacterView";
 import { Lobby } from "./Lobby";
-export const LobbyListView: React.FC<{ toggleLobby: () => void }> = ({
-  toggleLobby,
-}) => {
+export const LobbyListView: React.FC<{
+  toggleLobby: any;
+  battleStart: any;
+}> = ({ toggleLobby, battleStart }) => {
   const [lobby, setLobby] = useState(false);
   const [lobbyList, setLobbyList] = useState([]);
   const createLobby = (e) => {
@@ -15,7 +16,12 @@ export const LobbyListView: React.FC<{ toggleLobby: () => void }> = ({
   useEffect(() => {
     SocketService.getGames();
     SocketService.socket().on("lobby_state_res", (lobby) => {
-      setLobby(lobby);
+      if (lobby.players.find((p) => p.id === SocketService.getPlayerId())) {
+        SocketService.setLobbyData({ ...lobby });
+        setLobby(lobby);
+      } else {
+        setLobby(false);
+      }
     });
     SocketService.socket().on("get_games_res", (lobbies) => {
       setLobbyList([...lobbies]);
@@ -23,7 +29,7 @@ export const LobbyListView: React.FC<{ toggleLobby: () => void }> = ({
   }, []);
   return (
     <MenuContainer style={{ display: "flex", flexDirection: "column" }}>
-      {(lobby && <Lobby lobby={lobby} />) || (
+      {(lobby && <Lobby lobby={lobby} battleStart={battleStart} />) || (
         <>
           {" "}
           {lobbyList.map((game) => {
@@ -32,7 +38,6 @@ export const LobbyListView: React.FC<{ toggleLobby: () => void }> = ({
                 key={game.id}
                 onClick={() => {
                   SocketService.joinLobby(game.id);
-                  setLobby(game);
                 }}
               >
                 {game.name}
@@ -55,11 +60,11 @@ export const LobbyListView: React.FC<{ toggleLobby: () => void }> = ({
               <button style={{ zIndex: "3" }}>create</button>
             </form>{" "}
           </Frame>
+          <button style={{ zIndex: "3" }} onClick={() => toggleLobby()}>
+            back
+          </button>{" "}
         </>
       )}
-      <button style={{ zIndex: "3" }} onClick={() => toggleLobby()}>
-        back
-      </button>{" "}
     </MenuContainer>
   );
 };

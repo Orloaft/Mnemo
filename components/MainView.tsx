@@ -75,12 +75,7 @@ export const LoadButton = styled(Frame)`
   }
 `;
 export const MainView: React.FC = () => {
-  const [isLobby, setIsLobby] = useState(false);
   const [credentials, setCredentials] = useState(null);
-
-  function toggle() {
-    setIsLobby(!isLobby);
-  }
 
   function logIn() {
     setCredentials(window.localStorage.getItem("username"));
@@ -94,9 +89,7 @@ export const MainView: React.FC = () => {
         <SignIn logIn={logIn} />
       </>
     );
-  } else if (!isLobby) {
-    return <MenuView toggleLobby={toggle} />;
   } else {
-    return <LobbyListView toggleLobby={toggle} />;
+    return <MenuView />;
   }
 };

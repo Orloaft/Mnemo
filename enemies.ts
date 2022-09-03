@@ -11,6 +11,7 @@ export const getEnemy = () => {
       spellInput: [],
       spell: "missle",
       targeted: false,
+      target: 0,
     },
     {
       name: "turtle",
@@ -23,6 +24,7 @@ export const getEnemy = () => {
       spellInput: [],
       spell: "missle",
       targeted: false,
+      target: 0,
     },
     {
       name: "skeleton",
@@ -35,6 +37,7 @@ export const getEnemy = () => {
       spellInput: [],
       spell: "missle",
       targeted: false,
+      target: 0,
     },
     {
       name: "waspoid",
@@ -47,6 +50,7 @@ export const getEnemy = () => {
       spellInput: [],
       spell: "missle",
       targeted: false,
+      target: 0,
     },
     {
       name: "drake",
@@ -59,6 +63,7 @@ export const getEnemy = () => {
       spellInput: [],
       spell: "missle",
       targeted: false,
+      target: 0,
     },
     {
       name: "eye",
@@ -71,6 +76,7 @@ export const getEnemy = () => {
       spellInput: [],
       spell: "missle",
       targeted: false,
+      target: 0,
     },
     {
       name: "ghoul",
@@ -83,6 +89,7 @@ export const getEnemy = () => {
       spellInput: [],
       spell: "missle",
       targeted: false,
+      target: 0,
     },
     {
       name: "magus",
@@ -95,6 +102,7 @@ export const getEnemy = () => {
       spellInput: [],
       spell: "missle",
       targeted: false,
+      target: 0,
     },
   ];
   return enemies;

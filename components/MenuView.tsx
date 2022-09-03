@@ -6,6 +6,7 @@ import { LoadButton } from "./MainView";
 import { PartyMenuView } from "./PartyMenuView";
 import SocketService from "../SocketService";
 import gameData, { gameDataProps } from "../gameData";
+import { LobbyListView } from "./LobbyListView";
 
 const emerge = keyframes`
 0%{ 
@@ -62,9 +63,8 @@ const BattleContainer = styled.div`
   animation-timing-function: linear;
 `;
 
-export const MenuView: React.FC<{ toggleLobby: () => void }> = ({
-  toggleLobby,
-}) => {
+export const MenuView: React.FC = () => {
+  const [isLobby, setIsLobby] = useState(false);
   const [isBattle, setIsBattle] = useState(false);
   // checks if there is an id stored to try and resume interrupted match
   const [matchId, setMatchId] = useState(false);
@@ -78,22 +78,12 @@ export const MenuView: React.FC<{ toggleLobby: () => void }> = ({
   };
   useEffect(() => {
     localStorage.getItem("matchId") && setMatchId(true);
+    localStorage.getItem("playerId") && SocketService.setPlayerId();
 
     SocketService.socket().on("update_res", (obj: gameDataProps) => {
       SocketService.setGameData(obj);
       if (obj && !obj.concluded) {
         localStorage.setItem("matchId", obj.id);
-        if (
-          !obj.participatingSockets.find(
-            (socket) => socket === SocketService.socket().id
-          )
-        ) {
-          SocketService.update({
-            type: "addPlayerSocket",
-            socket: SocketService.socket().id,
-            id: obj.id,
-          });
-        }
 
         !isBattle && setIsBattle(true);
       } else {
@@ -111,6 +101,13 @@ export const MenuView: React.FC<{ toggleLobby: () => void }> = ({
         />
       </BattleContainer>
     );
+  } else if (isLobby) {
+    return (
+      <LobbyListView
+        toggleLobby={() => setIsLobby(!isLobby)}
+        battleStart={battleStart}
+      />
+    );
   } else {
     return (
       <MenuContainer>
@@ -125,7 +122,9 @@ export const MenuView: React.FC<{ toggleLobby: () => void }> = ({
             <LoadButton onClick={() => battleStart()}>Battle</LoadButton>
           </PartyWrap>
         )}
-        <LoadButton onClick={() => toggleLobby()}>Multiplayer</LoadButton>
+        <LoadButton onClick={() => setIsLobby(!isLobby)}>
+          Multiplayer
+        </LoadButton>
         <PartyMenuView />
       </MenuContainer>
     );

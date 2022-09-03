@@ -11,6 +11,7 @@ import { SpellTable } from "./SpellTable";
 import { EnemyView } from "./EnemyView";
 import { uuid } from "uuidv4";
 import { Socket } from "socket.io-client";
+import { PlayerView } from "./PlayerView";
 
 interface BattleViewProps {
   gameData: any;
@@ -222,12 +223,13 @@ export const BattleView: React.FC<BattleViewProps> = ({
                 alignItems: "center",
               }}
             >
-              {gameState.spellReq &&
-                gameState.spellReq.map((word, i) => {
-                  if (!gameState.spellInput[i]) {
+              {gameState &&
+                gameState.players[0].spellReq.map((word, i) => {
+                  if (!gameState.players[0].spellInput[i]) {
                     return <span key={uuid()}>{word}</span>;
                   } else if (
-                    gameState.spellInput[i] === gameState.spellReq[i]
+                    gameState.players[0].spellInput[i] ===
+                    gameState.players[0].spellReq[i]
                   ) {
                     return <Spell key={uuid()}>{word}</Spell>;
                   } else {
@@ -242,64 +244,13 @@ export const BattleView: React.FC<BattleViewProps> = ({
             <SpellTable
               id={gameState.id}
               spells={gameState.spellTable}
-              spellInput={gameState.spellInput}
+              spellInput={gameState.players[0].spellInput}
               clickHandler={spellClickHandle}
             />
           </div>
-
-          <Frame
-            style={{
-              display: "flex",
-              gap: "1rem",
-              minHeight: "5rem",
-            }}
-          >
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <StatView enemy={gameState.players[0]} />
-
-              <ActionView enemy={gameState.players[0]} />
-            </div>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <span
-                style={{
-                  cursor: "default",
-                  border: `${
-                    gameState.players[0].spell === "missle"
-                      ? "2px solid white"
-                      : ""
-                  }`,
-                }}
-                onClick={() =>
-                  SocketService.update({
-                    type: "spellSelect",
-                    spell: "missle",
-                    id: gameState.id,
-                  })
-                }
-              >
-                Missle
-              </span>
-              <span
-                style={{
-                  cursor: "default",
-                  border: `${
-                    gameState.players[0].spell === "heal"
-                      ? "2px solid white"
-                      : ""
-                  }`,
-                }}
-                onClick={() =>
-                  SocketService.update({
-                    type: "spellSelect",
-                    spell: "heal",
-                    id: gameState.id,
-                  })
-                }
-              >
-                Heal
-              </span>
-            </div>
-          </Frame>
+          {gameState.players.map((player) => {
+            return <PlayerView gameState={gameState} player={player} />;
+          })}
         </div>
       </div>
     );

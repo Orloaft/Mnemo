@@ -4,10 +4,11 @@ import next from "next";
 import getGameDataHandler, { gameDataProps } from "./gameData";
 import getGameActionHandler from "./gameActions";
 import { uuid } from "uuidv4";
+import { PlayerView } from "./components/PlayerView";
 
 // function that allows next.js to handle the server side code
 async function startServer() {
-  const nextJsApp = next({ dev: false, conf: { reactStrictMode: true } });
+  const nextJsApp = next({ dev: true, conf: { reactStrictMode: true } });
   await nextJsApp.prepare();
   const app = express();
   app.all("*", nextJsApp.getRequestHandler() as any);
@@ -20,15 +21,10 @@ async function startServer() {
     console.log("connected with", socket.id);
     //when a socket disconnects. check which game it was in and pause that game and remove socketId
     socket.on("disconnecting", () => {
-      getGameDataHandler.getAllGames().forEach((game) => {
-        if (
-          game.participatingSockets.find((socketId) => socketId === socket.id)
-        ) {
-          game.paused = true;
-          game.participatingSockets.filter(
-            (socketId) => socketId !== socket.id
-          );
-        }
+      getGameDataHandler.getAllLobbies().forEach((lobby) => {
+        lobby.players.find((p) => p.socket === socket.id) &&
+          (lobby.players = lobby.players.filter((p) => p.socket !== socket.id));
+        !lobby.players.length && getGameDataHandler.removeLobby(lobby.id);
       });
     });
     socket.on("join_lobby", async (roomId, player) => {

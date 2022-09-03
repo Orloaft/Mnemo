@@ -48,8 +48,9 @@ function getSocketService() {
     leaveLobby: function (lobbyId) {
       lobbyData = null;
       localStorage.removeItem("playerId");
-      playerId = null;
+
       socket.emit("leave_lobby", lobbyId, playerId);
+      playerId = null;
     },
     initGame: function () {
       !playerId && (playerId = uuid());
@@ -86,7 +87,11 @@ function getSocketService() {
       );
     },
     joinLobby: function (lobbyId) {
-      let player = { name: localStorage.getItem("username"), id: uuid() };
+      let player = {
+        name: localStorage.getItem("username"),
+        id: uuid(),
+        socket: socket.id,
+      };
       playerId = player.id;
       localStorage.setItem("playerId", playerId);
       socket.emit("join_lobby", lobbyId, player);

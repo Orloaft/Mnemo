@@ -44,7 +44,7 @@ const rounds = [...getEnemy()].map((enemy) => {
 let lobbyArr: {
   id: string;
   owner: string;
-  players: { id: string; name: string }[];
+  players: { id: string; name: string; socket: string }[];
   name: string;
   messages: { author: string; body: string }[];
 }[] = [];
@@ -93,7 +93,7 @@ function getGameDataHandler() {
       let newLobby = {
         id: uuid(),
         owner: owner.id,
-        players: [{ id: owner.id, name: owner.name }],
+        players: [{ ...owner }],
         name: name,
         messages: [],
       };

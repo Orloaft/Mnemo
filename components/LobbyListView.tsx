@@ -56,7 +56,7 @@ export const LobbyListView: React.FC<{
                 createLobby(e);
               }}
             >
-              <input name="lobby_name"></input>
+              <input name="lobby_name" autoComplete="off"></input>
               <button style={{ zIndex: "3" }}>create</button>
             </form>{" "}
           </Frame>

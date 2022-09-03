@@ -84,11 +84,8 @@ export function getGameActionHandler() {
     handleAction: function (req, io, playerId) {
       let gameData = getGameDataHandler.getGame(req.id);
       let player = gameData && gameData.players.find((p) => p.id === playerId);
-      if (player.life > 0) {
+      if (player && player.life > 0) {
         switch (req.type) {
-          // case "addPlayerSocket":
-          //   gameData && gameData.participatingSockets.push(req.socket);
-          //   break;
           case "pause":
             gameData.paused = !gameData.paused;
             io.to(gameData.id).emit("update_res", gameData);

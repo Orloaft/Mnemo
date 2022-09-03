@@ -169,7 +169,13 @@ const Wrap = styled.div`
   animationduration: 2s;
   animationiterationcount: once;
 `;
-
+const PlayerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  @media (min-width: 48rem) {
+    flex-direction: row;
+  }
+`;
 export const BattleView: React.FC<BattleViewProps> = ({
   gameData,
   leaveBattle,
@@ -270,32 +276,34 @@ export const BattleView: React.FC<BattleViewProps> = ({
               clickHandler={spellClickHandle}
             />
           </div>
-          {gameState.players.map((player, i) => {
-            if (
-              gameState.players.find(
-                (p) => p.id === localStorage.getItem("playerId")
-              ).spell === "heal" &&
-              gameState.players.find(
-                (p) => p.id === localStorage.getItem("playerId")
-              ).target === i
-            ) {
-              return (
-                <PlayerView
-                  gameState={gameState}
-                  player={player}
-                  targeted={true}
-                />
-              );
-            } else {
-              return (
-                <PlayerView
-                  gameState={gameState}
-                  player={player}
-                  targeted={false}
-                />
-              );
-            }
-          })}
+          <PlayerContainer>
+            {gameState.players.map((player, i) => {
+              if (
+                gameState.players.find(
+                  (p) => p.id === localStorage.getItem("playerId")
+                ).spell === "heal" &&
+                gameState.players.find(
+                  (p) => p.id === localStorage.getItem("playerId")
+                ).target === i
+              ) {
+                return (
+                  <PlayerView
+                    gameState={gameState}
+                    player={player}
+                    targeted={true}
+                  />
+                );
+              } else {
+                return (
+                  <PlayerView
+                    gameState={gameState}
+                    player={player}
+                    targeted={false}
+                  />
+                );
+              }
+            })}
+          </PlayerContainer>
         </div>
       </div>
     );

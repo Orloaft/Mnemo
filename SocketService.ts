@@ -52,14 +52,16 @@ function getSocketService() {
       socket.emit("leave_lobby", lobbyId, playerId);
       playerId = null;
     },
-    initGame: function () {
+    initGame: function (difficulty) {
       !playerId && (playerId = uuid());
       localStorage.setItem("playerId", playerId);
+      lobbyData.difficulty = difficulty;
       socket.emit(
         "init_gameData",
         lobbyData || {
           id: uuid(),
           players: [{ id: playerId, name: localStorage.getItem("username") }],
+          difficulty: difficulty,
         }
       );
     },

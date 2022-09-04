@@ -7,6 +7,7 @@ export interface gameDataProps {
   time: number;
   round: number;
   participatingSockets: string[];
+  difficulty: string;
   players: {
     id: string;
     name: string;
@@ -39,7 +40,7 @@ export interface gameDataProps {
   animation: string;
 }
 const rounds = [...getEnemy()].map((enemy) => {
-  return [{ ...enemy }, { ...enemy }, { ...enemy }];
+  return { ...enemy };
 });
 let lobbyArr: {
   id: string;
@@ -54,6 +55,7 @@ let gamesArr: {
   time: number;
   round: number;
   participatingSockets: string[];
+  difficulty: string;
   players: {
     id: string;
     name: string;
@@ -67,19 +69,7 @@ let gamesArr: {
     spellReq: string[];
     spellInput: string[];
   }[];
-  enemies: {
-    name: string;
-    life: number;
-    maxLife: number;
-    speed: number;
-    actionPoints: number;
-    action: string;
-    dmg: number;
-    spellInput: { word: string; isFlagged: boolean }[];
-    spell: string;
-    targeted: boolean;
-    target: any;
-  }[];
+  enemies: any;
   spellTable: string[];
   spellInput: string[];
   spellReq: string[];
@@ -100,7 +90,7 @@ function getGameDataHandler() {
       lobbyArr.push(newLobby);
       return newLobby;
     },
-    initGame: function (): any {
+    initGame: function (difficulty): any {
       let newGame = {
         id: uuid(),
         paused: false,
@@ -108,9 +98,8 @@ function getGameDataHandler() {
         round: 0,
         participatingSockets: [],
         players: [],
-        enemies: rounds[0].map((enemy) => {
-          return { ...enemy };
-        }),
+        difficulty: difficulty,
+        enemies: [],
         spellTable: [
           "lorem",
           "ipsum",
@@ -127,6 +116,21 @@ function getGameDataHandler() {
         animation: "normal",
         score: "",
       };
+      switch (difficulty) {
+        case "easy":
+          newGame.enemies = [{ ...rounds[0] }];
+          break;
+        case "medium":
+          newGame.enemies = [{ ...rounds[0] }, { ...rounds[0] }];
+          break;
+        case "hard":
+          newGame.enemies = [
+            { ...rounds[0] },
+            { ...rounds[0] },
+            { ...rounds[0] },
+          ];
+          break;
+      }
       gamesArr.push(newGame);
       newGame.enemies.forEach((enemy) => (enemy.spellInput = []));
 
@@ -154,9 +158,24 @@ function getGameDataHandler() {
       let game = gamesArr.find((game) => game.id === id);
       if (game.round + 1 < rounds.length) {
         game.round += 1;
-        game.enemies = rounds[game.round].map((enemy) => {
-          return { ...enemy };
-        });
+        switch (game.difficulty) {
+          case "easy":
+            game.enemies = [{ ...rounds[game.round] }];
+            break;
+          case "medium":
+            game.enemies = [
+              { ...rounds[game.round] },
+              { ...rounds[game.round] },
+            ];
+            break;
+          case "hard":
+            game.enemies = [
+              { ...rounds[game.round] },
+              { ...rounds[game.round] },
+              { ...rounds[game.round] },
+            ];
+            break;
+        }
         game.enemies.forEach((enemy) => {
           enemy.target = Math.floor(Math.random() * game.players.length);
           enemy.spellInput = [];

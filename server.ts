@@ -64,9 +64,11 @@ async function startServer() {
       io.to(lobby.id).emit("lobby_state_res", lobby);
     });
     socket.on("init_gameData", async (lobby: any) => {
-      let newGame: gameDataProps = getGameDataHandler.initGame();
+      let newGame: gameDataProps = getGameDataHandler.initGame(
+        lobby.difficulty
+      );
       newGame.id = lobby.id;
-
+      newGame.difficulty = lobby.difficulty;
       lobby.players.forEach((p) => {
         newGame.players.push({
           id: p.id,

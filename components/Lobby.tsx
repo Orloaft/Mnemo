@@ -1,6 +1,7 @@
 import { Frame } from "./CharacterView";
 import SocketService from "../SocketService";
 import { uuid } from "uuidv4";
+import { LoadButton } from "./MainView";
 export const Lobby = ({ lobby, battleStart }) => {
   const submitMessage = (e) => {
     e.preventDefault();
@@ -19,13 +20,7 @@ export const Lobby = ({ lobby, battleStart }) => {
             <input name="message_body" autoComplete="off"></input>
             <button>send</button>
           </form>
-          <button
-            onClick={() => {
-              battleStart();
-            }}
-          >
-            start game
-          </button>
+
           <button
             onClick={() => {
               SocketService.leaveLobby(lobby.id);
@@ -52,6 +47,29 @@ export const Lobby = ({ lobby, battleStart }) => {
             })}
           </div>
         </Frame>
+        <LoadButton
+          onClick={() => {
+            SocketService.initGame("easy");
+          }}
+        >
+          Easy
+        </LoadButton>
+
+        <LoadButton
+          onClick={() => {
+            SocketService.initGame("medium");
+          }}
+        >
+          Medium
+        </LoadButton>
+
+        <LoadButton
+          onClick={() => {
+            SocketService.initGame("hard");
+          }}
+        >
+          Hard
+        </LoadButton>
       </div>
     </>
   );

@@ -65,16 +65,17 @@ const BattleContainer = styled.div`
 
 export const MenuView: React.FC = () => {
   const [isLobby, setIsLobby] = useState(false);
-  const [isBattle, setIsBattle] = useState(false);
+  const [isBattle, setIsBattle] = useState("menu");
   // checks if there is an id stored to try and resume interrupted match
   const [matchId, setMatchId] = useState(false);
 
   const battleStart = () => {
-    SocketService.initGame();
+    // SocketService.initGame();
+    setIsBattle("settings");
   };
   const leaveBattle = () => {
     console.log("ended battle");
-    setIsBattle(false);
+    setIsBattle("menu");
   };
   useEffect(() => {
     localStorage.getItem("matchId") && setMatchId(true);
@@ -85,7 +86,7 @@ export const MenuView: React.FC = () => {
       if (obj && !obj.concluded) {
         localStorage.setItem("matchId", obj.id);
 
-        !isBattle && setIsBattle(true);
+        isBattle === "menu" && setIsBattle("battle");
       } else {
         localStorage.removeItem("matchId");
         SocketService.setLobbyData(null);
@@ -93,41 +94,72 @@ export const MenuView: React.FC = () => {
       }
     });
   }, []);
-  if (isBattle) {
-    return (
-      <BattleContainer>
-        <BattleView
-          gameData={SocketService.getGameData()}
-          leaveBattle={leaveBattle}
-        />
-      </BattleContainer>
-    );
-  } else if (isLobby) {
-    return (
-      <LobbyListView
-        toggleLobby={() => setIsLobby(!isLobby)}
-        battleStart={battleStart}
-      />
-    );
-  } else {
-    return (
-      <MenuContainer>
-        {(matchId && (
-          <PartyWrap>
-            <LoadButton onClick={() => SocketService.resumeGame()}>
-              Resume
+  switch (isBattle) {
+    case "settings":
+      return (
+        <MenuContainer>
+          <PartyWrap style={{ gap: ".5rem" }}>
+            <LoadButton
+              onClick={() => {
+                SocketService.initGame("easy");
+              }}
+            >
+              Easy
+            </LoadButton>
+
+            <LoadButton
+              onClick={() => {
+                SocketService.initGame("medium");
+              }}
+            >
+              Medium
+            </LoadButton>
+
+            <LoadButton
+              onClick={() => {
+                SocketService.initGame("hard");
+              }}
+            >
+              Hard
             </LoadButton>
           </PartyWrap>
-        )) || (
-          <PartyWrap>
-            <LoadButton onClick={() => battleStart()}>Battle</LoadButton>
-          </PartyWrap>
-        )}
-        <LoadButton onClick={() => setIsLobby(!isLobby)}>
-          Multiplayer
-        </LoadButton>
-        <PartyMenuView />
-      </MenuContainer>
-    );
+        </MenuContainer>
+      );
+    case "battle":
+      return (
+        <BattleContainer>
+          <BattleView
+            gameData={SocketService.getGameData()}
+            leaveBattle={leaveBattle}
+          />
+        </BattleContainer>
+      );
+    case "lobby":
+      return (
+        <LobbyListView
+          toggleLobby={() => setIsLobby(!isLobby)}
+          battleStart={battleStart}
+        />
+      );
+    case "menu":
+      return (
+        <MenuContainer>
+          {(matchId && (
+            <PartyWrap>
+              <LoadButton onClick={() => SocketService.resumeGame()}>
+                Resume
+              </LoadButton>
+            </PartyWrap>
+          )) || (
+            <PartyWrap>
+              <LoadButton onClick={() => battleStart()}>Battle</LoadButton>
+            </PartyWrap>
+          )}
+          <LoadButton onClick={() => setIsBattle("lobby")}>
+            Multiplayer
+          </LoadButton>
+          <PartyMenuView />
+        </MenuContainer>
+      );
   }
 };

@@ -55,7 +55,7 @@ function getSocketService() {
     initGame: function (difficulty) {
       !playerId && (playerId = uuid());
       localStorage.setItem("playerId", playerId);
-      lobbyData.difficulty = difficulty;
+      lobbyData && (lobbyData.difficulty = difficulty);
       socket.emit(
         "init_gameData",
         lobbyData || {

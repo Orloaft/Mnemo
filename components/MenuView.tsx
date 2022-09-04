@@ -64,7 +64,6 @@ const BattleContainer = styled.div`
 `;
 
 export const MenuView: React.FC = () => {
-  const [isLobby, setIsLobby] = useState(false);
   const [isBattle, setIsBattle] = useState("menu");
   // checks if there is an id stored to try and resume interrupted match
   const [matchId, setMatchId] = useState(false);
@@ -86,7 +85,7 @@ export const MenuView: React.FC = () => {
       if (obj && !obj.concluded) {
         localStorage.setItem("matchId", obj.id);
 
-        isBattle === "menu" && setIsBattle("battle");
+        isBattle !== "battle" && setIsBattle("battle");
       } else {
         localStorage.removeItem("matchId");
         SocketService.setLobbyData(null);
@@ -136,10 +135,7 @@ export const MenuView: React.FC = () => {
       );
     case "lobby":
       return (
-        <LobbyListView
-          toggleLobby={() => setIsLobby(!isLobby)}
-          battleStart={battleStart}
-        />
+        <LobbyListView setIsBattle={setIsBattle} battleStart={battleStart} />
       );
     case "menu":
       return (

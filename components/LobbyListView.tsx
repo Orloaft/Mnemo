@@ -4,9 +4,9 @@ import SocketService from "../SocketService";
 import { Frame } from "./CharacterView";
 import { Lobby } from "./Lobby";
 export const LobbyListView: React.FC<{
-  toggleLobby: any;
+  setIsBattle: any;
   battleStart: any;
-}> = ({ toggleLobby, battleStart }) => {
+}> = ({ setIsBattle, battleStart }) => {
   const [lobby, setLobby] = useState(false);
   const [lobbyList, setLobbyList] = useState([]);
   const createLobby = (e) => {
@@ -60,7 +60,7 @@ export const LobbyListView: React.FC<{
               <button style={{ zIndex: "3" }}>create</button>
             </form>{" "}
           </Frame>
-          <button style={{ zIndex: "3" }} onClick={() => toggleLobby()}>
+          <button style={{ zIndex: "3" }} onClick={() => setIsBattle("menu")}>
             back
           </button>{" "}
         </>

@@ -30,7 +30,7 @@ export function getGameActionHandler() {
               gameData.players.forEach((p) => {
                 if (p.life > 0) {
                   if (gameData && p.action === "chanting") {
-                    gameData && (p.actionPoints += 1.5);
+                    gameData && (p.actionPoints += 2.5);
                   }
                   if (gameData && p.actionPoints >= 15) {
                     setTimeout(() => {
@@ -42,7 +42,7 @@ export function getGameActionHandler() {
 
             gameData.enemies.forEach((enemy) => {
               if (enemy.action === "chanting" && enemy.life > 0) {
-                enemy.actionPoints += 1.25;
+                enemy.actionPoints += 1;
                 if (enemy.actionPoints % 5 === 0) {
                   enemy.spellInput.push({
                     word: [...gameData.spellTable]

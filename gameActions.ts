@@ -43,7 +43,7 @@ export function getGameActionHandler() {
             gameData.enemies.forEach((enemy) => {
               if (enemy.action === "chanting" && enemy.life > 0) {
                 enemy.actionPoints += 1;
-                if (enemy.actionPoints % 5 === 0) {
+                if (enemy.actionPoints % 4 === 0) {
                   enemy.spellInput.push({
                     word: [...gameData.spellTable]
                       .sort(() => 0.5 - Math.random())

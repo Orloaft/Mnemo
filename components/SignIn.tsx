@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useState } from "react";
 import { Frame } from "./CharacterView";
 
@@ -29,6 +30,7 @@ export const SignIn = ({ logIn }) => {
           sign in
         </button>
       </form>
+      <Link href="/signUpPage">Sign up</Link>
     </Frame>
   );
 };

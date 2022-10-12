@@ -10,7 +10,7 @@ export default function SignUpPageController() {
     newForm[name] = e.target.value;
     setForm(newForm);
   };
-  const router = useRouter();
+
   const [message, setMessage] = useState(null);
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -22,10 +22,11 @@ export default function SignUpPageController() {
         password: form.password,
       })
       .then((result) => {
-        sessionStorage.setItem("token", result.data.token);
         setMessage(result.data.message);
         setForm({ email: "", name: "", password: "" });
-        result.data.token && router.push("/");
+        if (result.data.message === "confirmation sent") {
+          // router.push(`/email/${result.data.email}`);
+        }
       })
       .catch((err) => console.log(err));
   };

@@ -1,5 +1,3 @@
-import { io } from "socket.io-client";
-import gameData from "./gameData";
 import getGameDataHandler from "./gameData";
 
 export function getGameActionHandler() {

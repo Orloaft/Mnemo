@@ -32,7 +32,7 @@ function getSocketService() {
     initLobby: function (name) {
       let owner = {
         id: uuid(),
-        name: localStorage.getItem("username"),
+        name: JSON.parse(localStorage.getItem("credentials")).name,
         socket: socket.id,
       };
       playerId = owner.id;
@@ -60,7 +60,12 @@ function getSocketService() {
         "init_gameData",
         lobbyData || {
           id: uuid(),
-          players: [{ id: playerId, name: localStorage.getItem("username") }],
+          players: [
+            {
+              id: playerId,
+              name: JSON.parse(localStorage.getItem("credentials")).name,
+            },
+          ],
           difficulty: difficulty,
         }
       );
@@ -90,7 +95,7 @@ function getSocketService() {
     },
     joinLobby: function (lobbyId) {
       let player = {
-        name: localStorage.getItem("username"),
+        name: JSON.parse(localStorage.getItem("credentials")).name,
         id: uuid(),
         socket: socket.id,
       };
@@ -104,7 +109,7 @@ function getSocketService() {
         "send_message",
         message,
         lobbyId,
-        localStorage.getItem("username")
+        JSON.parse(localStorage.getItem("credentials")).name
       );
     },
   }; // socket instance that will persist across all components

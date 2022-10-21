@@ -21,6 +21,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                   email: credentialsGroup[0].email,
                   name: credentialsGroup[0].name,
                   password: credentialsGroup[0].password,
+                  data: JSON.stringify({
+                    xp: 0,
+                    lvl: 1,
+                    spells: { missle: { level: 0 } },
+                  }),
                 })
                 .into("users")
                 .then(() => {

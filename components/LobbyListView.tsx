@@ -3,15 +3,22 @@ import { MenuContainer } from "./MenuView";
 import SocketService from "../SocketService";
 import { Frame } from "./CharacterView";
 import { Lobby } from "./Lobby";
+import { validateRoom } from "../utils/jsUtils";
 export const LobbyListView: React.FC<{
   setIsBattle: any;
   battleStart: any;
 }> = ({ setIsBattle, battleStart }) => {
   const [lobby, setLobby] = useState(false);
   const [lobbyList, setLobbyList] = useState([]);
+  const [message, setMessage] = useState("");
   const createLobby = (e) => {
     e.preventDefault();
-    SocketService.initLobby(e.target.lobby_name.value);
+
+    if (!validateRoom(e.target.lobby_name.value)) {
+      SocketService.initLobby(e.target.lobby_name.value);
+    } else {
+      setMessage(validateRoom(e.target.lobby_name.value));
+    }
   };
   useEffect(() => {
     SocketService.getGames();
@@ -56,8 +63,17 @@ export const LobbyListView: React.FC<{
                 createLobby(e);
               }}
             >
-              <input name="lobby_name" autoComplete="off"></input>
-              <button style={{ zIndex: "3" }}>create</button>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <input name="lobby_name" autoComplete="off"></input>
+                {message}
+                <button style={{ zIndex: "3" }}>create</button>
+              </div>
             </form>{" "}
           </Frame>
           <button style={{ zIndex: "3" }} onClick={() => setIsBattle("menu")}>

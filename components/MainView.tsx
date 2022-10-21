@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useContext } from "react";
 import styled, { keyframes } from "styled-components";
 
 import { MenuView } from "./MenuView";
 import { Frame } from "./CharacterView";
 import { SignIn } from "./SignIn";
-import { LobbyListView } from "./LobbyListView";
+import { UserContext } from "../pages";
 const hoverRainbow = keyframes`
  
 0% {
@@ -75,18 +75,17 @@ export const LoadButton = styled(Frame)`
   }
 `;
 export const MainView: React.FC = () => {
-  const [credentials, setCredentials] = useState(null);
-
-  function logIn() {
-    setCredentials(window.localStorage.getItem("username"));
-  }
+  const userContext = useContext(UserContext);
   useEffect(() => {
-    logIn();
-  });
-  if (credentials === null) {
+    if (localStorage.getItem("credentials")) {
+      userContext.setUser(JSON.parse(localStorage.getItem("credentials")));
+    }
+  }, []);
+  console.log(userContext);
+  if (!userContext.user.name) {
     return (
       <>
-        <SignIn logIn={logIn} />
+        <SignIn />
       </>
     );
   } else {

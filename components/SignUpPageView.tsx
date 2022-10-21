@@ -1,6 +1,5 @@
-import Link from "next/link";
 import styled from "styled-components";
-const Form = styled.form`
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -28,11 +27,10 @@ export const SignUpPageView = (props) => {
           type="password"
           name="password"
         ></input>
-        <button>Sign Up</button>
+        <button type="submit">Sign Up</button>
+        <button onClick={() => props.setStatus("sign in")}>back</button>
       </Form>
       {props.message}
-
-      <Link href="/">Back</Link>
     </div>
   );
 };

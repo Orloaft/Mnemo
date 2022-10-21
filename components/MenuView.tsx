@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { BattleView } from "./BattleView";
-import { CharacterView } from "./CharacterView";
+
 import { LoadButton } from "./MainView";
 import { PartyMenuView } from "./PartyMenuView";
 import SocketService from "../SocketService";
-import gameData, { gameDataProps } from "../gameData";
+import { gameDataProps } from "../gameData";
 import { LobbyListView } from "./LobbyListView";
 
 const emerge = keyframes`
@@ -63,7 +63,7 @@ const BattleContainer = styled.div`
   animation-timing-function: linear;
 `;
 
-export const MenuView: React.FC = () => {
+export const MenuView: React.FC = (props) => {
   const [isBattle, setIsBattle] = useState("menu");
   // checks if there is an id stored to try and resume interrupted match
   const [matchId, setMatchId] = useState(false);

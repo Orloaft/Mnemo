@@ -10,7 +10,8 @@ async function createDb() {
         email VARCHAR NOT NULL,
         name VARCHAR NOT NULL,
         token VARCHAR,
-        password VARCHAR
+        password VARCHAR,
+        data VARCHAR
       );
     `);
     await db.query(sql`

@@ -7,6 +7,8 @@ import { PartyMenuView } from "./PartyMenuView";
 import SocketService from "../SocketService";
 import { gameDataProps } from "../gameData";
 import { LobbyListView } from "./LobbyListView";
+import { UserData } from "./UserData";
+import { Frame } from "./CharacterView";
 
 const emerge = keyframes`
 0%{ 
@@ -64,17 +66,17 @@ const BattleContainer = styled.div`
 `;
 
 export const MenuView: React.FC = (props) => {
-  const [isBattle, setIsBattle] = useState("menu");
+  const [showComponent, setShowComponent] = useState("menu");
   // checks if there is an id stored to try and resume interrupted match
   const [matchId, setMatchId] = useState(false);
 
   const battleStart = () => {
     // SocketService.initGame();
-    setIsBattle("settings");
+    setShowComponent("settings");
   };
   const leaveBattle = () => {
     console.log("ended battle");
-    setIsBattle("menu");
+    setShowComponent("menu");
   };
   useEffect(() => {
     localStorage.getItem("matchId") && setMatchId(true);
@@ -85,7 +87,7 @@ export const MenuView: React.FC = (props) => {
       if (obj && !obj.concluded) {
         localStorage.setItem("matchId", obj.id);
 
-        isBattle !== "battle" && setIsBattle("battle");
+        showComponent !== "battle" && setShowComponent("battle");
       } else {
         localStorage.removeItem("matchId");
         SocketService.setLobbyData(null);
@@ -93,7 +95,7 @@ export const MenuView: React.FC = (props) => {
       }
     });
   }, []);
-  switch (isBattle) {
+  switch (showComponent) {
     case "settings":
       return (
         <MenuContainer>
@@ -135,7 +137,10 @@ export const MenuView: React.FC = (props) => {
       );
     case "lobby":
       return (
-        <LobbyListView setIsBattle={setIsBattle} battleStart={battleStart} />
+        <LobbyListView
+          setIsBattle={setShowComponent}
+          battleStart={battleStart}
+        />
       );
     case "menu":
       return (
@@ -151,10 +156,17 @@ export const MenuView: React.FC = (props) => {
               <LoadButton onClick={() => battleStart()}>Battle</LoadButton>
             </PartyWrap>
           )}
-          <LoadButton onClick={() => setIsBattle("lobby")}>
+          <LoadButton onClick={() => setShowComponent("lobby")}>
             Multiplayer
           </LoadButton>
+          <LoadButton onClick={() => setShowComponent("user")}>User</LoadButton>
           <PartyMenuView />
+        </MenuContainer>
+      );
+    case "user":
+      return (
+        <MenuContainer>
+          <UserData />
         </MenuContainer>
       );
   }

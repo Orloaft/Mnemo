@@ -31,7 +31,7 @@ function getSocketService() {
     },
     initLobby: function (name) {
       let owner = {
-        id: uuid(),
+        id: JSON.parse(localStorage.getItem("credentials")).token,
         name: JSON.parse(localStorage.getItem("credentials")).name,
         socket: socket.id,
       };
@@ -96,7 +96,7 @@ function getSocketService() {
     joinLobby: function (lobbyId) {
       let player = {
         name: JSON.parse(localStorage.getItem("credentials")).name,
-        id: uuid(),
+        id: JSON.parse(localStorage.getItem("credentials")).token,
         socket: socket.id,
       };
       playerId = player.id;

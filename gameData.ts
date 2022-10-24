@@ -1,6 +1,7 @@
 import { EventEmitter } from "stream";
 import { uuid } from "uuidv4";
 import { getEnemy } from "./enemies";
+import knex from "knex";
 export interface gameDataProps {
   id: string;
   paused: boolean;
@@ -22,6 +23,7 @@ export interface gameDataProps {
     spellInput: string[];
   }[];
   enemies: {
+    spell: any;
     name: string;
     life: number;
     maxLife: number;
@@ -38,7 +40,9 @@ export interface gameDataProps {
   spellReq: string[];
   concluded: boolean;
   animation: string;
+  score?: string;
 }
+
 const rounds = [...getEnemy()].map((enemy) => {
   return { ...enemy };
 });
@@ -49,34 +53,25 @@ let lobbyArr: {
   name: string;
   messages: { author: string; body: string }[];
 }[] = [];
-let gamesArr: {
-  id: string;
-  paused: boolean;
-  time: number;
-  round: number;
-  participatingSockets: string[];
-  difficulty: string;
-  players: {
-    id: string;
-    name: string;
-    life: number;
-    maxLife: number;
-    speed: number;
-    actionPoints: number;
-    action: string;
-    spell: string;
-    target: number;
-    spellReq: string[];
-    spellInput: string[];
-  }[];
-  enemies: any;
-  spellTable: string[];
-  spellInput: string[];
-  spellReq: string[];
-  concluded: boolean;
-  animation: string;
-  score: string;
-}[] = [];
+let gamesArr: gameDataProps[] = [];
+// look up each player by token and add xp to data
+const awardXp = (game: gameDataProps) => {
+  for (let player of game.players) {
+    knex("./gameUserData.db")
+      .select()
+      .where({ token: player.id })
+      .then((users) => {
+        let newData = JSON.parse(users[0].data);
+        newData.xp += game.round * 10;
+
+        knex("./gameUserData.db")
+          .update({ data: newData })
+          .where({ token: player.id })
+          .then(() => console.log("xp awarded"))
+          .catch((err) => console.log(err));
+      });
+  }
+};
 function getGameDataHandler() {
   return {
     initLobby: function (owner, name): any {
@@ -183,8 +178,9 @@ function getGameDataHandler() {
         return false;
       } else {
         game.concluded = true;
+        awardXp(game);
         game.enemies.forEach((enemy) => (enemy.spellInput = []));
-        game.score = "Congratulations, you eviscerated all enemies!";
+        game.score = "Congratulations, you defeated all enemies!";
         return true;
       }
     },

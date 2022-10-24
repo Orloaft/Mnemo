@@ -20,6 +20,7 @@ export default function handler(req, res) {
               token: token,
               message: "signed in succesfully",
               name: user[0].name,
+              knownSpells: JSON.parse(user[0].data).knownSpells,
             });
           });
       } else {

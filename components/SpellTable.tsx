@@ -39,8 +39,8 @@ interface clickProps {
   clicked?: boolean;
   onClick?: () => void;
 }
-export const SpellTable = ({ id, spells, spellInput, clickHandler }) => {
-  function installUndoHandler() {
+export const SpellTable = ({ id, spells, clickHandler, player }) => {
+  function installKeyPressHandler() {
     setOnKeyDown(async (e) => {
       if (e.key === "q") {
         console.log({ es: e });
@@ -78,12 +78,13 @@ export const SpellTable = ({ id, spells, spellInput, clickHandler }) => {
         });
       }
       if (e.keyCode === 40) {
-        console.log({ es: e });
-        SocketService.update({
-          type: "spellSelect",
-          spell: "heal",
-          id: id,
-        });
+        if (player.knownSpells.find((spell) => spell === "heal")) {
+          SocketService.update({
+            type: "spellSelect",
+            spell: "heal",
+            id: id,
+          });
+        }
       }
       if (e.keyCode === 37) {
         console.log({ es: e });
@@ -111,12 +112,12 @@ export const SpellTable = ({ id, spells, spellInput, clickHandler }) => {
     });
   }
   useMountEffect(() => {
-    installUndoHandler();
+    installKeyPressHandler();
   });
   return (
     <Table>
       {spells.map((w: string) => {
-        if (spellInput.find((e: string) => e === w)) {
+        if (player.spellInput.find((e: string) => e === w)) {
           return (
             <WordBox key={w} style={{ color: "black" }} clicked>
               {w}

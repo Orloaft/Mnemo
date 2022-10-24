@@ -25,10 +25,15 @@ export const SignIn = (props) => {
         password: form.password,
       })
       .then((result) => {
-        localStorage.setItem(
-          "credentials",
-          JSON.stringify({ token: result.data.token, name: result.data.name })
-        );
+        result.data.token &&
+          localStorage.setItem(
+            "credentials",
+            JSON.stringify({
+              token: result.data.token,
+              name: result.data.name,
+              knownSpells: result.data.knownSpells,
+            })
+          );
         setMessage(result.data.message);
         setForm({ email: "", password: "" });
         result.data.token &&

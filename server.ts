@@ -79,6 +79,7 @@ async function startServer() {
           actionPoints: 0,
           action: "chanting",
           spell: "missle",
+          knownSpells: p.knownSpells,
           target: 0,
           spellReq: ["lorem", "ipsum", "dolor"],
           spellInput: [],

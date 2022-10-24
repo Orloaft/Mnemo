@@ -24,7 +24,7 @@ function getSocketService() {
       socket.emit("resume_game", localStorage.getItem("matchId"));
     },
     setPlayerId: function () {
-      playerId = localStorage.getItem("playerId");
+      playerId = JSON.parse(localStorage.getItem("credentials")).token;
     },
     getPlayerId: function () {
       return playerId;
@@ -34,9 +34,10 @@ function getSocketService() {
         id: JSON.parse(localStorage.getItem("credentials")).token,
         name: JSON.parse(localStorage.getItem("credentials")).name,
         socket: socket.id,
+        knownSpells: JSON.parse(localStorage.getItem("credentials"))
+          .knownSpells,
       };
       playerId = owner.id;
-      localStorage.setItem("playerId", playerId);
       socket.emit("init_lobby", name, owner);
     },
     getLobbyData: function () {
@@ -47,14 +48,12 @@ function getSocketService() {
     },
     leaveLobby: function (lobbyId) {
       lobbyData = null;
-      localStorage.removeItem("playerId");
-
       socket.emit("leave_lobby", lobbyId, playerId);
-      playerId = null;
     },
     initGame: function (difficulty) {
-      !playerId && (playerId = uuid());
-      localStorage.setItem("playerId", playerId);
+      !playerId &&
+        (playerId = JSON.parse(localStorage.getItem("credentials")).token);
+
       lobbyData && (lobbyData.difficulty = difficulty);
       socket.emit(
         "init_gameData",
@@ -64,6 +63,8 @@ function getSocketService() {
             {
               id: playerId,
               name: JSON.parse(localStorage.getItem("credentials")).name,
+              knownSpells: JSON.parse(localStorage.getItem("credentials"))
+                .knownSpells,
             },
           ],
           difficulty: difficulty,
@@ -89,7 +90,7 @@ function getSocketService() {
       //send an update to the battle state which is handled by a switch statement
       socket.emit(
         "update_req",
-        playerId || localStorage.getItem("playerId"),
+        playerId || JSON.parse(localStorage.getItem("credentials")).token,
         req
       );
     },
@@ -98,9 +99,11 @@ function getSocketService() {
         name: JSON.parse(localStorage.getItem("credentials")).name,
         id: JSON.parse(localStorage.getItem("credentials")).token,
         socket: socket.id,
+        knownSpells: JSON.parse(localStorage.getItem("credentials"))
+          .knownSpells,
       };
       playerId = player.id;
-      localStorage.setItem("playerId", playerId);
+
       socket.emit("join_lobby", lobbyId, player);
     },
     sendMessage: function (message, lobbyId) {

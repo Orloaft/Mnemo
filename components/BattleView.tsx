@@ -182,7 +182,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
 }) => {
   const [gameState, setGameState] = useState<any>(gameData);
   let player = gameState.players.find(
-    (p) => p.id === localStorage.getItem("playerId")
+    (p) => p.id === JSON.parse(localStorage.getItem("credentials")).token
   );
   function spellClickHandle(w: string) {
     SocketService.update({
@@ -267,11 +267,11 @@ export const BattleView: React.FC<BattleViewProps> = ({
             <SpellTable
               id={gameState.id}
               spells={gameState.spellTable}
-              spellInput={
+              player={
                 gameState.players &&
                 gameState.players.find(
                   (p) => p.id === SocketService.getPlayerId()
-                ).spellInput
+                )
               }
               clickHandler={spellClickHandle}
             />
@@ -280,14 +280,19 @@ export const BattleView: React.FC<BattleViewProps> = ({
             {gameState.players.map((player, i) => {
               if (
                 gameState.players.find(
-                  (p) => p.id === localStorage.getItem("playerId")
+                  (p) =>
+                    p.id ===
+                    JSON.parse(localStorage.getItem("credentials")).token
                 ).spell === "heal" &&
                 gameState.players.find(
-                  (p) => p.id === localStorage.getItem("playerId")
+                  (p) =>
+                    p.id ===
+                    JSON.parse(localStorage.getItem("credentials")).token
                 ).target === i
               ) {
                 return (
                   <PlayerView
+                    key={uuid()}
                     gameState={gameState}
                     player={player}
                     targeted={true}
@@ -296,6 +301,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
               } else {
                 return (
                   <PlayerView
+                    key={uuid()}
                     gameState={gameState}
                     player={player}
                     targeted={false}

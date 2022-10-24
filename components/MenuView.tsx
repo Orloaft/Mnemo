@@ -166,7 +166,7 @@ export const MenuView: React.FC = (props) => {
     case "user":
       return (
         <MenuContainer>
-          <UserData />
+          <UserData setShowComponent={setShowComponent} />
         </MenuContainer>
       );
   }

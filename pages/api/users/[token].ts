@@ -14,6 +14,6 @@ export default function handler(
     .select()
     .from("users")
     .where({ token: req.query.token })
-    .then((users) => res.send(users[0].data))
+    .then((users) => res.json(JSON.parse(users[0].data)))
     .catch((err) => res.json(err));
 }

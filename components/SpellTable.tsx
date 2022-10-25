@@ -43,15 +43,12 @@ export const SpellTable = ({ id, spells, clickHandler, player }) => {
   function installKeyPressHandler() {
     setOnKeyDown(async (e) => {
       if (e.key === "q") {
-        console.log({ es: e });
         clickHandler("lorem");
       }
       if (e.key === "w") {
-        console.log({ es: e });
         clickHandler("ipsum");
       }
       if (e.key === "e") {
-        console.log({ es: e });
         clickHandler("dolor");
       }
       if (e.key === "r") {
@@ -70,24 +67,47 @@ export const SpellTable = ({ id, spells, clickHandler, player }) => {
         clickHandler("aut");
       }
       if (e.keyCode === 38) {
-        console.log({ es: e });
-        SocketService.update({
-          type: "spellSelect",
-          spell: "missle",
-          id: id,
-        });
+        switch (SocketService.getPlayer().spell) {
+          case "missle":
+            return;
+
+          case "heal":
+            SocketService.update({
+              type: "spellSelect",
+              spell: "missle",
+              id: id,
+            });
+            break;
+          case "blast":
+            SocketService.update({
+              type: "spellSelect",
+              spell: "heal",
+              id: id,
+            });
+            break;
+        }
       }
       if (e.keyCode === 40) {
-        if (player.knownSpells.find((spell) => spell === "heal")) {
-          SocketService.update({
-            type: "spellSelect",
-            spell: "heal",
-            id: id,
-          });
+        switch (SocketService.getPlayer().spell) {
+          case "missle":
+            SocketService.update({
+              type: "spellSelect",
+              spell: "heal",
+              id: id,
+            });
+            break;
+          case "heal":
+            SocketService.update({
+              type: "spellSelect",
+              spell: "blast",
+              id: id,
+            });
+            break;
+          case "blast":
+            return;
         }
       }
       if (e.keyCode === 37) {
-        console.log({ es: e });
         SocketService.update({
           type: "enemySelect",
           direction: "left",
@@ -95,7 +115,6 @@ export const SpellTable = ({ id, spells, clickHandler, player }) => {
         });
       }
       if (e.keyCode === 39) {
-        console.log({ es: e });
         SocketService.update({
           type: "enemySelect",
           direction: "right",
@@ -103,7 +122,6 @@ export const SpellTable = ({ id, spells, clickHandler, player }) => {
         });
       }
       if (e.keyCode === 13) {
-        console.log({ es: e });
         SocketService.update({
           type: "pause",
           id: id,

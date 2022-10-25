@@ -100,6 +100,9 @@ export const MenuView: React.FC = (props) => {
       return (
         <MenuContainer>
           <PartyWrap style={{ gap: ".5rem" }}>
+            <LoadButton onClick={() => setShowComponent("menu")}>
+              back
+            </LoadButton>
             <LoadButton
               onClick={() => {
                 SocketService.initGame("easy");

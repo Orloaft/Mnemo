@@ -17,6 +17,9 @@ function getSocketService() {
     getGameData: function () {
       return gameData;
     },
+    getPlayer: function () {
+      return gameData.players.find((player) => player.id === playerId);
+    },
     closeGame: function () {
       socket.emit("delete_gameData", gameData.id);
     },

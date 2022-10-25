@@ -12,6 +12,7 @@ import { EnemyView } from "./EnemyView";
 import { uuid } from "uuidv4";
 import { Socket } from "socket.io-client";
 import { PlayerView } from "./PlayerView";
+import { LoadButton } from "./MainView";
 
 interface BattleViewProps {
   gameData: any;
@@ -212,7 +213,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
           enemies={gameState.enemies}
           id={gameState.id}
         />
-        ;
+
         <Frame
           style={{
             display: "flex",
@@ -238,11 +239,17 @@ export const BattleView: React.FC<BattleViewProps> = ({
             >
               {gameState &&
                 gameState.players
-                  .find((p) => p.id === SocketService.getPlayerId())
+                  .find(
+                    (p) =>
+                      p.id ===
+                      JSON.parse(localStorage.getItem("credentials")).token
+                  )
                   .spellReq.map((word, i) => {
                     if (
                       !gameState.players.find(
-                        (p) => p.id === SocketService.getPlayerId()
+                        (p) =>
+                          p.id ===
+                          JSON.parse(localStorage.getItem("credentials")).token
                       ).spellInput[i]
                     ) {
                       return <span key={uuid()}>{word}</span>;
@@ -332,20 +339,30 @@ export const BattleView: React.FC<BattleViewProps> = ({
     );
   } else {
     return (
-      <Frame
-        onClick={() => {
-          leaveBattle();
-        }}
-        style={{
-          position: "absolute",
-          zIndex: 3,
-          left: "25%",
-          top: "25%",
-          cursor: "default",
-        }}
-      >
-        {gameState.score}
-      </Frame>
+      <>
+        <Frame
+          style={{
+            position: "absolute",
+            zIndex: 3,
+            left: "25%",
+            top: "25%",
+            cursor: "default",
+          }}
+        >
+          {gameState.score}
+        </Frame>
+        <LoadButton
+          style={{
+            position: "absolute",
+            zIndex: 3,
+          }}
+          onClick={() => {
+            leaveBattle();
+          }}
+        >
+          back
+        </LoadButton>
+      </>
     );
   }
 };

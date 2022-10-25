@@ -3,6 +3,7 @@ import axios from "axios";
 import { Frame } from "./CharacterView";
 import styled from "styled-components";
 import { uuid } from "uuidv4";
+import { LoadButton } from "./MainView";
 const XpBar = styled.div`
   background: transparent;
   padding: 0.15rem;
@@ -18,15 +19,23 @@ const Xp = styled.div`
   height: 100%;
 `;
 export const UserData = (props) => {
-  const maxXp = 100;
   const [data, setData] = useState(null);
-  const handleLevelUp = () => {
+
+  const handleLevelUp = (ability) => {
     axios
       .post(`/api/levelup`, {
         token: JSON.parse(localStorage.getItem("credentials")).token,
+        ability: ability,
       })
       .then((res) => {
-        console.log(res);
+        axios
+          .get(
+            `/api/users/${
+              JSON.parse(localStorage.getItem("credentials")).token
+            }`
+          )
+          .then((res) => {})
+          .catch((err) => console.log(err));
         props.setShowComponent("menu");
       })
       .catch((err) => console.log(err));
@@ -42,30 +51,40 @@ export const UserData = (props) => {
       .catch((err) => console.log(err));
   }, []);
   return (
-    <Frame style={{ display: "flex", flexDirection: "column" }}>
-      <span
-        style={{ cursor: "grab" }}
-        onClick={() => props.setShowComponent("menu")}
-      >
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <Frame style={{ display: "flex", width: "30rem" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <p>
+            {JSON.parse(localStorage.getItem("credentials")).name} the magus
+          </p>
+          <span>level:{data && data.lvl}</span>
+          {data && (
+            <XpBar>
+              <Xp
+                style={{
+                  width: `${data.xp}%`,
+                }}
+              />
+            </XpBar>
+          )}
+          <span>known spells:</span>
+          {data &&
+            data.knownSpells.map((spell: string) => {
+              return <span key={uuid()}>{spell}</span>;
+            })}
+        </div>
+        <aside>
+          {data && data.xp >= data.lvl * 100 && (
+            <>
+              <button onClick={() => handleLevelUp("heal")}>Heal</button>
+              <button onClick={() => handleLevelUp("blast")}>Blast</button>
+            </>
+          )}
+        </aside>
+      </Frame>
+      <LoadButton onClick={() => props.setShowComponent("menu")}>
         back
-      </span>
-      <p>level:{data && data.lvl}</p>
-      {data && (
-        <XpBar>
-          <Xp
-            style={{
-              width: `${data.xp}%`,
-            }}
-          />
-        </XpBar>
-      )}
-      {data &&
-        data.knownSpells.map((spell: string) => {
-          return <span key={uuid()}>{spell}</span>;
-        })}
-      {data && data.xp >= maxXp && (
-        <button onClick={handleLevelUp}>Level Up</button>
-      )}
-    </Frame>
+      </LoadButton>
+    </div>
   );
 };

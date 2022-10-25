@@ -90,6 +90,7 @@ export function getGameActionHandler() {
             io.to(gameData.id).emit("update_res", gameData);
             break;
           case "spellSelect":
+            console.log(req.spell);
             player.spell = req.spell;
             player.spellReq = [...gameData.spellTable]
               .sort(() => 0.5 - Math.random())
@@ -194,6 +195,18 @@ export function getGameActionHandler() {
                         } else {
                           playerTarget.life += 30;
                         }
+
+                        break;
+                      case "blast":
+                        gameData.enemies.forEach((enemy) => {
+                          enemy.life -= 10;
+                          if (enemy.life <= 0) {
+                            enemy.spellInput = [];
+
+                            io.to(req.id).emit("update_res", gameData);
+                            gameData.enemies.filter((e) => e !== enemy);
+                          }
+                        });
 
                         break;
                     }

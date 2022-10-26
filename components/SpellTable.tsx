@@ -67,44 +67,37 @@ export const SpellTable = ({ id, spells, clickHandler, player }) => {
         clickHandler("aut");
       }
       if (e.keyCode === 38) {
-        switch (SocketService.getPlayer().spell) {
-          case "missle":
-            return;
-
-          case "heal":
-            SocketService.update({
-              type: "spellSelect",
-              spell: "missle",
-              id: id,
-            });
-            break;
-          case "blast":
-            SocketService.update({
-              type: "spellSelect",
-              spell: "heal",
-              id: id,
-            });
-            break;
+        if (player.knownSpells.length > 1) {
+          let caster = SocketService.getPlayer();
+          SocketService.update({
+            type: "spellSelect",
+            spell:
+              caster.knownSpells[
+                caster.knownSpells.indexOf(
+                  caster.knownSpells.find(
+                    (spell) => spell.name === caster.spell.name
+                  )
+                ) - 1
+              ] || caster.knownSpells[0],
+            id: id,
+          });
         }
       }
       if (e.keyCode === 40) {
-        switch (SocketService.getPlayer().spell) {
-          case "missle":
-            SocketService.update({
-              type: "spellSelect",
-              spell: "heal",
-              id: id,
-            });
-            break;
-          case "heal":
-            SocketService.update({
-              type: "spellSelect",
-              spell: "blast",
-              id: id,
-            });
-            break;
-          case "blast":
-            return;
+        if (player.knownSpells.length > 1) {
+          let caster = SocketService.getPlayer();
+          SocketService.update({
+            type: "spellSelect",
+            spell:
+              caster.knownSpells[
+                caster.knownSpells.indexOf(
+                  caster.knownSpells.find(
+                    (spell) => spell.name === caster.spell.name
+                  )
+                ) + 1
+              ] || caster.knownSpells[caster.knownSpells.length - 1],
+            id: id,
+          });
         }
       }
       if (e.keyCode === 37) {

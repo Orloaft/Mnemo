@@ -1,6 +1,10 @@
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { Frame } from "../../components/CharacterView";
+import { ShootingStarView } from "../../components/ShootingStarView";
+import styles from "../../styles/Home.module.css";
 
 export default function ConfirmationPageController(props) {
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -28,10 +32,22 @@ export default function ConfirmationPageController(props) {
   };
 
   return (
-    (isConfirmed && <>Your account has been created</>) || (
-      <>
-        <button onClick={handleConfirm}>confirm {router.query.token} </button>
-      </>
-    )
+    <div className={styles.container}>
+      <ShootingStarView />
+      {(isConfirmed && (
+        <>
+          <Frame>Your account has been created</Frame>
+          <Frame>
+            <Link href="/">back</Link>
+          </Frame>
+        </>
+      )) || (
+        <>
+          <button style={{ zIndex: "4" }} onClick={handleConfirm}>
+            confirm {router.query.token}{" "}
+          </button>
+        </>
+      )}
+    </div>
   );
 }

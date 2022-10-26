@@ -80,7 +80,7 @@ export const MenuView: React.FC = (props) => {
   };
   useEffect(() => {
     localStorage.getItem("matchId") && setMatchId(true);
-    localStorage.getItem("playerId") && SocketService.setPlayerId();
+    localStorage.getItem("credentials") && SocketService.setPlayerId();
 
     SocketService.socket().on("update_res", (obj: gameDataProps) => {
       SocketService.setGameData(obj);

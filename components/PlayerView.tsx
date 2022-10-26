@@ -27,27 +27,31 @@ export const PlayerView = ({ gameState, player, targeted }) => {
           <ActionView enemy={player} />
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          {player.knownSpells.map((spell: string) => {
-            return (
-              <span
-                key={uuid()}
-                style={{
-                  padding: ".25rem",
-                  cursor: "default",
-                  border: `${player.spell === spell ? "2px solid white" : ""}`,
-                }}
-                onClick={() =>
-                  SocketService.update({
-                    type: "spellSelect",
-                    spell: spell,
-                    id: gameState.id,
-                  })
-                }
-              >
-                {spell}
-              </span>
-            );
-          })}
+          {SocketService.getPlayer().knownSpells.map(
+            (spell: { name: string; lvl: number }) => {
+              return (
+                <span
+                  key={uuid()}
+                  style={{
+                    padding: ".25rem",
+                    cursor: "default",
+                    border: `${
+                      player.spell.name === spell.name ? "2px solid white" : ""
+                    }`,
+                  }}
+                  onClick={() =>
+                    SocketService.update({
+                      type: "spellSelect",
+                      spell: spell,
+                      id: gameState.id,
+                    })
+                  }
+                >
+                  {spell.name}
+                </span>
+              );
+            }
+          )}
         </div>
       </PlayerFrame>
     );

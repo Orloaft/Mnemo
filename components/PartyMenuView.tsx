@@ -1,7 +1,8 @@
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import React from "react";
+import React, { useContext } from "react";
 import styled, { keyframes } from "styled-components";
 import { setTimeout } from "timers";
+import { UserContext } from "../pages";
 import { backgroundGradient } from "../utils/styleUtils";
 import { BackCard, FrontCard, InnerCard } from "./CharacterView";
 
@@ -72,6 +73,7 @@ const accordionText = keyframes`
 interface PartyMenuViewProps {}
 export const PartyMenuView = (props: PartyMenuViewProps) => {
   const [backContent, setBackContent] = React.useState<any>(null);
+  const userContext = useContext(UserContext);
   const MenuSpan = styled.span`
     cursor: default;
     font-size: 2rem;
@@ -120,6 +122,7 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
                     <>
                       <span>Heal: recover 30 player hp</span>
                       <span>Missle: deal 30 damage to target</span>
+                      <span>Blast: deal 10 damage to each enemy</span>
                     </>
                   );
                 }}
@@ -154,6 +157,14 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
                 }}
               >
                 About
+              </MenuSpan>
+              <MenuSpan
+                onClick={() => {
+                  localStorage.removeItem("credentials");
+                  userContext.setUser({});
+                }}
+              >
+                Sign out
               </MenuSpan>
             </OptionWrap>
           </FrontCard>

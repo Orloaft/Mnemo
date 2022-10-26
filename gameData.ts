@@ -17,9 +17,9 @@ export interface gameDataProps {
     speed: number;
     actionPoints: number;
     action: string;
-    spell: string;
+    spell: { name: string; lvl: number };
     target: number;
-    knownSpells: string[];
+    knownSpells: { name: string; lvl: number }[];
     spellReq: string[];
     spellInput: string[];
   }[];
@@ -57,7 +57,6 @@ let lobbyArr: {
 let gamesArr: gameDataProps[] = [];
 // look up each player by token and add xp to data
 const awardXp = (game: gameDataProps) => {
-  console.log("peparing xp");
   for (let player of game.players) {
     knex("./gameUserData.db")
       .select()
@@ -65,7 +64,17 @@ const awardXp = (game: gameDataProps) => {
       .where({ token: player.id })
       .then((users) => {
         let newData = JSON.parse(users[0].data);
-        newData.xp += 10;
+        switch (game.difficulty) {
+          case "easy":
+            newData.xp += game.round * 5;
+            break;
+          case "medium":
+            newData.xp += game.round * 10;
+            break;
+          case "hard":
+            newData.xp += game.round * 15;
+            break;
+        }
 
         knex("./gameUserData.db")
           .update({ data: JSON.stringify(newData) })

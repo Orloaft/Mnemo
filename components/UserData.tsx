@@ -4,6 +4,8 @@ import { Frame } from "./CharacterView";
 import styled from "styled-components";
 import { uuid } from "uuidv4";
 import { LoadButton } from "./MainView";
+import { AbilityUpgrades } from "./AbilityUpgrades";
+
 const XpBar = styled.div`
   background: transparent;
   padding: 0.15rem;
@@ -22,23 +24,27 @@ export const UserData = (props) => {
   const [data, setData] = useState(null);
 
   const handleLevelUp = (ability) => {
-    axios
-      .post(`/api/levelup`, {
-        token: JSON.parse(localStorage.getItem("credentials")).token,
-        ability: ability,
-      })
-      .then((res) => {
-        axios
-          .get(
-            `/api/users/${
-              JSON.parse(localStorage.getItem("credentials")).token
-            }`
-          )
-          .then((res) => {})
-          .catch((err) => console.log(err));
-        props.setShowComponent("menu");
-      })
-      .catch((err) => console.log(err));
+    if (data.xp >= data.lvl * 100) {
+      axios
+        .post(`/api/levelup`, {
+          token: JSON.parse(localStorage.getItem("credentials")).token,
+          ability: ability,
+        })
+        .then((res) => {
+          let credentials = JSON.parse(localStorage.getItem("credentials"));
+          localStorage.setItem(
+            "credentials",
+            JSON.stringify({
+              token: credentials.token,
+              name: credentials.name,
+              knownSpells: res.data.knownSpells,
+            })
+          );
+          props.setShowComponent("menu");
+        })
+
+        .catch((err) => console.log(err));
+    }
   };
   useEffect(() => {
     axios
@@ -46,12 +52,13 @@ export const UserData = (props) => {
         `/api/users/${JSON.parse(localStorage.getItem("credentials")).token}`
       )
       .then((res) => {
-        setData(res.data);
+        console.log(res);
+        setData(JSON.parse(res.data.data));
       })
       .catch((err) => console.log(err));
   }, []);
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "30%" }}>
       <Frame style={{ display: "flex", width: "30rem" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <p>
@@ -62,23 +69,41 @@ export const UserData = (props) => {
             <XpBar>
               <Xp
                 style={{
-                  width: `${data.xp}%`,
+                  width: `${(data.xp / (data.lvl * 100)) * 100}%`,
+                  maxWidth: "100%",
                 }}
               />
             </XpBar>
           )}
           <span>known spells:</span>
           {data &&
-            data.knownSpells.map((spell: string) => {
-              return <span key={uuid()}>{spell}</span>;
+            data.knownSpells.map((spell: { name: string; lvl: number }) => {
+              return (
+                <span key={uuid()}>
+                  {spell.name} level: {spell.lvl}
+                </span>
+              );
             })}
         </div>
-        <aside>
-          {data && data.xp >= data.lvl * 100 && (
-            <>
-              <button onClick={() => handleLevelUp("heal")}>Heal</button>
-              <button onClick={() => handleLevelUp("blast")}>Blast</button>
-            </>
+        <aside
+          className="hiddenScrollBar"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            overflowY: "scroll",
+            height: "8rem",
+            width: "50%",
+            gap: ".5rem",
+            alignItems: "center",
+            padding: "1rem 0",
+          }}
+        >
+          {data && (
+            <AbilityUpgrades
+              level={data.lvl}
+              handleLevelUp={handleLevelUp}
+              knownSpells={data.knownSpells}
+            />
           )}
         </aside>
       </Frame>

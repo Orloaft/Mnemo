@@ -5,7 +5,8 @@ import { MenuView } from "./MenuView";
 import { Frame } from "./CharacterView";
 import { SignIn } from "./SignIn";
 import { UserContext } from "../pages";
-const hoverRainbow = keyframes`
+import axios from "axios";
+export const hoverRainbow = keyframes`
  
 0% {
   border-color: #FF0000;
@@ -78,10 +79,24 @@ export const MainView: React.FC = () => {
   const userContext = useContext(UserContext);
   useEffect(() => {
     if (localStorage.getItem("credentials")) {
-      userContext.setUser(JSON.parse(localStorage.getItem("credentials")));
+      axios
+        .get(
+          `/api/users/${JSON.parse(localStorage.getItem("credentials")).token}`
+        )
+        .then((res) => {
+          let updatedCredentials = {
+            ...res.data,
+            knownSpells: JSON.parse(res.data.data).knownSpells,
+          };
+          localStorage.setItem(
+            "credentials",
+            JSON.stringify(updatedCredentials)
+          );
+          userContext.setUser(JSON.parse(localStorage.getItem("credentials")));
+        });
     }
   }, []);
-  console.log(userContext);
+
   if (!userContext.user.name) {
     return (
       <>

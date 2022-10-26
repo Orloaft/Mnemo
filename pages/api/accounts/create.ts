@@ -24,7 +24,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                   data: JSON.stringify({
                     xp: 0,
                     lvl: 1,
-                    knownSpells: ["missle"],
+                    knownSpells: [{ name: "missle", lvl: 1 }],
                   }),
                 })
                 .into("users")

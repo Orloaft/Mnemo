@@ -112,7 +112,10 @@ export function getGameActionHandler() {
             io.to(req.id).emit("update_res", gameData);
             break;
           case "enemySelect":
-            if (player.spell === "missle") {
+            if (
+              player.spell.name === "missle" ||
+              player.spell.name === "silence"
+            ) {
               if (!gameData.enemies[player.target]) {
                 player.target = 0;
               }
@@ -170,7 +173,7 @@ export function getGameActionHandler() {
                 io.to(req.id).emit("update_res", gameData);
                 setTimeout(() => {
                   if (gameData) {
-                    switch (player.spell) {
+                    switch (player.spell.name) {
                       case "missle":
                         let target = gameData.enemies[player.target];
                         if (!target) {
@@ -178,7 +181,7 @@ export function getGameActionHandler() {
                           target = gameData.enemies[player.target];
                         }
 
-                        target.life -= 30;
+                        target.life -= 10 * player.spell.lvl;
                         if (target.life <= 0) {
                           target.spellInput = [];
                           gameData.enemies[0].targeted = true;
@@ -190,16 +193,26 @@ export function getGameActionHandler() {
                         break;
                       case "heal":
                         let playerTarget = gameData.players[player.target];
-                        if (playerTarget.life + 30 > playerTarget.maxLife) {
-                          playerTarget.life = playerTarget.maxLife;
-                        } else {
-                          playerTarget.life += 30;
+                        if (playerTarget.life > 0) {
+                          if (
+                            playerTarget.life + 10 * player.spell.lvl >
+                            playerTarget.maxLife
+                          ) {
+                            playerTarget.life = playerTarget.maxLife;
+                          } else {
+                            playerTarget.life += 10 * player.spell.lvl;
+                          }
                         }
-
+                        break;
+                      case "silence":
+                        let silenceTarget = gameData.enemies[player.target];
+                        silenceTarget.actionPoints = 0;
+                        silenceTarget.spellInput = [];
+                        io.to(req.id).emit("update_res", gameData);
                         break;
                       case "blast":
                         gameData.enemies.forEach((enemy) => {
-                          enemy.life -= 10;
+                          enemy.life -= 5 * player.spell.lvl;
                           if (enemy.life <= 0) {
                             enemy.spellInput = [];
 

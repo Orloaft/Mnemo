@@ -204,10 +204,21 @@ export function getGameActionHandler() {
                           }
                         }
                         break;
+                      case "revive":
+                        if (gameData.players[player.target].life <= 0) {
+                          gameData.players[player.target].life = 20;
+                        }
+
+                        break;
                       case "silence":
                         let silenceTarget = gameData.enemies[player.target];
                         silenceTarget.actionPoints = 0;
                         silenceTarget.spellInput = [];
+                        io.to(req.id).emit("update_res", gameData);
+                        break;
+                      case "curse":
+                        let curseTarget = gameData.enemies[player.target];
+                        curseTarget.dmg -= curseTarget.dmg / 2;
                         io.to(req.id).emit("update_res", gameData);
                         break;
                       case "blast":

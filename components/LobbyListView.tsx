@@ -4,6 +4,7 @@ import SocketService from "../SocketService";
 import { Frame } from "./CharacterView";
 import { Lobby } from "./Lobby";
 import { validateRoom } from "../utils/jsUtils";
+import { LoadButton } from "./MainView";
 export const LobbyListView: React.FC<{
   setIsBattle: any;
   battleStart: any;
@@ -51,12 +52,12 @@ export const LobbyListView: React.FC<{
               </Frame>
             );
           })}{" "}
-          <button
+          <LoadButton
             style={{ zIndex: "3" }}
             onClick={() => SocketService.getGames()}
           >
             refresh
-          </button>
+          </LoadButton>
           <Frame>
             <form
               onSubmit={(e) => {
@@ -72,13 +73,16 @@ export const LobbyListView: React.FC<{
               >
                 <input name="lobby_name" autoComplete="off"></input>
                 {message}
-                <button style={{ zIndex: "3" }}>create</button>
+                <LoadButton style={{ zIndex: "3" }}>create</LoadButton>
               </div>
             </form>{" "}
           </Frame>
-          <button style={{ zIndex: "3" }} onClick={() => setIsBattle("menu")}>
+          <LoadButton
+            style={{ zIndex: "3" }}
+            onClick={() => setIsBattle("menu")}
+          >
             back
-          </button>{" "}
+          </LoadButton>{" "}
         </>
       )}
     </MenuContainer>

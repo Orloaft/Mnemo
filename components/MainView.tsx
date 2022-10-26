@@ -84,16 +84,21 @@ export const MainView: React.FC = () => {
           `/api/users/${JSON.parse(localStorage.getItem("credentials")).token}`
         )
         .then((res) => {
-          let updatedCredentials = {
-            ...res.data,
-            knownSpells: JSON.parse(res.data.data).knownSpells,
-          };
-          localStorage.setItem(
-            "credentials",
-            JSON.stringify(updatedCredentials)
-          );
-          userContext.setUser(JSON.parse(localStorage.getItem("credentials")));
-        });
+          if (res.data.data) {
+            let updatedCredentials = {
+              ...res.data,
+              knownSpells: JSON.parse(res.data.data).knownSpells,
+            };
+            localStorage.setItem(
+              "credentials",
+              JSON.stringify(updatedCredentials)
+            );
+            userContext.setUser(
+              JSON.parse(localStorage.getItem("credentials"))
+            );
+          }
+        })
+        .catch((err) => console.log(err));
     }
   }, []);
 

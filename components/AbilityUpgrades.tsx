@@ -79,6 +79,17 @@ export const AbilityUpgrades = ({ handleLevelUp, knownSpells, level }) => {
       >
         Revive
       </UpgradeButton>
+      <UpgradeButton
+        className={
+          knownSpells.find((spell) => spell.name === "shield")
+            ? `shownAbility`
+            : `hiddenAbility`
+        }
+        onClick={() => handleLevelUp("shield")}
+        disabled={level >= 10}
+      >
+        Revive
+      </UpgradeButton>
     </>
   );
 };

@@ -25,6 +25,11 @@ const emerge = keyframes`
 { transform: scale(1)
 }
 `;
+const Modifiers = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
 const EnemyImage = styled(Frame)`
   margin: 0;
   padding: 0.25rem;
@@ -35,15 +40,21 @@ const EnemyImage = styled(Frame)`
   border: ${(props: { targeted: boolean }) =>
     props.targeted ? `2px solid white` : ``};
   @media (min-width: 48rem) {
+    & p {
+      font-size: 1rem;
+    }
     width: 20%;
   }
 `;
 export const EnemyView = ({ player, enemies, id }) => {
   return (
     <div
+      key={uuid()}
       style={{
         display: "flex",
         gap: ".1rem",
+
+        width: "100%",
       }}
     >
       {enemies.map((enemy, i) => {
@@ -51,11 +62,17 @@ export const EnemyView = ({ player, enemies, id }) => {
           (player &&
             player.target === i &&
             (player.spell.name === "missle" ||
-              player.spell.name === "silence")) ||
+              player.spell.name === "silence" ||
+              player.spell.name === "curse")) ||
           player.spell.name === "blast"
         ) {
           return (
             <EnemyImage key={uuid()} targeted={true}>
+              <Modifiers>
+                {enemy.modifiers.map((mod) => (
+                  <span>{mod}</span>
+                ))}
+              </Modifiers>
               <img
                 style={{
                   objectFit: "cover",
@@ -109,7 +126,7 @@ export const EnemyView = ({ player, enemies, id }) => {
                         );
                       case "chanting":
                         return (
-                          <>
+                          <div key={uuid()}>
                             {(s.isFlagged && (
                               <p
                                 key={uuid()}
@@ -122,7 +139,7 @@ export const EnemyView = ({ player, enemies, id }) => {
                                 {s.word}
                               </p>
                             )}
-                          </>
+                          </div>
                         );
                     }
                   })}
@@ -143,6 +160,11 @@ export const EnemyView = ({ player, enemies, id }) => {
               }}
               targeted={false}
             >
+              <Modifiers>
+                {enemy.modifiers.map((mod) => (
+                  <span>{mod}</span>
+                ))}
+              </Modifiers>
               <img
                 style={{
                   objectFit: "cover",

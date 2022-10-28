@@ -77,6 +77,7 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
   const MenuSpan = styled.span`
     cursor: default;
     font-size: 2rem;
+
     &:hover {
       animation: ${accordionText};
       animation-duration: 1s;
@@ -120,9 +121,13 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
                 onClick={() => {
                   setBackContent(
                     <>
-                      <span>Heal: recover 30 player hp</span>
-                      <span>Missle: deal 30 damage to target</span>
-                      <span>Blast: deal 10 damage to each enemy</span>
+                      <span>Heal: recover target players hp</span>
+                      <span>Missle: deal damage to target</span>
+                      <span>Blast: deal damage to each enemy</span>
+                      <span>Silence: Interrupt enemy casting</span>
+                      <span>Curse: reduce target damage</span>
+                      <span>Revive: wake up a fainted player</span>
+                      <span>Shield: reduce oncoming damage</span>
                     </>
                   );
                 }}
@@ -134,8 +139,7 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
                   setBackContent(
                     <>
                       <span>Incantations - QWERASDF</span>
-                      <span>Missle - up arrow</span>
-                      <span>Heal - down arrow</span>
+                      <span>Select spell - down/up arrow</span>
                       <span>Toggle target - left/right arrow</span>
                       <span>Toggle pause - enter</span>
                     </>
@@ -173,6 +177,7 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
               height: "15rem",
               display: "flex",
               flexDirection: "column",
+              overflowY: "scroll",
             }}
             onMouseLeave={() => setTimeout(() => setBackContent(""), 1000)}
           >

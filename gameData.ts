@@ -7,6 +7,7 @@ export interface gameDataProps {
   paused: boolean;
   time: number;
   round: number;
+  log: string[];
   participatingSockets: string[];
   difficulty: string;
   players: {
@@ -15,6 +16,7 @@ export interface gameDataProps {
     life: number;
     maxLife: number;
     speed: number;
+    modifiers: string[];
     actionPoints: number;
     action: string;
     spell: { name: string; lvl: number };
@@ -28,6 +30,7 @@ export interface gameDataProps {
     name: string;
     life: number;
     maxLife: number;
+    modifiers: string[];
     speed: number;
     actionPoints: number;
     action: string;
@@ -44,7 +47,7 @@ export interface gameDataProps {
   score?: string;
 }
 
-const rounds = [...getEnemy()].map((enemy) => {
+const rounds = [...getEnemy(null)].map((enemy) => {
   return { ...enemy };
 });
 let lobbyArr: {
@@ -80,7 +83,7 @@ const awardXp = (game: gameDataProps) => {
           .update({ data: JSON.stringify(newData) })
           .from("users")
           .where({ token: player.id })
-          .then(() => console.log("xp awarded"))
+          .then(() => {})
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
@@ -105,6 +108,7 @@ function getGameDataHandler() {
         paused: false,
         time: 0,
         round: 0,
+        log: [],
         participatingSockets: [],
         players: [],
         difficulty: difficulty,

@@ -13,6 +13,7 @@ import { uuid } from "uuidv4";
 import { Socket } from "socket.io-client";
 import { PlayerView } from "./PlayerView";
 import { LoadButton } from "./MainView";
+import { BattleLog } from "./BattleLog";
 
 interface BattleViewProps {
   gameData: any;
@@ -134,12 +135,18 @@ export const Spell: any = styled.p`
   animation-duration: 1s;
   animation-iteration-count: once;
   animation-timing-function: linear;
+  @media (min-width: 48rem) {
+    font-size: 1.2rem;
+  }
 `;
 export const FailedSpell: any = styled.p`
   animation: ${miscast};
   animation-duration: 1s;
   animation-iteration-count: once;
   animation-timing-function: linear;
+  @media (min-width: 48rem) {
+    font-size: 1.2rem;
+  }
 `;
 
 const emerge = keyframes`
@@ -175,6 +182,22 @@ const PlayerContainer = styled.div`
   flex-direction: column;
   @media (min-width: 48rem) {
     flex-direction: row;
+  }
+`;
+const PlayerSpellWords = styled.div`
+  display: flex;
+  min-height: 1.75rem;
+  gap: 0.5rem;
+  align-items: center;
+
+  @media (min-width: 48rem) {
+    & span {
+      font-size: 1rem;
+    }
+    & p {
+      margin: 0;
+      font-size: 1rem;
+    }
   }
 `;
 export const BattleView: React.FC<BattleViewProps> = ({
@@ -213,7 +236,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
           enemies={gameState.enemies}
           id={gameState.id}
         />
-
+        <BattleLog gameLog={gameState.log} />
         <Frame
           style={{
             display: "flex",
@@ -229,14 +252,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
               lineHeight: ".15rem",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                minHeight: "1.75rem",
-                gap: ".5rem",
-                alignItems: "center",
-              }}
-            >
+            <PlayerSpellWords>
               {gameState &&
                 gameState.players
                   .find(
@@ -266,7 +282,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
                       return <FailedSpell key={uuid()}>{word}</FailedSpell>;
                     }
                   })}
-            </div>
+            </PlayerSpellWords>
           </div>
         </Frame>
         <div style={{ display: "flex", gap: "1rem", zIndex: 3 }}>

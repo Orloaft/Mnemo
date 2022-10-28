@@ -56,7 +56,7 @@ function getSocketService() {
     initGame: function (difficulty) {
       !playerId &&
         (playerId = JSON.parse(localStorage.getItem("credentials")).token);
-      console.log(JSON.parse(localStorage.getItem("credentials")).knownSpells);
+
       lobbyData && (lobbyData.difficulty = difficulty);
       socket.emit(
         "init_gameData",

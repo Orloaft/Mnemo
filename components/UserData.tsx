@@ -37,10 +37,10 @@ export const UserData = (props) => {
             JSON.stringify({
               token: credentials.token,
               name: credentials.name,
-              knownSpells: res.data.knownSpells,
+              knownSpells: JSON.parse(res.data).knownSpells,
             })
           );
-          props.setShowComponent("menu");
+          setData(JSON.parse(res.data));
         })
 
         .catch((err) => console.log(err));
@@ -52,14 +52,20 @@ export const UserData = (props) => {
         `/api/users/${JSON.parse(localStorage.getItem("credentials")).token}`
       )
       .then((res) => {
-        console.log(res);
         setData(JSON.parse(res.data.data));
       })
       .catch((err) => console.log(err));
   }, []);
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "30%" }}>
-      <Frame style={{ display: "flex", width: "30rem" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "30%",
+        height: "80%",
+      }}
+    >
+      <Frame style={{ display: "flex", width: "30rem", height: "20rem" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <p>
             {JSON.parse(localStorage.getItem("credentials")).name} the magus
@@ -91,9 +97,8 @@ export const UserData = (props) => {
             display: "flex",
             flexDirection: "column",
             overflowY: "scroll",
-            height: "8rem",
+
             width: "50%",
-            gap: ".5rem",
             alignItems: "center",
             padding: "1rem 0",
           }}

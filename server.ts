@@ -6,7 +6,7 @@ import getGameActionHandler from "./gameActions";
 
 // function that allows next.js to handle the server side code
 async function startServer() {
-  const nextJsApp = next({ dev: false, conf: { reactStrictMode: true } });
+  const nextJsApp = next({ dev: true, conf: { reactStrictMode: true } });
   await nextJsApp.prepare();
   const app = express();
   app.all("*", nextJsApp.getRequestHandler() as any);
@@ -76,6 +76,7 @@ async function startServer() {
           life: 100,
           maxLife: 100,
           speed: 10,
+          modifiers: [],
           actionPoints: 0,
           action: "chanting",
           spell: { ...p.knownSpells[0] },

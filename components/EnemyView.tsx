@@ -70,7 +70,7 @@ export const EnemyView = ({ player, enemies, id }) => {
             <EnemyImage key={uuid()} targeted={true}>
               <Modifiers>
                 {enemy.modifiers.map((mod) => (
-                  <span>{mod}</span>
+                  <span key={uuid()}>{mod}</span>
                 ))}
               </Modifiers>
               <img

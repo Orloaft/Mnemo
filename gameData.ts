@@ -2,6 +2,36 @@ import { EventEmitter } from "stream";
 import { uuid } from "uuidv4";
 import { getEnemy } from "./enemies";
 import knex from "knex";
+export interface enemyProps {
+  spell: any;
+  name: string;
+  life: number;
+  maxLife: number;
+  modifiers: string[];
+  speed: number;
+  actionPoints: number;
+  action: string;
+  dmg: number;
+  spellInput: { word: string; isFlagged: boolean }[];
+  targeted: boolean;
+  target: any;
+}
+
+export interface playerProps {
+  id: string;
+  name: string;
+  life: number;
+  maxLife: number;
+  speed: number;
+  modifiers: string[];
+  actionPoints: number;
+  action: string;
+  spell: { name: string; lvl: number };
+  target: number;
+  knownSpells: { name: string; lvl: number }[];
+  spellReq: string[];
+  spellInput: string[];
+}
 export interface gameDataProps {
   id: string;
   paused: boolean;
@@ -10,35 +40,8 @@ export interface gameDataProps {
   log: string[];
   participatingSockets: string[];
   difficulty: string;
-  players: {
-    id: string;
-    name: string;
-    life: number;
-    maxLife: number;
-    speed: number;
-    modifiers: string[];
-    actionPoints: number;
-    action: string;
-    spell: { name: string; lvl: number };
-    target: number;
-    knownSpells: { name: string; lvl: number }[];
-    spellReq: string[];
-    spellInput: string[];
-  }[];
-  enemies: {
-    spell: any;
-    name: string;
-    life: number;
-    maxLife: number;
-    modifiers: string[];
-    speed: number;
-    actionPoints: number;
-    action: string;
-    dmg: number;
-    spellInput: { word: string; isFlagged: boolean }[];
-    targeted: boolean;
-    target: any;
-  }[];
+  players: playerProps[];
+  enemies: enemyProps[];
   spellTable: string[];
   spellInput: string[];
   spellReq: string[];
@@ -131,16 +134,19 @@ function getGameDataHandler() {
       };
       switch (difficulty) {
         case "easy":
-          newGame.enemies = [{ ...rounds[0] }];
+          newGame.enemies = [{ ...rounds[Math.floor(Math.random() * 3)] }];
           break;
         case "medium":
-          newGame.enemies = [{ ...rounds[0] }, { ...rounds[0] }];
+          newGame.enemies = [
+            { ...rounds[Math.floor(Math.random() * 3)] },
+            { ...rounds[Math.floor(Math.random() * 3)] },
+          ];
           break;
         case "hard":
           newGame.enemies = [
-            { ...rounds[0] },
-            { ...rounds[0] },
-            { ...rounds[0] },
+            { ...rounds[Math.floor(Math.random() * 3)] },
+            { ...rounds[Math.floor(Math.random() * 3)] },
+            { ...rounds[Math.floor(Math.random() * 3)] },
           ];
           break;
       }
@@ -170,23 +176,61 @@ function getGameDataHandler() {
     nextRound: function (id: string) {
       let game = gamesArr.find((game) => game.id === id);
       awardXp(game);
-      if (game.round + 1 < rounds.length) {
+      if (game.round + 1 < 30) {
         game.round += 1;
         switch (game.difficulty) {
           case "easy":
-            game.enemies = [{ ...rounds[game.round] }];
+            game.enemies = [
+              {
+                ...rounds[
+                  Math.floor(
+                    Math.random() * (game.round < 10 ? game.round + 1 : 10)
+                  )
+                ],
+              },
+            ];
             break;
           case "medium":
             game.enemies = [
-              { ...rounds[game.round] },
-              { ...rounds[game.round] },
+              {
+                ...rounds[
+                  Math.floor(
+                    Math.random() * (game.round < 10 ? game.round + 1 : 10)
+                  )
+                ],
+              },
+              {
+                ...rounds[
+                  Math.floor(
+                    Math.random() * (game.round < 10 ? game.round + 1 : 10)
+                  )
+                ],
+              },
             ];
             break;
           case "hard":
             game.enemies = [
-              { ...rounds[game.round] },
-              { ...rounds[game.round] },
-              { ...rounds[game.round] },
+              {
+                ...rounds[
+                  Math.floor(
+                    Math.random() * (game.round < 10 ? game.round + 1 : 10)
+                  )
+                ],
+              },
+              {
+                ...rounds[
+                  Math.floor(
+                    Math.random() * (game.round < 10 ? game.round + 1 : 10)
+                  )
+                ],
+              },
+              {
+                ...rounds[
+                  Math.floor(
+                    Math.random() * (game.round < 10 ? game.round + 1 : 10)
+                  )
+                ],
+              },
             ];
             break;
         }

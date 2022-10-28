@@ -43,7 +43,18 @@ export function getGameActionHandler() {
                 gameData.enemies.splice(gameData.enemies.indexOf(enemy), 1);
               } else {
                 if (enemy.action === "chanting" && enemy.life > 0) {
-                  enemy.actionPoints += 1;
+                  switch (gameData.difficulty) {
+                    case "easy":
+                      enemy.actionPoints += 1;
+                      break;
+                    case "medium":
+                      enemy.actionPoints += 1.5;
+                      break;
+                    case "hard":
+                      enemy.actionPoints += 2;
+                      break;
+                  }
+
                   if (enemy.actionPoints >= 4 * (enemy.spellInput.length + 1)) {
                     enemy.spellInput.push({
                       word: [...gameData.spellTable]

@@ -162,7 +162,7 @@ export const EnemyView = ({ player, enemies, id }) => {
             >
               <Modifiers>
                 {enemy.modifiers.map((mod) => (
-                  <span>{mod}</span>
+                  <span key={uuid()}>{mod}</span>
                 ))}
               </Modifiers>
               <img

@@ -190,135 +190,141 @@ export function getGameActionHandler() {
                 player.actionPoints >= 15 &&
                 !player.spellInput.find((w) => w === req.word) &&
                 player.spellInput.push(req.word);
-            }
-            if (player && player.spellInput.length === player.spellReq.length) {
-              if (player.spellInput.join("") === player.spellReq.join("")) {
-                gameData.animation = "casting";
-                player.actionPoints = 0;
-                io.to(req.id).emit("update_res", gameData);
-                setTimeout(() => {
-                  if (gameData) {
-                    switch (player.spell.name) {
-                      case "missle":
-                        let target = gameData.enemies[player.target];
-                        if (!target) {
-                          player.target = 0;
-                          target = gameData.enemies[player.target];
-                        }
 
-                        target.life -= 10 * player.spell.lvl;
-                        gameData.log.unshift(
-                          `${player.name} casts missle at ${target.name}`
-                        );
-                        if (target.life <= 0) {
-                          target.spellInput = [];
-                          gameData.enemies[0].targeted = true;
-                          gameData.log.unshift(`${target.name} has fainted`);
+              if (
+                player &&
+                player.spellInput.length === player.spellReq.length
+              ) {
+                if (player.spellInput.join("") === player.spellReq.join("")) {
+                  gameData.animation = "casting";
+                  player.actionPoints = 0;
+                  io.to(req.id).emit("update_res", gameData);
+                  setTimeout(() => {
+                    if (gameData) {
+                      switch (player.spell.name) {
+                        case "missle":
+                          let target = gameData.enemies[player.target];
+                          if (!target) {
+                            player.target = 0;
+                            target = gameData.enemies[player.target];
+                          }
+
+                          target.life -= 10 * player.spell.lvl;
+                          gameData.log.unshift(
+                            `${player.name} casts missle at ${target.name}`
+                          );
+                          if (target.life <= 0) {
+                            target.spellInput = [];
+                            gameData.enemies[0].targeted = true;
+                            gameData.log.unshift(`${target.name} has fainted`);
+                            io.to(req.id).emit("update_res", gameData);
+                            gameData.enemies.splice(player.target, 1);
+                            player.target = 0;
+                          }
+                          break;
+                        case "heal":
+                          let playerTarget = gameData.players[player.target];
+                          if (playerTarget.life > 0) {
+                            if (
+                              playerTarget.life + 10 * player.spell.lvl >
+                              playerTarget.maxLife
+                            ) {
+                              playerTarget.life = playerTarget.maxLife;
+                            } else {
+                              playerTarget.life += 10 * player.spell.lvl;
+                            }
+                          }
+                          gameData.log.unshift(
+                            `${player.name} heals ${playerTarget.name}`
+                          );
+                          break;
+                        case "shield":
+                        case "revive":
+                          if (gameData.players[player.target].life <= 0) {
+                            gameData.players[player.target].life = 20;
+                            gameData.log.unshift(
+                              `${player.name} revives ${
+                                gameData.players[player.target].name
+                              }`
+                            );
+                          }
+
+                          break;
+                        case "silence":
+                          let silenceTarget = gameData.enemies[player.target];
+                          silenceTarget.actionPoints = 0;
+                          silenceTarget.spellInput = [];
+                          gameData.log.unshift(
+                            `${player.name} silenced ${silenceTarget.name}`
+                          );
                           io.to(req.id).emit("update_res", gameData);
-                          gameData.enemies.splice(player.target, 1);
-                          player.target = 0;
-                        }
-                        break;
-                      case "heal":
-                        let playerTarget = gameData.players[player.target];
-                        if (playerTarget.life > 0) {
+                          break;
+                        case "curse":
+                          let curseTarget = gameData.enemies[player.target];
                           if (
-                            playerTarget.life + 10 * player.spell.lvl >
-                            playerTarget.maxLife
+                            !curseTarget.modifiers.find(
+                              (mod) => mod === "curse"
+                            )
                           ) {
-                            playerTarget.life = playerTarget.maxLife;
-                          } else {
-                            playerTarget.life += 10 * player.spell.lvl;
+                            gameData.log.unshift(
+                              `${player.name} cursed ${curseTarget.name}`
+                            );
+                            curseTarget.modifiers = [
+                              ...curseTarget.modifiers,
+                              "curse",
+                            ];
+
+                            curseTarget.dmg = curseTarget.dmg / 2;
                           }
-                        }
-                        gameData.log.unshift(
-                          `${player.name} heals ${playerTarget.name}`
-                        );
-                        break;
-                      case "shield":
-                      case "revive":
-                        if (gameData.players[player.target].life <= 0) {
-                          gameData.players[player.target].life = 20;
+
+                          io.to(req.id).emit("update_res", gameData);
+                          break;
+                        case "blast":
                           gameData.log.unshift(
-                            `${player.name} revives ${
-                              gameData.players[player.target].name
-                            }`
+                            `${player.name} casts blast on all enemies`
                           );
-                        }
+                          gameData.enemies.forEach((enemy) => {
+                            enemy.life -= 5 * player.spell.lvl;
 
-                        break;
-                      case "silence":
-                        let silenceTarget = gameData.enemies[player.target];
-                        silenceTarget.actionPoints = 0;
-                        silenceTarget.spellInput = [];
-                        gameData.log.unshift(
-                          `${player.name} silenced ${silenceTarget.name}`
-                        );
-                        io.to(req.id).emit("update_res", gameData);
-                        break;
-                      case "curse":
-                        let curseTarget = gameData.enemies[player.target];
-                        if (
-                          !curseTarget.modifiers.find((mod) => mod === "curse")
-                        ) {
-                          gameData.log.unshift(
-                            `${player.name} cursed ${curseTarget.name}`
-                          );
-                          curseTarget.modifiers = [
-                            ...curseTarget.modifiers,
-                            "curse",
-                          ];
+                            if (enemy.life <= 0) {
+                              enemy.spellInput = [];
+                              gameData.log.unshift(`${enemy.name} has fainted`);
+                            }
+                          });
+                          io.to(req.id).emit("update_res", gameData);
+                          break;
+                      }
 
-                          curseTarget.dmg = curseTarget.dmg / 2;
-                        }
-
-                        io.to(req.id).emit("update_res", gameData);
-                        break;
-                      case "blast":
-                        gameData.log.unshift(
-                          `${player.name} casts blast on all enemies`
-                        );
-                        gameData.enemies.forEach((enemy) => {
-                          enemy.life -= 5 * player.spell.lvl;
-
-                          if (enemy.life <= 0) {
-                            enemy.spellInput = [];
-                            gameData.log.unshift(`${enemy.name} has fainted`);
-                          }
-                        });
-                        io.to(req.id).emit("update_res", gameData);
-                        break;
+                      player.spellInput = [];
+                      player.spellReq = [...gameData.spellTable]
+                        .sort(() => 0.5 - Math.random())
+                        .slice(0, 3);
+                      gameData.animation = "normal";
+                      player.action = "chanting";
+                      if (
+                        gameData &&
+                        !gameData.enemies.find((enemy) => enemy.life > 0)
+                      ) {
+                        getGameDataHandler.nextRound(gameData.id) &&
+                          getGameDataHandler.removeGame(gameData.id);
+                      }
+                      io.to(req.id).emit("update_res", gameData);
                     }
-
-                    player.spellInput = [];
-                    player.spellReq = [...gameData.spellTable]
-                      .sort(() => 0.5 - Math.random())
-                      .slice(0, 3);
-                    gameData.animation = "normal";
-                    player.action = "chanting";
-                    if (
-                      gameData &&
-                      !gameData.enemies.find((enemy) => enemy.life > 0)
-                    ) {
-                      getGameDataHandler.nextRound(gameData.id) &&
-                        getGameDataHandler.removeGame(gameData.id);
+                  }, 1000);
+                } else {
+                  gameData.animation = "failed";
+                  io.to(req.id).emit("update_res", gameData);
+                  setTimeout(() => {
+                    if (gameData) {
+                      player.spellInput = [];
+                      gameData.animation = "normal";
+                      io.to(req.id).emit("update_res", gameData);
                     }
-                    io.to(req.id).emit("update_res", gameData);
-                  }
-                }, 1000);
+                  }, 1000);
+                }
               } else {
-                gameData.animation = "failed";
                 io.to(req.id).emit("update_res", gameData);
-                setTimeout(() => {
-                  if (gameData) {
-                    player.spellInput = [];
-                    gameData.animation = "normal";
-                    io.to(req.id).emit("update_res", gameData);
-                  }
-                }, 1000);
               }
-            } else {
-              io.to(req.id).emit("update_res", gameData);
             }
         }
       }

@@ -5,11 +5,13 @@ import knex from "knex";
 export interface enemyProps {
   spell: any;
   name: string;
+  animation: string;
   life: number;
   maxLife: number;
   modifiers: string[];
   speed: number;
   actionPoints: number;
+  invuln: boolean;
   action: string;
   dmg: number;
   spellInput: { word: string; isFlagged: boolean }[];

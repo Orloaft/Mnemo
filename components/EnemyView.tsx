@@ -5,6 +5,26 @@ import { FailedSpell, Spell } from "./BattleView";
 import { Frame } from "./CharacterView";
 import { StatView } from "./StatView";
 import SocketService from "../SocketService";
+const collapse = keyframes`
+0%{ 
+    opacity:1
+}
+20%
+{  opacity:.8
+}
+40%
+{  opacity:.6
+}
+60%
+{  opacity:.4
+}
+80%
+{ opacity:.2
+}
+100%
+{  opacity:0
+}
+`;
 const emerge = keyframes`
 0%{ 
     transform: scale(0)
@@ -46,6 +66,12 @@ const EnemyImage = styled(Frame)`
     width: 20%;
   }
 `;
+const DyingEnemyImage = styled(EnemyImage)`
+  animation: ${collapse};
+  animation-duration: 1s;
+  animation-iteration-count: once;
+  animation-timing-function: linear;
+`;
 export const EnemyView = ({ player, enemies, id }) => {
   return (
     <div
@@ -58,6 +84,89 @@ export const EnemyView = ({ player, enemies, id }) => {
       }}
     >
       {enemies.map((enemy, i) => {
+        if (enemy.life <= 0) {
+          return (
+            <DyingEnemyImage key={uuid()} targeted={true}>
+              <Modifiers>
+                {enemy.modifiers.map((mod) => (
+                  <span key={uuid()}>{mod}</span>
+                ))}
+              </Modifiers>
+              <img
+                style={{
+                  objectFit: "cover",
+                  position: "absolute",
+                  height: "auto",
+                  width: "45%",
+                  left: "50%",
+                  bottom: 0,
+                  zIndex: 0,
+                }}
+                src={`${enemy.name}.png`}
+              />
+              <div
+                style={{
+                  position: "relative",
+                  zIndex: "2",
+                  display: "flex",
+                  gap: ".1rem",
+                  minHeight: "5rem",
+                  flexDirection: "column",
+                }}
+              >
+                <StatView enemy={enemy} />
+                <ActionView enemy={enemy} />
+                <div
+                  style={{
+                    margin: 0,
+                    padding: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    flexWrap: "wrap",
+                    fontSize: ".5rem",
+                    maxWidth: "100%",
+                    gap: ".25rem",
+                    lineHeight: ".5rem",
+                  }}
+                >
+                  {enemy.spellInput.map((s) => {
+                    switch (enemy.action) {
+                      case "casting":
+                        return (
+                          <Spell key={uuid()} style={{ margin: 0 }}>
+                            {s.word}
+                          </Spell>
+                        );
+                      case "failed":
+                        return (
+                          <FailedSpell key={uuid()} style={{ margin: 0 }}>
+                            {s.word}
+                          </FailedSpell>
+                        );
+                      case "chanting":
+                        return (
+                          <div key={uuid()}>
+                            {(s.isFlagged && (
+                              <p
+                                key={uuid()}
+                                style={{ margin: 0, color: "yellow" }}
+                              >
+                                {s.word}
+                              </p>
+                            )) || (
+                              <p key={uuid()} style={{ margin: 0 }}>
+                                {s.word}
+                              </p>
+                            )}
+                          </div>
+                        );
+                    }
+                  })}
+                </div>
+              </div>
+            </DyingEnemyImage>
+          );
+        }
         if (
           (player &&
             player.target === i &&

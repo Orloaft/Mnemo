@@ -1,5 +1,6 @@
+import gameData from "./gameData";
 import getGameDataHandler from "./gameData";
-
+const deathAnimate = (enemy, gameData) => {};
 export function getGameActionHandler() {
   return {
     gameTimer: function (roomId: string, io: any) {
@@ -40,7 +41,15 @@ export function getGameActionHandler() {
             // add action points to each living enemy and add a random spell word every 4 points with a chance of being flagged for capture
             gameData.enemies.forEach((enemy) => {
               if (enemy.life <= 0) {
-                gameData.enemies.splice(gameData.enemies.indexOf(enemy), 1);
+                enemy.spellInput = [];
+
+                gameData.log.unshift(`${enemy.name} has fainted`);
+                enemy.animation = "death";
+                enemy.invuln = true;
+                setTimeout(() => {
+                  gameData.enemies.splice(gameData.enemies.indexOf(enemy), 1);
+                  io.to(gameData.id).emit("update_res", gameData);
+                }, 1000);
               } else {
                 if (enemy.action === "chanting" && enemy.life > 0) {
                   switch (gameData.difficulty) {
@@ -214,11 +223,8 @@ export function getGameActionHandler() {
                             `${player.name} casts missle at ${target.name}`
                           );
                           if (target.life <= 0) {
-                            target.spellInput = [];
-                            gameData.enemies[0].targeted = true;
-                            gameData.log.unshift(`${target.name} has fainted`);
                             io.to(req.id).emit("update_res", gameData);
-                            gameData.enemies.splice(player.target, 1);
+
                             player.target = 0;
                           }
                           break;

@@ -110,7 +110,7 @@ export const SignUpPageView = (props) => {
         ></input>{" "}
         {props.message}
         <Button type="submit">Sign Up</Button>
-        <Button onClick={() => props.setStatus("sign in")}>back</Button>
+        <Button onClick={() => props.setStatus("default")}>back</Button>
       </Form>
     </div>
   );

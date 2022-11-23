@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Frame } from "../../components/CharacterView";
+import { LoadButton } from "../../components/MainView";
 import { ShootingStarView } from "../../components/ShootingStarView";
 import styles from "../../styles/Home.module.css";
 
@@ -36,16 +37,16 @@ export default function ConfirmationPageController(props) {
       <ShootingStarView />
       {(isConfirmed && (
         <>
-          <Frame>Your account has been created</Frame>
+          <Frame>Your email has been confirmed</Frame>
           <Frame>
             <Link href="/">back</Link>
           </Frame>
         </>
       )) || (
         <>
-          <button style={{ zIndex: "4" }} onClick={handleConfirm}>
-            confirm {router.query.token}{" "}
-          </button>
+          <LoadButton style={{ zIndex: "4" }} onClick={handleConfirm}>
+            confirm your email
+          </LoadButton>
         </>
       )}
     </div>

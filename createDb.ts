@@ -7,7 +7,7 @@ async function createDb() {
     await db.query(sql`
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        email VARCHAR NOT NULL,
+        email VARCHAR,
         name VARCHAR NOT NULL,
         token VARCHAR,
         password VARCHAR,

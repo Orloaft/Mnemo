@@ -12,9 +12,8 @@ export const GuestView = (props) => {
       <Frame style={{ flexDirection: "column" }}>
         Screen name
         <input
-          value={props.form.email}
           onChange={(e) => {
-            props.onChange(e, "email");
+            props.onChange(e, "name");
           }}
         ></input>
         {props.message}

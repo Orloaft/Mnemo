@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
-
-import { Frame } from "./CharacterView";
-import SocketService from "../SocketService";
-import { StatView } from "./StatView";
-import { ActionView } from "./ActionView";
-
+import SocketService from "../../SocketService";
 import { SpellTable } from "./SpellTable";
-
 import { EnemyView } from "./EnemyView";
 import { uuid } from "uuidv4";
-import { Socket } from "socket.io-client";
 import { PlayerView } from "./PlayerView";
-import { LoadButton } from "./MainView";
+import { LoadButton } from "../mainMenu/MainView";
 import { BattleLog } from "./BattleLog";
+import { Frame } from "../LogInPanel";
 
 interface BattleViewProps {
   gameData: any;
@@ -100,7 +94,7 @@ const miscast = keyframes`
       color: red;
     }
   
-    40% {
+    40% {import { Socket } from "socket.io-client";
       letter-spacing: 0.025rem;
       color: red;
     }

@@ -1,10 +1,32 @@
-import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import React, { useContext } from "react";
 import styled, { keyframes } from "styled-components";
 import { setTimeout } from "timers";
-import { UserContext } from "../pages";
-import { backgroundGradient } from "../utils/styleUtils";
-import { BackCard, FrontCard, InnerCard } from "./CharacterView";
+import { UserContext } from "../../pages";
+import { backgroundGradient } from "../../utils/styleUtils";
+import { Frame } from "../LogInPanel";
+export const InnerCard = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 1s;
+  transform-style: preserve-3d;
+`;
+export const FrontCard = styled.div`
+  position: absolute;
+  width: 100%;
+  height: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+`;
+export const BackCard = styled(Frame)`
+  position: absolute;
+  width: 100%;
+  height: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+`;
 
 const PartyMenu = styled.div`
   z-index: 4;

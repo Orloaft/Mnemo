@@ -1,10 +1,10 @@
 import styled, { keyframes } from "styled-components";
 import { uuid } from "uuidv4";
-import { ActionView } from "./ActionView";
-import { FailedSpell, Spell } from "./BattleView";
-import { Frame } from "./CharacterView";
+import { ActionView } from "../battle/ActionView";
+import { FailedSpell, Spell } from "../battle/BattleView";
 import { StatView } from "./StatView";
-import SocketService from "../SocketService";
+import SocketService from "../../SocketService";
+import { Frame } from "../LogInPanel";
 const collapse = keyframes`
 0%{ 
     opacity:1

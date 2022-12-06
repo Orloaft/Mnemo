@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import styles from "../styles/Home.module.css";
 import React, { useEffect, createContext, useState } from "react";
-import { MainView } from "../components/MainView";
+import { MainView } from "../components/mainMenu/MainView";
 import { ShootingStarView } from "../components/ShootingStarView";
 import SocketService from "../SocketService";
 export const UserContext = createContext({

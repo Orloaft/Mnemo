@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import SocketService from "../SocketService";
+import SocketService from "../../SocketService";
 import { ActionView } from "./ActionView";
-import { Frame } from "./CharacterView";
 import { StatView } from "./StatView";
 import { uuid } from "uuidv4";
+import { Frame } from "../LogInPanel";
 const PlayerFrame = styled(Frame)`
   background: linear-gradient(to right, #868f96 0%, #596164 100%);
   border: ${(props: { targeted: boolean }) =>

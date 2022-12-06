@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { MenuContainer } from "./MenuView";
-import SocketService from "../SocketService";
-import { Frame } from "./CharacterView";
+import { MenuContainer } from "../mainMenu/MenuView";
+import SocketService from "../../SocketService";
+import { Frame } from "../LogInPanel";
 import { Lobby } from "./Lobby";
-import { validateRoom } from "../utils/jsUtils";
-import { LoadButton } from "./MainView";
+import { validateRoom } from "../../utils/jsUtils";
+import { LoadButton } from "../mainMenu/MainView";
 export const LobbyListView: React.FC<{
   setIsBattle: any;
   battleStart: any;

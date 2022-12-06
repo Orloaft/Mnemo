@@ -1,7 +1,8 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import { otherGradient } from "../utils/styleUtils";
-import { Frame } from "./CharacterView";
+
+import { otherGradient } from "../../utils/styleUtils";
+import { Frame } from "../LogInPanel";
 
 export const InnerCard = styled.div`
   position: relative;

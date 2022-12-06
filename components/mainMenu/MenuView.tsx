@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
-import { BattleView } from "./BattleView";
-
+import { BattleView } from "../battle/BattleView";
 import { PartyMenuView } from "./PartyMenuView";
-import SocketService from "../SocketService";
-import { gameDataProps } from "../gameData";
-import { LobbyListView } from "./LobbyListView";
-import { UserData } from "./UserData";
-import { Frame } from "./CharacterView";
+import SocketService from "../../SocketService";
+import { gameDataProps } from "../../gameData";
+import { LobbyListView } from "../lobby/LobbyListView";
+import { UserData } from "../user/UserData";
+import { Frame } from "../LogInPanel";
 
 const emerge = keyframes`
 0%{ 
@@ -240,10 +239,6 @@ export const MenuView: React.FC = (props) => {
         </MenuContainer>
       );
     case "user":
-      return (
-        <MenuContainer>
-          <UserData setShowComponent={setShowComponent} />
-        </MenuContainer>
-      );
+      return <UserData setShowComponent={setShowComponent} />;
   }
 };

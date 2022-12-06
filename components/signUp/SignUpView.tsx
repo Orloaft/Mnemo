@@ -1,14 +1,5 @@
-import axios from "axios";
-
-import { useContext, useState } from "react";
-import { UserContext } from "../pages";
-import SignUpPageController from "./signUpPageController";
-import { Frame } from "./CharacterView";
-import { Form } from "./SignUpPageView";
 import styled, { keyframes } from "styled-components";
-import { backgroundGradient } from "../utils/styleUtils";
-import { SignInPageController } from "./SignInPageController";
-import { GuestController } from "./GuestController";
+import { backgroundGradient } from "../../utils/styleUtils";
 const hoverRainbow = keyframes`
  
 0% {
@@ -89,28 +80,38 @@ export const Button = styled.button`
   z-index: 2;
   background: ${backgroundGradient};
 `;
-export const SignIn = (props) => {
-  const [status, setStatus] = useState("default");
-
-  switch (status) {
-    case "default":
-      return (
-        <div style={{ maxHeight: "5rem", display: "flex", gap: ".5rem" }}>
-          {" "}
-          <Button onClick={() => setStatus("sign in")}>sign in</Button>
-          <Button onClick={() => setStatus("sign up")}>Sign up</Button>
-          <Button onClick={() => setStatus("guest")}>Play as guest</Button>
-        </div>
-      );
-    case "sign in":
-      return <SignInPageController setStatus={setStatus} />;
-    case "sign up":
-      return (
-        <Frame>
-          <SignUpPageController setStatus={setStatus} />
-        </Frame>
-      );
-    case "guest":
-      return <GuestController setStatus={setStatus} />;
-  }
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+export const SignUpPageView = (props) => {
+  return (
+    <div>
+      <Form onSubmit={props.submit}>
+        EMAIL
+        <input
+          onChange={(e) => props.onChange(e, "email")}
+          value={props.form.email}
+          name="email"
+        ></input>
+        USERNAME
+        <input
+          onChange={(e) => props.onChange(e, "name")}
+          value={props.form.name}
+          name="name"
+        ></input>
+        PASSWORD
+        <input
+          onChange={(e) => props.onChange(e, "password")}
+          value={props.form.password}
+          type="password"
+          name="password"
+        ></input>{" "}
+        {props.message}
+        <Button type="submit">Sign Up</Button>
+        <Button onClick={() => props.setStatus("default")}>back</Button>
+      </Form>
+    </div>
+  );
 };

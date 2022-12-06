@@ -1,5 +1,5 @@
-import { Frame } from "./CharacterView";
-import { Button, Form } from "./SignUpPageView";
+import { Frame } from "../LogInPanel";
+import { Button, Form } from "../signUp/SignUpView";
 
 export const SignInPageView = (props) => {
   return (

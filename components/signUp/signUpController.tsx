@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
-import { SignUpPageView } from "./SignUpPageView";
-import { validateSignUp } from "../utils/jsUtils";
+import { SignUpPageView } from "./SignUpView";
+import { validateSignUp } from "../../utils/jsUtils";
 
 export default function SignUpPageController(props) {
   const [form, setForm] = useState({ email: "", name: "", password: "" });

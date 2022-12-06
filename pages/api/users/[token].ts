@@ -15,7 +15,11 @@ export default function handler(
     .from("users")
     .where({ token: req.query.token })
     .then((users) => {
-      res.send(users[0]);
+      if (users[0]) {
+        res.send(users[0]);
+      } else {
+        res.json({ message: "user not found" });
+      }
     })
     .catch((err) => res.json(err));
 }

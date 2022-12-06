@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
-import { SignInPageView } from "./SignInPageView";
+import { SignInPageView } from "./SignInView";
 import axios from "axios";
-import { UserContext } from "../pages";
+import { UserContext } from "../../pages";
 export const SignInPageController = (props) => {
   const userContext = useContext(UserContext);
   const [form, setForm] = useState({ email: "", password: "" });

@@ -1,11 +1,9 @@
 import React, { useEffect, useContext } from "react";
 import styled, { keyframes } from "styled-components";
-
 import { MenuView } from "./MenuView";
-import { Frame } from "./CharacterView";
-import { SignIn } from "./SignIn";
-import { UserContext } from "../pages";
+import { UserContext } from "../../pages";
 import axios from "axios";
+import { Frame, LogInPanel } from "../LogInPanel";
 export const hoverRainbow = keyframes`
  
 0% {
@@ -105,7 +103,7 @@ export const MainView: React.FC = () => {
   if (!userContext.user.name) {
     return (
       <>
-        <SignIn />
+        <LogInPanel />
       </>
     );
   } else {

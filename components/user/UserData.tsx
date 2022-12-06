@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Frame } from "./CharacterView";
+
 import styled from "styled-components";
 import { uuid } from "uuidv4";
-import { LoadButton } from "./MainView";
+import { LoadButton } from "../mainMenu/MainView";
 import { AbilityUpgrades } from "./AbilityUpgrades";
+import { Frame } from "../LogInPanel";
 
 const XpBar = styled.div`
   background: transparent;
@@ -59,13 +60,15 @@ export const UserData = (props) => {
   return (
     <div
       style={{
+        position: "absolute",
+        top: "10%",
         display: "flex",
         flexDirection: "column",
-        gap: "30%",
-        height: "80%",
+        gap: "5%",
+        height: "50%",
       }}
     >
-      <Frame style={{ display: "flex", width: "30rem", height: "20rem" }}>
+      <Frame style={{ display: "flex", width: "100%", height: "20rem" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <p>
             {JSON.parse(localStorage.getItem("credentials")).name} the magus

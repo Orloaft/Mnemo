@@ -1,7 +1,7 @@
-import { Frame } from "./CharacterView";
-import SocketService from "../SocketService";
+import SocketService from "../../SocketService";
 import { uuid } from "uuidv4";
-import { LoadButton } from "./MainView";
+import { LoadButton } from "../mainMenu/MainView";
+import { Frame } from "../LogInPanel";
 export const Lobby = ({ lobby, battleStart }) => {
   const submitMessage = (e) => {
     e.preventDefault();

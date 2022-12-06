@@ -1,5 +1,12 @@
+import { useState } from "react";
+
 import styled, { keyframes } from "styled-components";
 import { backgroundGradient } from "../utils/styleUtils";
+import { GuestController } from "./guest/GuestController";
+import { SignInPageController } from "./signIn/SignInController";
+import SignUpPageController from "./signUp/signUpController";
+import { Lobby } from "./lobby/Lobby";
+
 const hoverRainbow = keyframes`
  
 0% {
@@ -59,6 +66,15 @@ border-color: #00FF66;
     color:#FF0000;
   }
 `;
+export const Frame = styled.div`
+  display: flex;
+  // border: 2px solid #ffebcd;
+  color: #ffebcd;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  z-index: 2;
+  background: ${backgroundGradient};
+`;
 export const Button = styled.button`
   &:hover {
     animation: ${hoverRainbow};
@@ -80,38 +96,28 @@ export const Button = styled.button`
   z-index: 2;
   background: ${backgroundGradient};
 `;
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-export const SignUpPageView = (props) => {
-  return (
-    <div>
-      <Form onSubmit={props.submit}>
-        EMAIL
-        <input
-          onChange={(e) => props.onChange(e, "email")}
-          value={props.form.email}
-          name="email"
-        ></input>
-        USERNAME
-        <input
-          onChange={(e) => props.onChange(e, "name")}
-          value={props.form.name}
-          name="name"
-        ></input>
-        PASSWORD
-        <input
-          onChange={(e) => props.onChange(e, "password")}
-          value={props.form.password}
-          type="password"
-          name="password"
-        ></input>{" "}
-        {props.message}
-        <Button type="submit">Sign Up</Button>
-        <Button onClick={() => props.setStatus("default")}>back</Button>
-      </Form>
-    </div>
-  );
+export const LogInPanel = (props) => {
+  const [status, setStatus] = useState("default");
+
+  switch (status) {
+    case "default":
+      return (
+        <div style={{ maxHeight: "5rem", display: "flex", gap: ".5rem" }}>
+          {" "}
+          <Button onClick={() => setStatus("sign in")}>sign in</Button>
+          <Button onClick={() => setStatus("sign up")}>Sign up</Button>
+          <Button onClick={() => setStatus("guest")}>Play as guest</Button>
+        </div>
+      );
+    case "sign in":
+      return <SignInPageController setStatus={setStatus} />;
+    case "sign up":
+      return (
+        <Frame>
+          <SignUpPageController setStatus={setStatus} />
+        </Frame>
+      );
+    case "guest":
+      return <GuestController setStatus={setStatus} />;
+  }
 };

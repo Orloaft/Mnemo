@@ -1,4 +1,4 @@
-import { Frame } from "./CharacterView";
+import { Frame } from "../LogInPanel";
 
 export const BattleLog = ({ gameLog }) => {
   return (

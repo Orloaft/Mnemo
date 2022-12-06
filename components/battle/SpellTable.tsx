@@ -1,8 +1,8 @@
 import styled, { keyframes } from "styled-components";
-import { setOnKeyDown, useMountEffect } from "../utils/jsUtils";
-import { otherGradient, backgroundGradient } from "../utils/styleUtils";
-import { Frame } from "./CharacterView";
-import SocketService from "../SocketService";
+import { setOnKeyDown, useMountEffect } from "../../utils/jsUtils";
+import { otherGradient, backgroundGradient } from "../../utils/styleUtils";
+import SocketService from "../../SocketService";
+import { Frame } from "../LogInPanel";
 
 const wiggle = keyframes`
 0% { transform: rotate(0deg); }

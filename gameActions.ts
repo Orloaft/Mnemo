@@ -1,4 +1,3 @@
-import gameData from "./gameData";
 import getGameDataHandler from "./gameData";
 const deathAnimate = (enemy, gameData) => {};
 export function getGameActionHandler() {
@@ -42,12 +41,12 @@ export function getGameActionHandler() {
             gameData.enemies.forEach((enemy) => {
               if (enemy.life <= 0) {
                 enemy.spellInput = [];
-
-                gameData.log.unshift(`${enemy.name} has fainted`);
                 enemy.animation = "death";
                 enemy.invuln = true;
                 setTimeout(() => {
+                  gameData.log.unshift(`${enemy.name} has fainted`);
                   gameData.enemies.splice(gameData.enemies.indexOf(enemy), 1);
+                  console.log(enemy.name + "has fainted");
                   io.to(gameData.id).emit("update_res", gameData);
                 }, 1000);
               } else {
@@ -223,9 +222,8 @@ export function getGameActionHandler() {
                             `${player.name} casts missle at ${target.name}`
                           );
                           if (target.life <= 0) {
-                            io.to(req.id).emit("update_res", gameData);
-
                             player.target = 0;
+                            gameData.log.unshift(` ${target.name} fainted`);
                           }
                           break;
                         case "heal":

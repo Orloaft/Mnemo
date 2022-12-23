@@ -46,9 +46,8 @@ export function getGameActionHandler() {
                 setTimeout(() => {
                   gameData.log.unshift(`${enemy.name} has fainted`);
                   gameData.enemies.splice(gameData.enemies.indexOf(enemy), 1);
-                  console.log(enemy.name + "has fainted");
                   io.to(gameData.id).emit("update_res", gameData);
-                }, 1000);
+                }, 500);
               } else {
                 if (enemy.action === "chanting" && enemy.life > 0) {
                   switch (gameData.difficulty) {

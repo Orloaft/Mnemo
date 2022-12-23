@@ -1,12 +1,37 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { uuid } from "uuidv4";
 import { LoadButton } from "../mainMenu/MainView";
 import { AbilityUpgrades } from "./AbilityUpgrades";
 import { Frame } from "../LogInPanel";
-
+const emerge = keyframes`
+0%{ 
+    transform: scale(0)
+}
+20%
+{ transform: scale(.15)
+}
+40%
+{ transform: scale(.25)
+}
+60%
+{ transform: scale(.45)
+}
+80%
+{ transform: scale(.75)
+}
+100%
+{ transform: scale(1)
+}
+`;
+const User = styled.div`
+  animation: ${emerge};
+  animation-duration: 0.5s;
+  animation-iteration-count: once;
+  animation-timing-function: linear;
+`;
 const XpBar = styled.div`
   background: transparent;
   padding: 0.15rem;
@@ -58,7 +83,7 @@ export const UserData = (props) => {
       .catch((err) => console.log(err));
   }, []);
   return (
-    <div
+    <User
       style={{
         position: "absolute",
         top: "10%",
@@ -118,6 +143,6 @@ export const UserData = (props) => {
       <LoadButton onClick={() => props.setShowComponent("menu")}>
         back
       </LoadButton>
-    </div>
+    </User>
   );
 };

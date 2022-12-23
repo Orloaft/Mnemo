@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import SocketService from "../../SocketService";
 import { SpellTable } from "./SpellTable";
-import { EnemyView } from "./EnemyView";
+import EnemyView from "./EnemyView";
 import { uuid } from "uuidv4";
 import { PlayerView } from "./PlayerView";
 import { LoadButton } from "../mainMenu/MainView";
@@ -225,11 +225,7 @@ export const BattleView: React.FC<BattleViewProps> = ({
           gap: ".5rem",
         }}
       >
-        <EnemyView
-          player={player}
-          enemies={gameState.enemies}
-          id={gameState.id}
-        />
+        <EnemyView enemies={gameState.enemies} id={gameState.id} />
         <BattleLog gameLog={gameState.log} />
         <Frame
           style={{

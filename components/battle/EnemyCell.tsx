@@ -72,7 +72,7 @@ const EnemyImage = styled(Frame)`
   }
   animation: ${collapse};
   animation-duration: ${(props: enemyCellProps) =>
-    props.isDead ? `2s` : `0s`};
+    props.isDead ? `1s` : `0s`};
   animation-iteration-count: once;
   animation-timing-function: linear;
 `;
@@ -89,7 +89,7 @@ const EnemyCell = ({ enemy, handleClick, i }) => {
     player.spell.name === "blast"
   ) {
     return (
-      <EnemyImage key={uuid()} targeted={true} isDead={false}>
+      <EnemyImage key={uuid()} targeted={true} isDead={enemy.animation === "death"}>
         <Modifiers>
           {enemy.modifiers.map((mod) => (
             <span key={uuid()}>{mod}</span>
@@ -172,7 +172,7 @@ const EnemyCell = ({ enemy, handleClick, i }) => {
         key={uuid()}
         onClick={handleClick}
         targeted={false}
-        isDead={enemy.life < 1}
+        isDead={enemy.animation === "death"}
       >
         <Modifiers>
           {enemy.modifiers.map((mod) => (

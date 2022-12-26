@@ -1,5 +1,5 @@
 import getGameDataHandler from "./gameData";
-const deathAnimate = (enemy, gameData) => {};
+
 export function getGameActionHandler() {
   return {
     gameTimer: function (roomId: string, io: any) {
@@ -39,15 +39,16 @@ export function getGameActionHandler() {
               });
             // add action points to each living enemy and add a random spell word every 4 points with a chance of being flagged for capture
             gameData.enemies.forEach((enemy) => {
-              if (enemy.life <= 0) {
+              if (enemy.life <= 0 && enemy.animation !== "death") {
                 enemy.spellInput = [];
                 enemy.animation = "death";
                 enemy.invuln = true;
+                io.to(gameData.id).emit("update_res", gameData);
                 setTimeout(() => {
                   gameData.log.unshift(`${enemy.name} has fainted`);
                   gameData.enemies.splice(gameData.enemies.indexOf(enemy), 1);
                   io.to(gameData.id).emit("update_res", gameData);
-                }, 500);
+                }, 1000);
               } else {
                 if (enemy.action === "chanting" && enemy.life > 0) {
                   switch (gameData.difficulty) {
@@ -222,7 +223,7 @@ export function getGameActionHandler() {
                           );
                           if (target.life <= 0) {
                             player.target = 0;
-                            gameData.log.unshift(` ${target.name} fainted`);
+                           
                           }
                           break;
                         case "heal":
@@ -307,9 +308,12 @@ export function getGameActionHandler() {
                       if (
                         gameData &&
                         !gameData.enemies.find((enemy) => enemy.life > 0)
-                      ) {
-                        getGameDataHandler.nextRound(gameData.id) &&
+                      ) { // nextRound return true or false if there are any rounds remaining
+                        setTimeout(()=> {
+                          getGameDataHandler.nextRound(gameData.id) &&
                           getGameDataHandler.removeGame(gameData.id);
+                        },1000)
+                  
                       }
                       io.to(req.id).emit("update_res", gameData);
                     }

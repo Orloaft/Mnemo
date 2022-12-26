@@ -24,7 +24,7 @@ export const PlayerView = ({ gameState, player, targeted }) => {
         <div style={{ display: "flex", flexDirection: "column" }}>
           <StatView enemy={player} />
 
-          <ActionView enemy={player} />
+          <ActionView enemy={player} isPlayer={true} />
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
           {SocketService.getPlayer().knownSpells.map(
@@ -68,7 +68,7 @@ export const PlayerView = ({ gameState, player, targeted }) => {
         <div style={{ display: "flex", flexDirection: "column" }}>
           <StatView enemy={player} />
 
-          <ActionView enemy={player} />
+          <ActionView enemy={player} isPlayer={true}/>
         </div>
       </PlayerFrame>
     );

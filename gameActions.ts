@@ -186,7 +186,7 @@ export function getGameActionHandler() {
                 let match = e.spellInput[e.spellInput.length - 1];
 
                 if (match && match.isFlagged && match.word === req.word) {
-                  player.actionPoints += 5;
+                  player.overcharge += 1;
                   match.isFlagged = false;
                   e.spellInput.pop();
                   e.actionPoints -= 5;
@@ -317,6 +317,8 @@ export function getGameActionHandler() {
                       }
                       io.to(req.id).emit("update_res", gameData);
                     }
+                    player.actionPoints += player.overcharge * 5;
+                    player.overcharge = 0;
                   }, 1000);
                 } else {
                   gameData.animation = "failed";

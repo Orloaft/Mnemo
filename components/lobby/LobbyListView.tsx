@@ -14,7 +14,7 @@ export const LobbyListView: React.FC<{
   const [message, setMessage] = useState("");
   const createLobby = (e) => {
     e.preventDefault();
-
+ console.log("creating")
     if (!validateRoom(e.target.lobby_name.value)) {
       SocketService.initLobby(e.target.lobby_name.value);
     } else {
@@ -73,7 +73,7 @@ export const LobbyListView: React.FC<{
               >
                 <input name="lobby_name" autoComplete="off"></input>
                 {message}
-                <LoadButton style={{ zIndex: "3" }}>create</LoadButton>
+                <button style={{ zIndex: "3" }}>create</button>
               </div>
             </form>{" "}
           </Frame>

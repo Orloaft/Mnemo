@@ -10,7 +10,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     .then((users) => {
       let data = JSON.parse(users[0].data);
       if (data.xp >= data.lvl * 100) {
-        data.xp = 0;
+        data.xp -= data.lvl * 100;
         data.lvl++;
         if (data.knownSpells.find((spell) => spell.name === req.body.ability)) {
           data.knownSpells.find((spell) => spell.name === req.body.ability)

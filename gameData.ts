@@ -33,6 +33,7 @@ export interface playerProps {
   knownSpells: { name: string; lvl: number }[];
   spellReq: string[];
   spellInput: string[];
+  overcharge: number;
 }
 export interface gameDataProps {
   id: string;
@@ -74,13 +75,13 @@ const awardXp = (game: gameDataProps) => {
         let newData = JSON.parse(users[0].data);
         switch (game.difficulty) {
           case "easy":
-            newData.xp += game.round * 5;
-            break;
-          case "medium":
             newData.xp += game.round * 10;
             break;
-          case "hard":
+          case "medium":
             newData.xp += game.round * 15;
+            break;
+          case "hard":
+            newData.xp += game.round * 30;
             break;
         }
 

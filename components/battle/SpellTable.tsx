@@ -12,6 +12,7 @@ const wiggle = keyframes`
 100% { transform: rotate(0deg); }
 `;
 const Table = styled.div`
+  opacity: ${(props:{active:boolean})=> props.active ? `1`: `.5`};
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
@@ -126,7 +127,7 @@ export const SpellTable = ({ id, spells, clickHandler, player }) => {
     installKeyPressHandler();
   });
   return (
-    <Table>
+    <Table active={player.actionPoints >= 15}>
       {spells.map((w: string) => {
         if (player.spellInput.find((e: string) => e === w)) {
           return (

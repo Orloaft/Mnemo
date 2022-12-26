@@ -118,7 +118,7 @@ const EnemyCell = ({ enemy, handleClick, i }) => {
           }}
         >
           <StatView enemy={enemy} />
-          <ActionView enemy={enemy} />
+          <ActionView enemy={enemy} isPlayer={false} />
           <div
             style={{
               margin: 0,
@@ -202,7 +202,7 @@ const EnemyCell = ({ enemy, handleClick, i }) => {
           }}
         >
           <StatView enemy={enemy} />
-          <ActionView enemy={enemy} />
+          <ActionView enemy={enemy} isPlayer={false} />
           <div
             style={{
               margin: 0,

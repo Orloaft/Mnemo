@@ -83,6 +83,11 @@ export const UserData = (props) => {
       .catch((err) => console.log(err));
   }, []);
   return (
+    <div style={{display:"flex", zIndex:"3", justifyContent:"space-between",gap:"1rem"}}>
+    <img
+    style={{height: "25rem", width: "auto", position:"absolute", left:"20%", top:"10%"}}
+     src={`sapce-wizard.jpg`}
+   />
     <User
       style={{
         position: "absolute",
@@ -92,7 +97,10 @@ export const UserData = (props) => {
         gap: "5%",
         height: "50%",
       }}
+      
     >
+   
+  
       <Frame style={{ display: "flex", width: "100%", height: "20rem" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <p>
@@ -140,9 +148,11 @@ export const UserData = (props) => {
           )}
         </aside>
       </Frame>
+     
       <LoadButton onClick={() => props.setShowComponent("menu")}>
         back
       </LoadButton>
     </User>
+    </div>
   );
 };

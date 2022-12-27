@@ -2,13 +2,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import knex from "knex";
 
-type Data = {
-  name: string;
-};
+
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
   knex("./gameUserData.db")
     .select()

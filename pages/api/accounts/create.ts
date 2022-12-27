@@ -24,6 +24,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                   data: JSON.stringify({
                     xp: 0,
                     lvl: 1,
+                    image: Math.floor(Math.random()*10),
                     knownSpells: [{ name: "missle", lvl: 1 }],
                   }),
                 })

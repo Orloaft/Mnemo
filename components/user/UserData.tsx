@@ -84,10 +84,10 @@ export const UserData = (props) => {
   }, []);
   return (
     <div style={{display:"flex", zIndex:"3", justifyContent:"space-between",gap:"1rem"}}>
-    <img
+    {data && <img
     style={{height: "25rem", width: "auto", position:"absolute", left:"20%", top:"10%"}}
-     src={`sapce-wizard.jpg`}
-   />
+     src={`space-wizard${data.image}.jpg`}
+   />}
     <User
       style={{
         position: "absolute",

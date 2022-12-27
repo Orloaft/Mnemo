@@ -27,6 +27,7 @@ export const GuestController = (props) => {
               token: result.data.token,
               name: result.data.name,
               knownSpells: result.data.knownSpells,
+              image: result.data.image,
             })
           );
         setMessage(result.data.message);

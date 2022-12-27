@@ -2,6 +2,7 @@ import knex from "knex";
 import { uuid } from "uuidv4";
 
 export default function handler(req, res) {
+  let token = uuid();
   knex("./gameUserData.db")
     .select()
     .from("users")
@@ -10,16 +11,18 @@ export default function handler(req, res) {
       if (user.length === 0) {
         knex("./gameUserData.db")
           .insert({
+            token: token,
             name: req.body.name,
             data: JSON.stringify({
               xp: 0,
               lvl: 1,
               knownSpells: [{ name: "missle", lvl: 1 }],
+              image: Math.floor(Math.random()*10)
             }),
           })
           .into("users")
           .then(() => {
-            let token = uuid();
+          
             knex("./gameUserData.db")
               .update({ token: token })
               .from("users")
@@ -29,7 +32,9 @@ export default function handler(req, res) {
                   token: token,
                   message: "signed in succesfully",
                   name: req.body.name,
-                  knownSpells: [{ name: "missle", lvl: 1 }],
+                  knownSpells: [{ name: "missle",lvl: 1 }],
+                  image: Math.floor(Math.random()*10),
+                  
                 });
               });
           });

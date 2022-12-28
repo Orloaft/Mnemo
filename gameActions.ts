@@ -44,11 +44,13 @@ export function getGameActionHandler() {
                 enemy.animation = "death";
                 enemy.invuln = true;
                 io.to(gameData.id).emit("update_res", gameData);
+                gameData.log.unshift(`${enemy.name} has fainted`);
+                if(gameData.enemies.length > 1) {
                 setTimeout(() => {
-                  gameData.log.unshift(`${enemy.name} has fainted`);
-                  gameData.enemies.splice(gameData.enemies.indexOf(enemy), 1);
+                    gameData.enemies.splice(gameData.enemies.indexOf(enemy), 1);  
                   io.to(gameData.id).emit("update_res", gameData);
                 }, 1000);
+              }
               } else {
                 if (enemy.action === "chanting" && enemy.life > 0) {
                   switch (gameData.difficulty) {

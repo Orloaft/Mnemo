@@ -1,4 +1,4 @@
-import { EventEmitter } from "stream";
+
 import { uuid } from "uuidv4";
 import { getEnemy } from "./enemies";
 import knex from "knex";
@@ -202,13 +202,7 @@ function getGameDataHandler() {
         switch (game.difficulty) {
           case "easy":
             game.enemies = [
-              {
-                ...rounds[
-                  Math.floor(
-                    Math.random() * (game.round < 10 ? game.round + 1 : 10)
-                  )
-                ],
-              },
+             
               {
                 ...rounds[
                   Math.floor(
@@ -220,13 +214,7 @@ function getGameDataHandler() {
             break;
           case "medium":
             game.enemies = [
-              {
-                ...rounds[
-                  Math.floor(
-                    Math.random() * (game.round < 10 ? game.round + 1 : 10)
-                  )
-                ],
-              },
+            
               {
                 ...rounds[
                   Math.floor(
@@ -245,13 +233,7 @@ function getGameDataHandler() {
             break;
           case "hard":
             game.enemies = [
-              {
-                ...rounds[
-                  Math.floor(
-                    Math.random() * (game.round < 10 ? game.round + 1 : 10)
-                  )
-                ],
-              },
+            
               {
                 ...rounds[
                   Math.floor(
@@ -286,20 +268,6 @@ function getGameDataHandler() {
       if (game.round + 1 === 10){
         game.round += 1;
         game.enemies = [{ 
-          name: "unseen horror",
-           life: 190,
-           maxLife: 190,
-           speed: 9,
-           actionPoints: 0,
-           animation: "",
-           invuln: false,
-           modifiers: [],
-           action: "chanting",
-           dmg: 40,
-           spellInput: [],
-           spell: game.enemies.length === 3 ?"missle":"summon horror",
-           targeted: false,
-           target: 0,},{ 
             name: "unseen horror",
              life: 190,
              maxLife: 190,

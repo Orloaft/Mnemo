@@ -191,6 +191,13 @@ function getGameDataHandler() {
                   )
                 ],
               },
+              {
+                ...rounds[
+                  Math.floor(
+                    Math.random() * (game.round < 10 ? game.round + 1 : 10)
+                  )
+                ],
+              },
             ];
             break;
           case "medium":

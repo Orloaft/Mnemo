@@ -2,7 +2,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Frame } from "../../components/CharacterView";
+import { Frame } from "../../components/LogInPanel";
 import { LoadButton } from "../../components/mainMenu/MainView";
 import { ShootingStarView } from "../../components/ShootingStarView";
 import styles from "../../styles/Home.module.css";

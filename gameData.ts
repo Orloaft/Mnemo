@@ -52,7 +52,25 @@ export interface gameDataProps {
   animation: string;
   score?: string;
 }
+const getboss1 = (game: gameDataProps) => {
+  return { 
+    
+ name: "unseen horror",
+  life: 190,
+  maxLife: 190,
+  speed: 9,
+  actionPoints: 0,
+  animation: "",
+  invuln: false,
+  modifiers: [],
+  action: "chanting",
+  dmg: 40,
+  spellInput: [],
+  spell: game.enemies.length < 3 ?"missle":"summon horror",
+  targeted: false,
+  target: 0,}
 
+}
 const rounds = [...getEnemy(null)].map((enemy) => {
   return { ...enemy };
 });
@@ -179,7 +197,7 @@ function getGameDataHandler() {
     nextRound: function (id: string) {
       let game = gamesArr.find((game) => game.id === id);
       awardXp(game);
-      if (game.round + 1 < 30) {
+      if (game.round + 1 < 10) {
         game.round += 1;
         switch (game.difficulty) {
           case "easy":
@@ -259,11 +277,50 @@ function getGameDataHandler() {
             break;
         }
         game.enemies.forEach((enemy) => {
+          
           enemy.target = Math.floor(Math.random() * game.players.length);
           enemy.spellInput = [];
         });
         return false;
-      } else {
+      } else 
+      if (game.round + 1 === 10){
+        game.round += 1;
+        game.enemies = [{ 
+          name: "unseen horror",
+           life: 190,
+           maxLife: 190,
+           speed: 9,
+           actionPoints: 0,
+           animation: "",
+           invuln: false,
+           modifiers: [],
+           action: "chanting",
+           dmg: 40,
+           spellInput: [],
+           spell: game.enemies.length === 3 ?"missle":"summon horror",
+           targeted: false,
+           target: 0,},{ 
+            name: "unseen horror",
+             life: 190,
+             maxLife: 190,
+             speed: 9,
+             actionPoints: 0,
+             animation: "",
+             invuln: false,
+             modifiers: [],
+             action: "chanting",
+             dmg: 40,
+             spellInput: [],
+             spell: game.enemies.length === 3 ?"missle":"summon horror",
+             targeted: false,
+             target: 0,}]
+        game.enemies.forEach((enemy) => {
+          enemy.target = Math.floor(Math.random() * game.players.length);
+          enemy.spellInput = [];
+        });
+        return false;
+      }
+       else {
         game.concluded = true;
         awardXp(game);
         game.enemies.forEach((enemy) => (enemy.spellInput = []));

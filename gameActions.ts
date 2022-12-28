@@ -88,6 +88,23 @@ export function getGameActionHandler() {
                             gameData.players[enemy.target].name
                           }`
                         );
+                        break;
+                      case "summon horror":
+                        gameData.enemies.push({ name: "spawn",
+                        life: 40,
+                        maxLife: 40,
+                        speed: 9,
+                        actionPoints: 0,
+                        animation: "",
+                        invuln: false,
+                        modifiers: [],
+                        action: "chanting",
+                        dmg: 20,
+                        spellInput: [],
+                        spell: "missle",
+                        targeted: false,
+                        target: 0,})  
+                        break;
                     }
                     enemy.spellInput = [];
                     enemy.actionPoints = 0;

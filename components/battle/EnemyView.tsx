@@ -5,6 +5,7 @@ import SocketService from "../../SocketService";
 import EnemyCell from "./EnemyCell";
 
 const EnemyView = ({ enemies, id }) => {
+  
   const getHandleEnemyClick = (i) => {
     return () => {
       SocketService.update({

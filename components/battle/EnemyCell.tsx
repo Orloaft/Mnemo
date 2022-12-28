@@ -79,7 +79,7 @@ const EnemyImage = styled(Frame)`
 
 const EnemyCell = ({ enemy, handleClick, i }) => {
   const player = SocketService.getPlayer();
-
+ 
   if (
     (player &&
       player.target === i &&

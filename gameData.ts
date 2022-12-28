@@ -216,10 +216,24 @@ function getGameDataHandler() {
                   )
                 ],
               },
+              {
+                ...rounds[
+                  Math.floor(
+                    Math.random() * (game.round < 10 ? game.round + 1 : 10)
+                  )
+                ],
+              },
             ];
             break;
           case "hard":
             game.enemies = [
+              {
+                ...rounds[
+                  Math.floor(
+                    Math.random() * (game.round < 10 ? game.round + 1 : 10)
+                  )
+                ],
+              },
               {
                 ...rounds[
                   Math.floor(

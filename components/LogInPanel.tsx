@@ -1,11 +1,10 @@
 import { useState } from "react";
-
 import styled, { keyframes } from "styled-components";
 import { backgroundGradient } from "../utils/styleUtils";
 import { GuestController } from "./guest/GuestController";
 import { SignInPageController } from "./signIn/SignInController";
 import SignUpPageController from "./signUp/signUpController";
-import { Lobby } from "./lobby/Lobby";
+
 
 const hoverRainbow = keyframes`
  
@@ -68,7 +67,6 @@ border-color: #00FF66;
 `;
 export const Frame = styled.div`
   display: flex;
-  // border: 2px solid #ffebcd;
   color: #ffebcd;
   border-radius: 0.25rem;
   padding: 0.5rem;

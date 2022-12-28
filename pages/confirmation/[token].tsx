@@ -1,12 +1,20 @@
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { Frame } from "../../components/LogInPanel";
+import { useState } from "react";
+import styled from "styled-components";
 import { LoadButton } from "../../components/mainMenu/MainView";
 import { ShootingStarView } from "../../components/ShootingStarView";
 import styles from "../../styles/Home.module.css";
-
+import { backgroundGradient } from "../../utils/styleUtils";
+const Frame = styled.div`
+display: flex;
+color: #ffebcd;
+border-radius: 0.25rem;
+padding: 0.5rem;
+z-index: 2;
+background: ${backgroundGradient};
+`;
 export default function ConfirmationPageController(props) {
   const [isConfirmed, setIsConfirmed] = useState(false);
   let router = useRouter();

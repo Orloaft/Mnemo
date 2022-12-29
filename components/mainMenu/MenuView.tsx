@@ -143,7 +143,7 @@ export const MenuView: React.FC = (props) => {
     setShowComponent("settings");
   };
   const leaveBattle = () => {
-    console.log("ended battle");
+
     setShowComponent("menu");
   };
   useEffect(() => {

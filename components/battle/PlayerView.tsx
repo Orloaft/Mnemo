@@ -9,10 +9,15 @@ const PlayerFrame = styled(Frame)`
   border: ${(props: { targeted: boolean }) =>
     props.targeted ? `2px solid white` : `2px solid transparent`};
 `;
-export const PlayerView = ({ gameState, player, targeted }) => {
+export const PlayerView = ({ gameState, player, targeted,handler }) => {
+  
   if (player.id === SocketService.getPlayerId()) {
     return (
       <PlayerFrame
+      onClick={()=>{
+
+        handler()
+      }}
         style={{
           display: "flex",
           gap: "1rem",
@@ -58,6 +63,10 @@ export const PlayerView = ({ gameState, player, targeted }) => {
   } else {
     return (
       <PlayerFrame
+      onClick={()=>{
+  
+        handler()
+      }}
         style={{
           display: "flex",
           gap: "1rem",

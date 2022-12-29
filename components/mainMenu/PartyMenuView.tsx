@@ -149,7 +149,7 @@ export const PartyMenuView = (props: PartyMenuViewProps) => {
                       <span>Silence: Interrupt enemy casting</span>
                       <span>Curse: reduce target damage</span>
                       <span>Revive: wake up a fainted player</span>
-                      <span>Shield: reduce oncoming damage</span>
+                      <span>Shield: reduce incoming damage</span>
                     </>
                   );
                 }}

@@ -139,6 +139,7 @@ export const SpellTable = ({ id, spells, clickHandler, player }) => {
           return (
             <WordBox
               key={w}
+             
               onClick={() => {
                 clickHandler(w);
               }}

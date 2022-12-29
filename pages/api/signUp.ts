@@ -28,7 +28,7 @@ export default function handler(req, res) {
           .where({ name: req.body.name })
           .then((user) => {
             if (user.length === 0) {
-              console.log("sending credentials", { ...req.body });
+         
               // if no user with the name or email exists in db then a token will be created and attached to the email set to expire in 300 sec
               let authToken = uuid();
               const mailData = {
@@ -45,7 +45,7 @@ export default function handler(req, res) {
                   transporter.sendMail(mailData, function (err, info) {
                     if (err) console.log(err);
                     else {
-                      console.log(info);
+                    
                       res.status(200).json({
                         message: "confirmation sent",
                         email: req.body.email,

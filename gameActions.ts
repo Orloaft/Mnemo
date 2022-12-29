@@ -84,12 +84,14 @@ export function getGameActionHandler() {
                   setTimeout(() => {
                     switch (enemy.spell) {
                       case "missle":
+                        if(gameData.players[enemy.target]){
                         gameData.players[enemy.target].life -= enemy.dmg;
                         gameData.log.unshift(
                           `${enemy.name} casts missle at ${
                             gameData.players[enemy.target].name
                           }`
                         );
+                      }
                         break;
                       case "summon horror":
                         gameData.enemies.push({ name: "spawn",
@@ -115,6 +117,7 @@ export function getGameActionHandler() {
                     enemy.target = Math.floor(
                       Math.random() * gameData.players.length
                     );
+                    
                     if (gameData.players[enemy.target].life <= 0) {
                       gameData.log.unshift(
                         `${gameData.players[enemy.target].name} has fainted`
@@ -156,6 +159,13 @@ export function getGameActionHandler() {
               io.to(req.id).emit("update_res", gameData);
             }, req.duration);
 
+            break;
+          case "playerClicked":
+            if(player.spell.name === "heal"){
+              player.target = req.targetIndex;
+              io.to(req.id).emit("update_res", gameData);
+            }
+            
             break;
           case "enemyClicked":
             player.target = req.targetIndex;
@@ -217,7 +227,14 @@ export function getGameActionHandler() {
                 player.actionPoints >= 15 &&
                 !player.spellInput.find((w) => w === req.word) &&
                 player.spellInput.push(req.word);
-
+                if(player.spellInput[player.spellInput.length-1]!== player.spellReq[player.spellInput.length-1]){
+                  player.actionPoints = 12;
+                  setTimeout(()=> {
+                  player.spellInput = [];
+                  player.actionPoints = 15;
+                  io.to(req.id).emit("update_res",gameData);
+                  },1000)
+                }
               if (
                 player &&
                 player.spellInput.length === player.spellReq.length

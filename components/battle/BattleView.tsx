@@ -209,7 +209,15 @@ export const BattleView: React.FC<BattleViewProps> = ({
       id: gameState.id,
     });
   }
-
+  const getHandlePlayerClick = (i) => {
+    return () => {
+      SocketService.update({
+        type: "playerClicked",
+        targetIndex: i,
+        id: gameData.id,
+      });
+    };
+  };
   useEffect(() => {
     SocketService.socket().on("update_res", (obj: object) => {
       setGameState({ ...obj });
@@ -291,33 +299,30 @@ export const BattleView: React.FC<BattleViewProps> = ({
           </div>
           <PlayerContainer>
             {gameState.players.map((player, i) => {
-              if (
-                gameState.players.find(
-                  (p) =>
-                    p.id ===
-                    JSON.parse(localStorage.getItem("credentials")).token
-                ).spell === "heal" &&
-                gameState.players.find(
-                  (p) =>
-                    p.id ===
-                    JSON.parse(localStorage.getItem("credentials")).token
-                ).target === i
+              if ( 
+                SocketService.getPlayer().spell.name === "heal" &&
+                SocketService.getPlayer().target === i
               ) {
+              
                 return (
                   <PlayerView
                     key={uuid()}
                     gameState={gameState}
                     player={player}
                     targeted={true}
+                    handler={getHandlePlayerClick(i)}
                   />
                 );
               } else {
+         
                 return (
                   <PlayerView
                     key={uuid()}
                     gameState={gameState}
                     player={player}
                     targeted={false}
+                    handler={getHandlePlayerClick(i)}
+               
                   />
                 );
               }

@@ -2,6 +2,7 @@ import knex from "knex";
 import nodemailer from "nodemailer";
 import { uuid } from "uuidv4";
 
+
 // compares chosen name and email against user table in db, returns message if taken or sends email with confirmation link
 export default function handler(req, res) {
   const transporter = nodemailer.createTransport({

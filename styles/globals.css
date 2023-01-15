@@ -3,6 +3,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
+ 
 }
 /*margin reset on body element*/
 body {

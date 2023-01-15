@@ -26,11 +26,32 @@ const emerge = keyframes`
 { transform: scale(1)
 }
 `;
-const User = styled.div`
+const User = styled(Frame)`
   animation: ${emerge};
   animation-duration: 0.5s;
   animation-iteration-count: once;
   animation-timing-function: linear;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  & aside {
+ 
+      display: flex;
+      flex-direction: column;
+      overflow-y: scroll;
+      max-height: 30%;
+
+      align-items: center;
+      padding: 1rem 0;
+    }
+    @media (min-width: 48rem) {
+      max-height: 75%;
+      & aside {
+        max-height: 50%;
+      }
+
+    }
+  }
 `;
 const XpBar = styled.div`
   background: transparent;
@@ -45,6 +66,22 @@ const Xp = styled.div`
   transition: width 0.3 ease;
   background-color: purple;
   height: 100%;
+`;
+const UserContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  z-index: 3;
+  height: 100%;
+  & img {
+    margin: 1rem;
+    max-height: 40%;
+    max-width: 100%;
+  }
+  @media (min-width: 48rem) {
+    flex-direction: row;
+    gap: 0.75rem;
+    margin-top: 10%;
+  }
 `;
 export const UserData = (props) => {
   const [data, setData] = useState(null);
@@ -83,25 +120,9 @@ export const UserData = (props) => {
       .catch((err) => console.log(err));
   }, []);
   return (
-    <div style={{display:"flex", zIndex:"3", justifyContent:"space-between",gap:"1rem"}}>
-    {data && <img
-    style={{height: "25rem", width: "auto", position:"absolute", left:"20%", top:"10%"}}
-     src={`space-wizard${data.image}.jpg`}
-   />}
-    <User
-      style={{
-        position: "absolute",
-        top: "10%",
-        display: "flex",
-        flexDirection: "column",
-        gap: "5%",
-        height: "50%",
-      }}
-      
-    >
-   
-  
-      <Frame style={{ display: "flex", width: "100%", height: "20rem" }}>
+    <UserContainer>
+      {data && <img src={`space-wizard${data.image}.jpg`} />}
+      <User>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <p>
             {JSON.parse(localStorage.getItem("credentials")).name} the magus
@@ -127,18 +148,7 @@ export const UserData = (props) => {
               );
             })}
         </div>
-        <aside
-          className="hiddenScrollBar"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            overflowY: "scroll",
-
-            width: "50%",
-            alignItems: "center",
-            padding: "1rem 0",
-          }}
-        >
+        <aside className="hiddenScrollBar">
           {data && (
             <AbilityUpgrades
               level={data.lvl}
@@ -147,12 +157,11 @@ export const UserData = (props) => {
             />
           )}
         </aside>
-      </Frame>
-     
-      <LoadButton onClick={() => props.setShowComponent("menu")}>
-        back
-      </LoadButton>
-    </User>
-    </div>
+
+        <LoadButton onClick={() => props.setShowComponent("menu")}>
+          back
+        </LoadButton>
+      </User>
+    </UserContainer>
   );
 };

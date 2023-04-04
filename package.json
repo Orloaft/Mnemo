@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "ts-node createDb.ts & next dev",
     "build": "next build",
-    "start": "NODE_ENV=production ts-node createDb.ts & ts-node server.ts -p $PORT",
+    "start": "NODE_ENV=production ts-node createDb.ts & next start -p $PORT",
     "heroku-postbuild": "npm run build",
     "lint": "next lint"
   },

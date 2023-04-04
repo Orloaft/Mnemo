@@ -1,11 +1,14 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import knex from "knex";
 import type { NextApiRequest, NextApiResponse } from "next";
-
+const knex = require("knex")({
+  client: "sqlite3",
+  connection: {
+    filename: "./gameUserData.db",
+  },
+  useNullAsDefault: true,
+});
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  knex("gameUserData.db")
+  knex("users")
     .select()
-    .from("users")
     .where({ token: req.body.token })
     .then((users) => {
       let data = JSON.parse(users[0].data);
@@ -18,14 +21,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         } else {
           data.knownSpells.push({ name: req.body.ability, lvl: 1 });
         }
-        knex("gameUserData.db")
+        knex("users")
           .update({ data: JSON.stringify(data) })
-          .from("users")
           .where({ token: users[0].token })
           .then(() => {
-            knex("gameUserData.db")
+            knex("users")
               .select()
-              .from("users")
               .where({ token: users[0].token })
               .then((users) => {
                 res.status(201).json(users[0].data);

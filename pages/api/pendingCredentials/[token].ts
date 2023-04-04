@@ -1,11 +1,14 @@
-import knex from "knex";
 import { NextApiRequest, NextApiResponse } from "next";
-
+const knex = require("knex")({
+  client: "sqlite3",
+  connection: {
+    filename: "./gameUserData.db",
+  },
+  useNullAsDefault: true,
+});
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-
-  knex("./gameUserData.db")
+  knex("pendingCredentials")
     .select()
-    .from("pendingCredentials")
     .where({ token: req.body.token })
     .then((credentialsGroup) => {
       console.log(credentialsGroup);

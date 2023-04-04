@@ -1,15 +1,19 @@
-import knex from "knex";
 import { uuid } from "uuidv4";
-
+const knex = require("knex")({
+  client: "sqlite3",
+  connection: {
+    filename: "./gameUserData.db",
+  },
+  useNullAsDefault: true,
+});
 export default function handler(req, res) {
   let token = uuid();
-  knex("./gameUserData.db")
+  knex("users")
     .select()
-    .from("users")
     .where({ name: req.body.name })
     .then((user) => {
       if (user.length === 0) {
-        knex("./gameUserData.db")
+        knex("users")
           .insert({
             token: token,
             name: req.body.name,
@@ -17,12 +21,10 @@ export default function handler(req, res) {
               xp: 0,
               lvl: 1,
               knownSpells: [{ name: "missle", lvl: 1 }],
-              image: Math.floor(Math.random()*10)
+              image: Math.floor(Math.random() * 10),
             }),
           })
-          .into("users")
           .then(() => {
-          
             knex("./gameUserData.db")
               .update({ token: token })
               .from("users")
@@ -32,9 +34,8 @@ export default function handler(req, res) {
                   token: token,
                   message: "signed in succesfully",
                   name: req.body.name,
-                  knownSpells: [{ name: "missle",lvl: 1 }],
-                  image: Math.floor(Math.random()*10),
-                  
+                  knownSpells: [{ name: "missle", lvl: 1 }],
+                  image: Math.floor(Math.random() * 10),
                 });
               });
           });

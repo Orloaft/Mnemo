@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "ts-node createDb.ts & ts-node server.ts ",
+    "dev": "ts-node createDb.ts & next dev",
     "build": "next build",
     "start": "NODE_ENV=production ts-node createDb.ts & ts-node server.ts -p $PORT",
     "heroku-postbuild": "npm run build",

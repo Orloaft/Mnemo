@@ -1,3 +1,4 @@
+import axios from "axios";
 import io from "socket.io-client";
 import { uuid } from "uuidv4";
 let socket: any = null;
@@ -54,6 +55,7 @@ function getSocketService() {
       socket.emit("leave_lobby", lobbyId, playerId);
     },
     initGame: function (difficulty) {
+      console.log("initiating gaem");
       !playerId &&
         (playerId = JSON.parse(localStorage.getItem("credentials")).token);
 
@@ -76,15 +78,12 @@ function getSocketService() {
     },
     //method to initiate socket instance
     connect: function () {
-      return new Promise((rs, rj) => {
-        socket = io();
-
-        if (!socket) return rj();
-
-        socket.on("connect", () => {
-          rs(socket);
-        });
-      });
+      axios
+        .get("/api/socket")
+        .then(() => {
+          socket = io();
+        })
+        .catch((err) => err);
     },
     getGames: function () {
       socket.emit("get_games", socket.id);

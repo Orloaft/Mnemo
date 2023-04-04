@@ -143,25 +143,25 @@ export const MenuView: React.FC = (props) => {
     setShowComponent("settings");
   };
   const leaveBattle = () => {
-
     setShowComponent("menu");
   };
   useEffect(() => {
     localStorage.getItem("matchId") && setMatchId(true);
     localStorage.getItem("credentials") && SocketService.setPlayerId();
 
-    SocketService.socket().on("update_res", (obj: gameDataProps) => {
-      SocketService.setGameData(obj);
-      if (obj && !obj.concluded) {
-        localStorage.setItem("matchId", obj.id);
+    SocketService &&
+      SocketService.socket().on("update_res", (obj: gameDataProps) => {
+        SocketService.setGameData(obj);
+        if (obj && !obj.concluded) {
+          localStorage.setItem("matchId", obj.id);
 
-        showComponent !== "battle" && setShowComponent("battle");
-      } else {
-        localStorage.removeItem("matchId");
-        SocketService.setLobbyData(null);
-        setMatchId(false);
-      }
-    });
+          showComponent !== "battle" && setShowComponent("battle");
+        } else {
+          localStorage.removeItem("matchId");
+          SocketService.setLobbyData(null);
+          setMatchId(false);
+        }
+      });
   }, []);
   switch (showComponent) {
     case "settings":
